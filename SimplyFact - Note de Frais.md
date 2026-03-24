@@ -34,10 +34,10 @@ Objectif V2 :
 - Gestion des utilisateurs : Back office.
 
 ## Besoins :
- Interface utilisateur (non obligatoire ou alors à la fin du formulaire avec les informations déjà saisie et non la totalité obligatoirement)
+ Interface utilisateur (non obligatoire ou possible à la fin du formulaire avec les informations déjà saisie et non la totalité obligatoirement, ou encore uniquement au choix de l'utilisateur avec uniquement utilisation de son email comme mdp)
  Compte utilisateur + connexion ==> Authentification, Token
  Export PDF à envoyer par email : 
- - pdf : pdfkit, [jsPDF](https://github.com/MrRio/jsPDF)
+ - pdf : pdfkit, [jsPDF](https://github.com/MrRio/jsPDF), pdf-lib (pdf dans pdf)
  - mail : [nodemailer](https://nodemailer.com/), 
  Back End (PHP Laravel ou Nest JS + typeORM, Express JS ?) + Front End (React, React Native ?) + BDD(MySQL : déjà mis en place sur serveur)
  Vérification Front : Zod ?
@@ -46,10 +46,146 @@ Objectif V2 :
  Signature en ligne (trackpad)
 
 ### Base de données
- V1 = pas de base de données; on va simplement envoyé le pdf formulé par email après avoir fait un recap sur l'interface pour confirmer avec l'utilisateur.
 
-V2 = BDD MySQL
+### Simplifié
 
+C'est à dire deux tables : `user` et `expenses_claim`
+`user`
+
+| champ           | caractéristiques |
+| --------------- | ---------------- |
+| id              | uuid PK          |
+| firstname       | string           |
+| lastname        | string           |
+| address_street  | string           |
+| address_zipcode | number           |
+| address_city    | string           |
+| address_country | string           |
+| email_address   | string           |
+| phone_number    | string           |
+`expenses_claim`
+
+| champ             | caractéristiques          |
+| ----------------- | ------------------------- |
+| id                | uuid PK                   |
+| user              | uuid PK                   |
+| commitee_name     | string                    |
+| title             | string                    |
+| action_dates      | string                    |
+| claim_declaration | string (JSON.stringify()) |
+| total_given       | number                    |
+| total_reimbursed  | number                    |
+| created_at        | timestamp                 |
+possiblement `vehicule`
+
+| champ         | caractéristiques         |
+| ------------- | ------------------------ |
+| id            | uuid PK                  |
+| owner         | uuid FK(user)            |
+| vehicule_type | string ("auto"\| "moto") |
+| number_plate  | string                   |
+### Complète
+
+`user`
+
+| champ           | caractéristiques |
+| --------------- | ---------------- |
+| id              | uuid PK          |
+| firstname       | string           |
+| lastname        | string           |
+| address_street  | string           |
+| address_zipcode | number           |
+| address_city    | string           |
+| address_country | string           |
+| email_address   | string           |
+| phone_number    | string           |
+`vehicule`
+
+| champ          | caractéristiques                                    |
+| -------------- | --------------------------------------------------- |
+| id             | uuid PK                                             |
+| vehicule_type  | "voiture" \| "moto"                                 |
+| electrical     | boolean default false                               |
+| power          | string (select en dur dans le front) nullable       |
+| price_given    | number                                              |
+| number_plate   | string                                              |
+| legal_document | uuid FK (car_registration_licence) si c'est utilisé |
+| added_at       | timestamp                                           |
+`car_registration_licence` (pour la carte grise, optionnel - à decider)
+
+| champ    | caractéristiques |
+| -------- | ---------------- |
+| id       | uuid PK          |
+| document | string ??        |
+| url      | string ??        |
+| added_at | timestamp        |
+`expenses_claim`
+
+| champ            | caractéristiques |
+| ---------------- | ---------------- |
+| id               | uuid PK          |
+| commitee_name    | string           |
+| action_name      | string           |
+| action_dates     | string           |
+| total_given      | number nullable  |
+| total_reimbursed | number nullable  |
+| created_at       | timestamp        |
+`accomodation`
+
+| champ             | caractéristiques         |
+| ----------------- | ------------------------ |
+| id                | uuid PK                  |
+| expenses_claim    | uuid FK (expenses_claim) |
+| accomodation_type | string                   |
+| nb_of_night       | number                   |
+| total_price       | number                   |
+| reimbursed_price  | number                   |
+`meal`
+
+| champ            | caractéristiques         |
+| ---------------- | ------------------------ |
+| id               | uuid PK                  |
+| expenses_claim   | uuid FK (expenses_claim) |
+| total_price      | number                   |
+| reimbursed_price | number                   |
+`other_expense`
+
+| champ          | caractéristiques         |
+| -------------- | ------------------------ |
+| id             | uuid PK                  |
+| expenses_claim | uuid FK (expenses_claim) |
+| expense_name   | string                   |
+| expense_price  | number                   |
+`driven_trip`
+
+| champ                | caractéristiques         |
+| -------------------- | ------------------------ |
+| id                   | uuid PK                  |
+| expenses_claim       | uuid FK (expenses_claim) |
+| starting_city        | string                   |
+| strating_zip_code    | number                   |
+| ending_city          | string                   |
+| ending_zip_code      | string                   |
+| trip_type            | string nullable          |
+| total_distance       | number                   |
+| total_price          | number                   |
+| total_distance_given | number nullable          |
+| total_price_given    | number nullable          |
+> question de savoir si on fait une table driven_trip_destination et destination ?
+
+`other_trip`
+
+| champ          | caractéristiques         |
+| -------------- | ------------------------ |
+| id             | uuid PK                  |
+| expenses_claim | uuid FK (expenses_claim) |
+| expense_name   | string                   |
+| expense_price  | number                   |
+### Choix final
+BDD **complète** car plus stable et adaptable à notre user flow.
+### Sauvegarde des documents 
+Non nécessaire pour les justificatifs de paiement, ils doivent uniquement être join au PDF final.
+Possibilité de sauvegarder uniquement la carte grise ou de tout mettre dans un dossier temporaire et sous-dossier avec l'id de la note de frais pour ensuite supprimer les documents à l'envoi de la NDF
 ### Fonctionnalités
 
 Utilisateurs :
@@ -63,22 +199,25 @@ Utilisateurs :
 - Voir son historique
 - Ré-utiliser un ancien formulaire
 - Explication possible sur certaine entrée
+
 Formulaires :
+- Remplir le formulaire et le mettre en pause à tout moment
+- Auto-complétion possible avec information utilisateur
+- Récupération d'une autre note de frais
+- Signature électronique
+- Ajout de documents justificatif
+- Exportation en PDF
+- Envoi par email au service comptable et à l'utilisateur
 
+>Bonus : envoie d'un CSV descriptif
+## Version de l'application
 
-
-## Versionning
-
-### V1 :
+### V1.1 :
 React + Nest JS
 => petit formulaire + formation PDF () + envoie email
 Pk : compréhension et stabilisation de la logique technique
 
-### V2 : 
-=> vrai formulaire + formation PDF + envoie email
-Pk : focalisation sur la rédaction de la Note de frais complète
-
-### V3 : 
+### V1.2 : 
 => vrai formulaire + formation PDF + envoie email + envoie des données en BDD
 Pk : enregistrement des données, authentification et répétition des données pour usage ultérieur + historique.
 Q : possibilité de stocker les informations en plusieurs format (informatif ou complet pour pouvoir en tirer des études et analyse en plus de l'historique possiblement personnalisé)
