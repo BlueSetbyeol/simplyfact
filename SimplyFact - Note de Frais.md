@@ -47,7 +47,7 @@ Objectif V2 :
 
 ### Base de données
 
-### Simplifié
+#### Simplifié
 
 C'est à dire deux tables : `user` et `expenses_claim`
 `user`
@@ -84,7 +84,7 @@ possiblement `vehicule`
 | owner         | uuid FK(user)            |
 | vehicule_type | string ("auto"\| "moto") |
 | number_plate  | string                   |
-### Complète
+#### Complète
 
 `user`
 
@@ -181,7 +181,7 @@ possiblement `vehicule`
 | expenses_claim | uuid FK (expenses_claim) |
 | expense_name   | string                   |
 | expense_price  | number                   |
-### Choix final
+#### Choix final
 BDD **complète** car plus stable et adaptable à notre user flow.
 ### Sauvegarde des documents 
 Non nécessaire pour les justificatifs de paiement, ils doivent uniquement être join au PDF final.
@@ -210,7 +210,7 @@ Formulaires :
 - Envoi par email au service comptable et à l'utilisateur
 
 >Bonus : envoie d'un CSV descriptif
-## Version de l'application
+## Plannification de l'application
 
 ### V1.1 :
 React + Nest JS
