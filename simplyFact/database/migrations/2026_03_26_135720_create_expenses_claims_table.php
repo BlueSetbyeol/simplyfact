@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expenses_claim', function (Blueprint $table) {
+        Schema::create('expensesClaims', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable();
             $table->string('commitee_name', 150);
@@ -28,7 +28,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('expenses_claim');
+        Schema::dropIfExists('expensesClaims');
     }
 };
 

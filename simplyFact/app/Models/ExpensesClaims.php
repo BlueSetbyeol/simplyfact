@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Expenses_claim extends Model
+class ExpensesClaim extends Model
 {
     protected $fillable = [
         'commitee_name',
@@ -18,6 +18,5 @@ class Expenses_claim extends Model
     public function user(): BelongsTo{
         return $this -> belongsTo(User::class);
     }
-
 
 }

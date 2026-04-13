@@ -3,9 +3,11 @@ import { Button, TextField, styled } from "@mui/material"
 import { CloudUploadIcon } from "lucide-react"
 import AppLayout from "@/layouts/AppLayout"
 import { Head } from "@inertiajs/react"
+import { useForm, router } from '@inertiajs/react';
 
-
-{/* Composant input caché visuellement pour le téléchargement de fichiers. */}
+{
+    /* Composant input caché visuellement pour le téléchargement de fichiers. */
+}
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -14,101 +16,153 @@ const VisuallyHiddenInput = styled('input')({
     position: 'absolute',
     whiteSpace: 'nowrap',
     width: 1,
-})
+});
 
 export default function MealForm() {
+    const { data, setData, post, errors, reset } = useForm({
+        number_of_meal: 0,
+        total_price: 0,
+        reimbursed_price: 0,
+    });
+    const totalRefund = Math.min(data.total_price, 25 * data.number_of_meal);
 
-    {/* Ces trois constantes sont utilisées pour afficher le nombre de repas, le montant total et le remboursement total.*/}
-    const [mealNumber, setMealNumber] = useState(0)
-    const [totalAmount, setTotalAmount] = useState(0)
-    const totalRefund = Math.min(totalAmount, 25)
+    function submitMeal(e: { preventDefault: () => void }) {
+        e.preventDefault();
+        setData('reimbursed_price', totalRefund);
+        // POSTs to meal.store → saves → redirects to flow.return-parent → back here
+        post('/expenses-claims/${expensesClaim.id}/meals', {
+            onSuccess: () => reset(),
+        });
+    }
 
-    {/*Cette constante est utilisée pour stocker le document de preuve.*/}
-    const [proofDocument, setProofDocument] = useState<File[]>([])
+    function completeStep() {
+        // POSTs to flow.complete-step → marks meal done → redirects to flow.next
+        router.post('flow.complete-step');
+    }
 
-    return(
+    /*Cette constante est utilisée pour stocker le document de preuve.*/
+    const [proofDocument, setProofDocument] = useState<File[]>([]);
+
+    return (
         <AppLayout>
+
             <Head title="Repas"></Head>
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full max-w-xl">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
 
                 <h1 className="text-xl font-medium text-gray-900">Vos repas</h1>
-                <p className="text-sm text-gray-500 mt-1 mb-6">Renseignez vos dépenses de repas effectuées lors de votre déplacement.</p>
+                <p className="mt-1 mb-6 text-sm text-gray-500">
+                    Renseignez vos dépenses de repas effectuées lors de votre
+                    déplacement.
+                </p>
 
-                <hr className="border-gray-100 mb-6"/>
-
-                <div className="flex flex-col gap-5">
-                    {/* Ces deux champs permettent à l'utilisateur de saisir le nombre de repas et le montant total dépensé. */}
-                    <TextField
-                        label="Nombre de repas"
-                        type="number"
-                        value={mealNumber}
-                        onChange={(e) => setMealNumber(Number(e.target.value))}
-                        fullWidth
-                    />
-                    <TextField
-                        label="Montant total"
-                        type="number"
-                        value={totalAmount}
-                        onChange={(e) => setTotalAmount(Number(e.target.value))}
-                        fullWidth
-                    />
-                </div>  
-
-                <hr className="border-gray-100 my-6"/>
-
-                <div className= "bg-gray-50 rounded-xl p-4 flex justify-between items-center mb-6">
-                    {/* Cette section affiche le montant total remboursé, qui est calculé automatiquement en fonction du montant total saisi par l'utilisateur. Le remboursement est plafonné à 25 €. */}
-                    <div>
-                        <p className= "text-sm text-gray-500">Total remboursé</p>
-                        <p className= "text-xs text-gray-400 mt-1">Calculé automatiquement</p>
+                <hr className="mb-6 border-gray-100" />
+                <form onSubmit={submitMeal}>
+                    <div className="flex flex-col gap-5">
+                        {/* Ces deux champs permettent à l'utilisateur de saisir le nombre de repas et le montant total dépensé. */}
+                        <TextField
+                            label="Nombre de repas"
+                            slotProps={{ inputLabel: { shrink: true } }}
+                            defaultValue={''}
+                            onChange={(e) =>
+                                setData(
+                                    'number_of_meal',
+                                    Number(e.target.value),
+                                )
+                            }
+                            fullWidth
+                        />
+                        {errors.number_of_meal && (
+                            <span>{errors.number_of_meal}</span>
+                        )}
+                        <TextField
+                            label="Montant total"
+                            slotProps={{ inputLabel: { shrink: true } }}
+                            defaultValue={''}
+                            onChange={(e) =>
+                                setData('total_price', Number(e.target.value))
+                            }
+                            fullWidth
+                        />
+                        {errors.total_price && (
+                            <span>{errors.total_price}</span>
+                        )}
                     </div>
-                    <div className="text-right">
-                        <p className= "text-2xl font-medium text-gray-900">{totalRefund}€</p>
-                        <p className= "text-xs text-gray-400 mt-1">Plafond : 25 €</p>
-                    </div>
-                </div>
 
+                    <hr className="my-6 border-gray-100" />
+
+                    <div className="mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">
+                        {/* Cette section affiche le montant total remboursé, qui est calculé automatiquement en
+                        fonction du montant total saisi par l'utilisateur.*/}
+                        <div>
+                            <p className="text-sm text-gray-500">
+                                Total remboursé
+                            </p>
+                        </div>
+                        <div className="text-right">
+                            <p className="text-2xl font-medium text-gray-900">
+                                {totalRefund}€
+                            </p>
+                            <p className="mt-1 text-xs text-gray-400">
+                                Plafond : 25 € par repas
+                            </p>
+                        </div>
+                    </div>
+                </form>
                 <div>
-                    <Button 
+                    <Button
                         component="label"
                         role={undefined}
                         variant="outlined"
                         fullWidth
-                        startIcon={<CloudUploadIcon/>}
+                        startIcon={<CloudUploadIcon />}
                         sx={{
-                                color: '#2D6A2D',
-                                borderColor: '#2D6A2D',
-                                '&:hover': {
-                                    borderColor: '#1F4F1F',
-                                    backgroundColor: '#F0F7F0'
-                                }
-                            }}
-                        
+                            color: '#2D6A2D',
+                            borderColor: '#2D6A2D',
+                            '&:hover': {
+                                borderColor: '#1F4F1F',
+                                backgroundColor: '#F0F7F0',
+                            },
+                        }}
                     >
                         Document justificatif
                         {/* Ce champ de saisie est caché visuellement, mais il est accessible via le bouton "Document justificatif". Lorsque l'utilisateur clique sur ce bouton, il peut sélectionner un fichier à télécharger. Le fichier sélectionné est ensuite stocké dans l'état `proofDocument`. */}
                         <VisuallyHiddenInput
                             type="file"
                             onChange={(e) => {
-                                const files = Array.from(e.target.files || [])
-                                setProofDocument(prev => [...prev, ...files])
+                                const files = Array.from(e.target.files || []);
+                                setProofDocument((prev) => [...prev, ...files]);
                             }}
                         />
                     </Button>
                     {proofDocument.length > 0 ? (
                         proofDocument.map((file, index) => (
-                            <p key={index} className="text-sm text-gray-500 mt-1">{file.name}</p>
+                            <p
+                                key={index}
+                                className="mt-1 text-sm text-gray-500"
+                            >
+                                {file.name}
+                            </p>
                         ))
                     ) : (
-                        <p className= "text-sm text-gray-500 mt-2">Aucun document sélectionné</p>
+                        <p className="mt-2 text-sm text-gray-500">
+                            Aucun document sélectionné
+                        </p>
                     )}
                 </div>
 
-                <Button variant="contained" fullWidth className="!mt-5" sx={{ backgroundColor: '#2D6A2D', '&:hover': { backgroundColor: '#1F4F1F'}}}>Suivant</Button>
-
+                <Button
+                    variant="contained"
+                    fullWidth
+                    className="!mt-5"
+                    sx={{
+                        backgroundColor: '#2D6A2D',
+                        '&:hover': { backgroundColor: '#1F4F1F' },
+                    }}
+                    onClick={completeStep}
+                >
+                    Suivant
+                </Button>
             </div>
         </AppLayout>
-        
-    )
-
+    );
 }
