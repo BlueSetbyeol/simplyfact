@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('meals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('expensesClaim_id');
-            $table->float('number_of_meal');
+            $table->foreignId('expenses_claim_id');
+            $table->integer('number_of_meal');
             $table->float('total_price');
             $table->float('reimbursed_price');
             $table->timestamps();

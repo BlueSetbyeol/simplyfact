@@ -10,8 +10,9 @@ class Meal extends Model
     protected $fillable = [
         'number_of_meal',
         'total_price',
-        'reimbursed_price',
     ];
+
+    //TODO vérifier comment est ajouté 'reimbursed_price'
 
     public function expenses_claim(): BelongsTo{
         return $this -> belongsTo(ExpensesClaim::class);

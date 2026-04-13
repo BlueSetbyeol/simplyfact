@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ExpensesClaim;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+
 // use Inertia\Inertia;
 
 class ExpensesClaimController extends Controller
@@ -14,9 +16,9 @@ class ExpensesClaimController extends Controller
     public function index()
     {
         // $expenses_claim = Expenses_claim::all();
-        // return Inertia::render('Expenses_claim', [
-        //     'expenses_claim' => $expenses_claim,
-        // ]);
+        return Inertia::render('expensesClaim/ExpensesClaimForm', [
+            'expensesClaim'    => ExpensesClaim::get(),
+        ]);
     }
 
     /**
