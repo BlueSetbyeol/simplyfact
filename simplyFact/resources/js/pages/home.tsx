@@ -1,7 +1,10 @@
+import AppLayout from '@/layouts/AppLayout';
 import {
+    App,
     Head,
     // Link, usePage
 } from '@inertiajs/react';
+import { Button } from "@mui/material"
 // import { dashboard, login, register } from '@/routes';
 
 export default function Home() {
@@ -13,15 +16,18 @@ export default function Home() {
     // const { auth } = usePage().props;
 
     return (
-        <>
+        <AppLayout showback={false}>
             <Head title="Home"></Head>
-            <div className="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]">
-                <h1 className="text-5xl text-red-700">Hello Laravel</h1>
-                <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
-                    <main className="flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row"></main>
-                </div>
-                <div className="hidden h-14.5 lg:block"></div>
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full max-w-xl">
+
+                <h1 className="text-xl font-medium text-gray-900">Déclaration de notes de frais</h1>
+                <p className="text-sm text-gray-500 mt-1 mb-6">Fédération Française de Spéléologie</p>
+                <img src="/img/speleo_Philippe_Crochet-SP23-1570.jpg" alt="Image de la fédération" className="mb-6 rounded-lg"></img>
+
+        
+                <Button variant="contained" fullWidth className="!mt-5" sx={{ backgroundColor: '#2D6A2D', '&:hover': { backgroundColor: '#1F4F1F'}}}>Faire une note de frais</Button>
+
             </div>
-        </>
+        </AppLayout>
     );
 }
