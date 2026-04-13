@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { Button, TextField, styled } from "@mui/material"
 import { CloudUploadIcon } from "lucide-react"
+import AppLayout from "@/layouts/AppLayout"
+
 
 {/* Composant input caché visuellement pour le téléchargement de fichiers. */}
 const VisuallyHiddenInput = styled('input')({
@@ -24,7 +26,7 @@ export default function MealForm() {
     const [proofDocument, setProofDocument] = useState<File[]>([])
 
     return(
-        <div className= "min-h-screen bg-gray-100 flex items-center justify-center p-8">
+        <AppLayout>
             <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full max-w-xl">
 
                 <h1 className="text-xl font-medium text-gray-900">Vos repas</h1>
@@ -103,7 +105,8 @@ export default function MealForm() {
                 <Button variant="contained" fullWidth className="!mt-5" sx={{ backgroundColor: '#2D6A2D', '&:hover': { backgroundColor: '#1F4F1F'}}}>Suivant</Button>
 
             </div>
-        </div>
+        </AppLayout>
+        
     )
 
 }
