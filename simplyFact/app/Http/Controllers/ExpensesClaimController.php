@@ -1,0 +1,108 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Expenses_claim;
+use Illuminate\Http\Request;
+// use Inertia\Inertia;
+
+class ExpensesClaimController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        // $expenses_claim = Expenses_claim::all();
+        // return Inertia::render('Expenses_claim', [
+        //     'expenses_claim' => $expenses_claim,
+        // ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $expenses_claim = Expenses_claim::with('user');
+        return view('/', ['expenses_claim'=> $expenses_claim]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //validation de la data
+        $validated = $request -> validate([
+            'commitee_name' => 'required|string|max:150|min:3',
+            'action_name' => 'required|string|max:255|min:5',
+            'action_dates' => 'required|string|max:255|min:8',
+            'total_given' => 'nullable|float',
+            'total_reimbursed' => 'nullable|float',
+        ], [
+            'commitee_name.required' => "Merci d'ajouter le nom de votre Commission",
+            'commitee_name.min' => "Le nom doit obligatoirement avoir 3 caractères minimum",
+            'action_name.required' => "Merci d'indiquer le sujet de votre Note de Frais",
+            'action_name.min' => "Le nom de l'action doit obligatoirement avoir 5 caractères minimum",
+            'action_dates.required' => "Merci d'indiquer les dates auxquels ont eu lieu votre action",
+            'action_dates.min' => "La date de l'action doit obligatoirement avoir 8 caractères minimum",
+        ]
+        );
+
+        Expenses_claim::create([
+            'user_id'=> null,
+            'commitee_name'=> $validated['commitee_name'],
+            'action_name'=> $validated['action_name'],
+            'action_dates'=> $validated['action_dates'],
+            'total_given'=> $validated['total_given'],
+            'total_given'=> $validated['total_given'],
+            
+        ]);
+
+        return redirect('expenses_claim')->with('success', 'Claim created, ready to start completing')->route('flow.start');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        return view('expenses_claim.edit', compact('expenses_claim'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //Not sure if we do authorize the modification at the end or not
+
+        //Validate
+        // $validated = $request->validate([
+            // 'message' => 'required|string|max:255',
+        // ]);
+        // Update
+        // $expenses_claim->update($validated);
+        // return redirect('/')->with('success', 'Expenses Claim updated!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //Not sure if we do authorize the deletion at the end or not, what if someone give up midway ?
+
+        //$expenses_claim->delete();
+        //return redirect('/')->with('success', 'Expenses Claim deleted!');
+    }
+}

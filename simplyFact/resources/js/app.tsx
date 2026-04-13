@@ -9,6 +9,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
+    // page: (name) =>{}, ??? possible pour aider avec la redirection ?
     layout: (name) => {
         switch (true) {
             case name === 'welcome':
