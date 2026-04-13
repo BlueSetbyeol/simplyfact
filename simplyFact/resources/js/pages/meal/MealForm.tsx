@@ -2,6 +2,7 @@ import { useForm, router } from '@inertiajs/react';
 import { Button, TextField, styled } from '@mui/material';
 import { CloudUploadIcon } from 'lucide-react';
 import { useState } from 'react';
+import AppLayout from '@/layouts/app-layout';
 
 {
     /* Composant input caché visuellement pour le téléchargement de fichiers. */
@@ -42,7 +43,7 @@ export default function MealForm() {
     const [proofDocument, setProofDocument] = useState<File[]>([]);
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-100 p-8">
+        <AppLayout>
             <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
                 <h1 className="text-xl font-medium text-gray-900">Vos repas</h1>
                 <p className="mt-1 mb-6 text-sm text-gray-500">
@@ -158,6 +159,6 @@ export default function MealForm() {
                     Suivant
                 </Button>
             </div>
-        </div>
+        </AppLayout>
     );
 }
