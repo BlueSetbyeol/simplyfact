@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Button, TextField, styled } from "@mui/material"
 import { CloudUploadIcon } from "lucide-react"
 import AppLayout from "@/layouts/AppLayout"
+import { Head } from "@inertiajs/react"
 
 
 {/* Composant input caché visuellement pour le téléchargement de fichiers. */}
@@ -27,6 +28,7 @@ export default function MealForm() {
 
     return(
         <AppLayout>
+            <Head title="Repas"></Head>
             <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full max-w-xl">
 
                 <h1 className="text-xl font-medium text-gray-900">Vos repas</h1>
