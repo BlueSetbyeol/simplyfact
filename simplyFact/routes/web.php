@@ -6,6 +6,8 @@ use Laravel\Fortify\Features;
 Route::inertia('/', 'home', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
+
+Route::inertia('meal', 'meal/MealForm')->name('meal');
 // aussi possible sous les formes : 
     // Route::inertia('/home', 'home');
     // Route::get('/', function(){
