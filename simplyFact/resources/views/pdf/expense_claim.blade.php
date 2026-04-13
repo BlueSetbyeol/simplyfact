@@ -339,7 +339,7 @@
     </p>
     <p class="mt-1">
       Estimation de réduction d'impôt :
-      <strong>{{ number_format($computed->taxReduction, 2, ',', ' ') }} €</strong>
+      <strong>{{ number_format($computed->taxReduction, 0, ',', ' ') }} €</strong>
     </p>
   </section>
   @endif
@@ -353,7 +353,7 @@
     </div>
     <div class="flex justify-between py-1">
       <span>Estimation réduction d'impôt (hors frais réels) si 100% en abandon</span>
-      <span class="font-medium text-gray-900">{{ number_format($computed->fullAbandonTotal, 2, ',', ' ') }} €</span>
+      <span class="font-medium text-gray-900">{{ number_format($computed->fullAbandonTotal, 0, ',', ' ') }} €</span>
     </div>
   </section>
 
