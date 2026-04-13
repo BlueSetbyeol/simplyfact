@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expenses_claim;
+use App\Models\ExpensesClaim;
 use Illuminate\Http\Request;
 // use Inertia\Inertia;
 
@@ -24,8 +24,8 @@ class ExpensesClaimController extends Controller
      */
     public function create()
     {
-        $expenses_claim = Expenses_claim::with('user');
-        return view('/', ['expenses_claim'=> $expenses_claim]);
+        $expenses_claim = ExpensesClaim::with('user');
+        return view('', ['expenses_claim'=> $expenses_claim]);
     }
 
     /**
@@ -33,7 +33,7 @@ class ExpensesClaimController extends Controller
      */
     public function store(Request $request)
     {
-        //validation de la data
+        //data validation
         $validated = $request -> validate([
             'commitee_name' => 'required|string|max:150|min:3',
             'action_name' => 'required|string|max:255|min:5',
@@ -50,7 +50,7 @@ class ExpensesClaimController extends Controller
         ]
         );
 
-        Expenses_claim::create([
+        ExpensesClaim::create([
             'user_id'=> null,
             'commitee_name'=> $validated['commitee_name'],
             'action_name'=> $validated['action_name'],
@@ -76,7 +76,7 @@ class ExpensesClaimController extends Controller
      */
     public function edit(string $id)
     {
-        return view('expenses_claim.edit', compact('expenses_claim'));
+        return view('expensesClaim.edit', compact('expenses_claim'));
     }
 
     /**

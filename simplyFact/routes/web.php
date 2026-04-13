@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExpensesClaimController;
 use App\Http\Controllers\FlowController;
+use App\Http\Controllers\MealController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -24,8 +25,11 @@ Route::post('/flow/return-parent',  [FlowController::class, 'returnToParent'])->
 Route::post('/flow/complete-step',  [FlowController::class, 'completeStep'])->name('flow.complete-step');
 Route::get('/flow/done',            [FlowController::class, 'done'])->name('flow.done');
 
-// Attention au nom de la route, probablement à changer en fonction du Front.
-Route::resource('/expenses_claim', ExpensesClaimController::class)
+// TODO Attention au nom de la route, probablement à changer en fonction du Front.
+Route::resource('/expensesClaim', ExpensesClaimController::class)
+->only(['store','edit','update','destroy']);
+
+Route::resource('/meal', MealController::class)
 ->only(['store','edit','update','destroy']);
 
 //remplace ci-dessous :
