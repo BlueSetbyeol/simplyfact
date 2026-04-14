@@ -13,15 +13,18 @@ class MealController extends Controller
      */
     public function index()
     {
-        $flowSteps = session('flow_steps', []);
-        $stepIndex = session('step_index', 0);
+        // Pass existing meals for the current claim => flow
+        // $flowSteps = session('flow_steps', []);
+        // $stepIndex = session('step_index', 0);
+        // $claimId = session('expenses_claim_id');
+        // 'meals'    => Meal::where('expenses_claim_id', $claimId)->get(),
+        // 'flowStep' => $flowSteps[$stepIndex] ?? null,
 
-        // Pass existing meals for the current claim
-        $claimId = session('expenses_claim_id');
+        $meal = Meal::with('expenses_claim');
 
         return Inertia::render('meal/MealForm', [
-            'meals'    => Meal::where('expenses_claim_id', $claimId)->get(),
-            'flowStep' => $flowSteps[$stepIndex] ?? null,
+            'meal' => $meal,
+            'expensesClaim' => ['exists:expensesClaim'],
         ]);
     }
 
@@ -31,7 +34,10 @@ class MealController extends Controller
     public function create()
     {
         $meal = Meal::with('expenses_claim');
-        return view('meal', ['meal'=> $meal]);
+
+        return Inertia::render('meal/MealForm', [
+            'meal' => $meal,
+            'expensesClaim' => ['exists:expensesClaim']]);
     }
 
     /**
@@ -39,16 +45,16 @@ class MealController extends Controller
      */
     public function store(Request $request)
     {
-        //validation de la data
+        // validation de la data
         $validated = $request->validate([
-            'number_of_meal' =>'required|integer|min:1',
-            'total_price' =>'required|float|min:0',
-            'reimbursed_price' =>'float',
+            'number_of_meal' => 'required|integer|min:1',
+            'total_price' => 'required|float|min:0',
+            'reimbursed_price' => 'float',
             // TODO reimbursed_price a recalculer dans le back
-            'expenses_claim_id' => ['exists:expensesClaim,id'],
+            'expenses_claim_id' => ['exists:expensesClaim.id'],
         ], [
             'number_of_meal.required' => "Merci d'ajouter le nombre de repas",
-            'total_price.required' => "Merci de préciser le total du prix des repas consommés",
+            'total_price.required' => 'Merci de préciser le total du prix des repas consommés',
         ]
         );
 
@@ -57,7 +63,7 @@ class MealController extends Controller
         Meal::create($validated);
 
         // Go back to meal.index (the hub) via the flow
-        return redirect()->with('success', "L'ajout du/des repas a bien été pris en compte")->route('flow.return-parent');
+        return redirect('meals')->route('flow.return-parent');
     }
 
     /**
@@ -73,8 +79,9 @@ class MealController extends Controller
      */
     public function edit(Meal $meal)
     {
-        return Inertia::render('meal/MealEdit', [
+        return Inertia::render('meal/MealForm', [
             'meal' => $meal,
+            'expensesClaim' => ['exists:expensesClaim'],
         ]);
     }
 
@@ -85,8 +92,8 @@ class MealController extends Controller
     {
         $validated = $request->validate([
             'number_of_meal' => 'required|integer|min:1',
-            'total_price'  => 'required|float|min:0',
-            'reimbursed_price' =>'float',
+            'total_price' => 'required|float|min:0',
+            'reimbursed_price' => 'float',
             // TODO reimbursed_price a recalculer dans le back
             'expenses_claim_id' => ['exists:expensesClaim,id'],
         ]);
@@ -94,7 +101,7 @@ class MealController extends Controller
         $meal->update($validated);
 
         // Edit/update stays on the same page, no flow movement
-        return redirect()->route('meal.index');
+        return redirect()->route('flow.return-parent');
     }
 
     /**
@@ -104,6 +111,6 @@ class MealController extends Controller
     {
         $meal->delete();
 
-        return redirect()->route('meal.index');
+        return redirect()->route('flow.return-parent');
     }
 }

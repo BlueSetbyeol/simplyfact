@@ -2,7 +2,7 @@ import { useForm, router } from '@inertiajs/react';
 import { Button, TextField, styled } from '@mui/material';
 import { CloudUploadIcon } from 'lucide-react';
 import { useState } from 'react';
-import AppLayout from '@/layouts/app-layout';
+import AppLayout from '@/layouts/AppLayout';
 
 {
     /* Composant input caché visuellement pour le téléchargement de fichiers. */

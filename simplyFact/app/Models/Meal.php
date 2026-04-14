@@ -12,9 +12,10 @@ class Meal extends Model
         'total_price',
     ];
 
-    //TODO vérifier comment est ajouté 'reimbursed_price'
+    // TODO vérifier comment est ajouté 'reimbursed_price'
 
-    public function expenses_claim(): BelongsTo{
-        return $this -> belongsTo(ExpensesClaim::class);
+    public function expenses_claim(): BelongsTo
+    {
+        return $this->belongsTo(ExpensesClaim::class);
     }
 }

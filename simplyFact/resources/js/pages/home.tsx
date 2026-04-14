@@ -1,10 +1,10 @@
-import AppLayout from '@/layouts/AppLayout';
 import {
-    App,
     Head,
-    // Link, usePage
+    Link,
+    // usePage
 } from '@inertiajs/react';
-import { Button } from "@mui/material"
+import { Button } from '@mui/material';
+import AppLayout from '@/layouts/AppLayout';
 // import { dashboard, login, register } from '@/routes';
 
 export default function Home() {
@@ -18,15 +18,32 @@ export default function Home() {
     return (
         <AppLayout showback={false}>
             <Head title="Home"></Head>
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full max-w-xl">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+                <h1 className="text-xl font-medium text-gray-900">
+                    Déclaration de notes de frais
+                </h1>
+                <p className="mt-1 mb-6 text-sm text-gray-500">
+                    Fédération Française de Spéléologie
+                </p>
+                <img
+                    src="/img/speleo_Philippe_Crochet-SP23-1570.jpg"
+                    alt="Image de la fédération"
+                    className="mb-6 rounded-lg"
+                ></img>
 
-                <h1 className="text-xl font-medium text-gray-900">Déclaration de notes de frais</h1>
-                <p className="text-sm text-gray-500 mt-1 mb-6">Fédération Française de Spéléologie</p>
-                <img src="/img/speleo_Philippe_Crochet-SP23-1570.jpg" alt="Image de la fédération" className="mb-6 rounded-lg"></img>
-
-        
-                <Button variant="contained" fullWidth className="!mt-5" sx={{ backgroundColor: '#2D6A2D', '&:hover': { backgroundColor: '#1F4F1F'}}}>Faire une note de frais</Button>
-
+                <Link href={'/users'}>
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        className="!mt-5"
+                        sx={{
+                            backgroundColor: '#2D6A2D',
+                            '&:hover': { backgroundColor: '#1F4F1F' },
+                        }}
+                    >
+                        Faire une note de frais
+                    </Button>
+                </Link>
             </div>
         </AppLayout>
     );

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class FlowController extends Controller
 {
-
     public function start(Request $request)
     {
         $requested = $request->input('steps', []);
@@ -21,7 +21,7 @@ class FlowController extends Controller
             'accommodation' => [
                 ['name' => 'accommodation_detail', 'done' => false],
             ],
-            'meal'          => [],
+            'meal' => [],
             'other_expense' => [],
         ];
 
@@ -29,9 +29,9 @@ class FlowController extends Controller
         foreach ($requested as $name) {
             if (array_key_exists($name, $definitions)) {
                 $steps[] = [
-                    'name'        => $name,
-                    'done'        => false,
-                    'children'    => $definitions[$name],
+                    'name' => $name,
+                    'done' => false,
+                    'children' => $definitions[$name],
                 ];
             }
         }
@@ -44,13 +44,13 @@ class FlowController extends Controller
         return redirect()->route('flow.next');
     }
 
-    //Advance to the next undone top-level step.
+    // Advance to the next undone top-level step.
     public function next()
     {
-        $steps    = session('flow_steps', []);
-        $index    = session('step_index', 0);
+        $steps = session('flow_steps', []);
+        $index = session('step_index', 0);
 
-        if (!isset($steps[$index])) {
+        if (! isset($steps[$index])) {
             return redirect()->route('flow.done');
         }
 
@@ -72,9 +72,9 @@ class FlowController extends Controller
     // Finish child step and return to parent step
     public function returnToParent()
     {
-        $steps      = session('flow_steps', []);
-        $index      = session('step_index', 0);
-        $childName  = session('current_child');
+        $steps = session('flow_steps', []);
+        $index = session('step_index', 0);
+        $childName = session('current_child');
 
         // Mark child as done (optional)
         if (isset($steps[$index]['children'])) {
@@ -87,7 +87,7 @@ class FlowController extends Controller
         }
 
         session([
-            'flow_steps'    => $steps,
+            'flow_steps' => $steps,
             'current_child' => null,
         ]);
 
@@ -123,21 +123,22 @@ class FlowController extends Controller
     public function done()
     {
         session()->forget(['flow_steps', 'step_index']);
+
         return Inertia::render('Flow/Done');
     }
 
-    private function routeToStep(string $step): \Illuminate\Http\RedirectResponse
+    private function routeToStep(string $step): RedirectResponse
     {
         return match ($step) {
-            'travel'               => redirect()->route('travel.index'),
-            'vehicle'              => redirect()->route('travel.vehicle.create'),
-            'driven_trip'          => redirect()->route('travel.driven_trip.create'),
-            'other_trip'           => redirect()->route('travel.other_trip.create'),
-            'accommodation'        => redirect()->route('accommodation.index'),
+            'travel' => redirect()->route('travel.index'),
+            'vehicle' => redirect()->route('travel.vehicle.create'),
+            'driven_trip' => redirect()->route('travel.driven_trip.create'),
+            'other_trip' => redirect()->route('travel.other_trip.create'),
+            'accommodation' => redirect()->route('accommodation.index'),
             'accommodation_detail' => redirect()->route('accommodation.detail.create'),
-            'meal'                 => redirect()->route('meal.index'),
-            'other_expense'        => redirect()->route('other_expense.index'),
-            default                => redirect()->route('flow.done'),
+            'meal' => redirect()->route('meal.index'),
+            'other_expense' => redirect()->route('other_expense.index'),
+            default => redirect()->route('flow.done'),
         };
     }
 }

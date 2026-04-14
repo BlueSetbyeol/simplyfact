@@ -12,8 +12,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+#[Fillable(['firstname', 'lastname', 'address_street', 'address_zipcode', 'address_city', 'address_country', 'email_address', 'phone_number'])]
+// #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -33,7 +34,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function expenses_claim(): HasMany {
-        return $this->hasMany('expenses_claim'::class);
+    public function expensesClaims(): HasMany
+    {
+        return $this->hasMany(ExpensesClaim::class);
     }
 }

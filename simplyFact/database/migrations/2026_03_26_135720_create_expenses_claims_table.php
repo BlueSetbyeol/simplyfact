@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expensesClaims', function (Blueprint $table) {
+        Schema::create('expenses_claims', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable();
-            $table->string('commitee_name', 150);
+            $table->foreignId('user_id')->constrained();
+            $table->string('committee_name', 150);
             $table->string('action_name', 255);
             $table->string('action_dates', 255);
-            $table->float('total_given')->nullable();
-            $table->float('total_reimbursed')->nullable();
+            $table->decimal('total_given', 10, 2)->nullable();
+            $table->decimal('total_reimbursed', 10, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -28,10 +28,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('expensesClaims');
+        Schema::dropIfExists('expenses_claim');
     }
 };
 
-
-`expenses_claim`
-;
+`expenses_claim`;
