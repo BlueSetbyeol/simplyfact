@@ -1,6 +1,5 @@
 import AppLayout from '@/layouts/AppLayout';
 import {
-    App,
     Head,
     // Link, usePage
 } from '@inertiajs/react';
@@ -17,7 +16,7 @@ export default function Home() {
 
     return (
         <AppLayout showback={false}>
-            <Head title="Home"></Head>
+            <Head title="Accueil"></Head>
             <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full max-w-xl">
 
                 <h1 className="text-xl font-medium text-gray-900">Déclaration de notes de frais</h1>
