@@ -3,6 +3,8 @@
 use App\Http\Controllers\ExpensesClaimController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
+use App\Services\ExpenseClaimPdfService;
+use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -10,7 +12,7 @@ use Laravel\Fortify\Features;
 // Chemin temporaire pour dev
 Route::inertia('user', 'user/User')->name('user');
 
-//Front : chemin pour afficher React en utilisant Inertia ??
+// Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');
 // A ajouter si on veut avoir une vérification d'identification avant complétion
 //      , ['canRegister' => Features::enabled(Features::registration()),]
@@ -33,14 +35,13 @@ Route::prefix('expenses-claims/{expensesClaim}/flow')
         Route::get('/done', 'done')->name('done');
     });
 
-
 // Route::get('/expenses-claims', [ExpensesClaimController::class, 'index'])->name('expensesClaim.index');
 // Route::post('/expenses-claims', [ExpensesClaimController::class, 'store'])->name('expensesClaim.store');
 // // {expenses_claim} : route model binding, c'est le front qui donne l'id recherché
 // Route::get('/expenses-claims/{expensesClaim}/edit', [ExpensesClaimController::class, 'edit'])->name('expensesClaim.edit');
 // Route::put('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'update'])->name('expensesClaim.update');
 // Route::delete('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'destroy'])->name('expensesClaim.destroy');
-    
+
 // Route::post('/flow/start',          [FlowController::class, 'start'])->name('flow.start');
 // Route::get('/flow/next',            [FlowController::class, 'next'])->name('flow.next');
 // Route::post('/flow/enter-child',    [FlowController::class, 'enterChild'])->name('flow.enter-child');
@@ -55,12 +56,19 @@ Route::prefix('expenses-claims/{expensesClaim}/flow')
 // Route::put('/expenses-claims/{expensesClaim}/meal/{meal}',         [MealController::class, 'update'])->name('meal.update');
 // Route::delete('/expenses-claims/{expensesClaim}/meal/{meal}',      [MealController::class, 'destroy'])->name('meal.destroy');
 
-
 // Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
+
+Route::get('/pdf-preview', function () {
+    $service = new ExpenseClaimPdfService(
+        new PdfGenerator
+    );
+
+    return $service->previewFake();
+})->name('pdf.preview');
 
 require __DIR__.'/settings.php';
 
-//Route pour identification avant d'atteindre ces pages
+// Route pour identification avant d'atteindre ces pages
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 // });
