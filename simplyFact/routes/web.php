@@ -7,11 +7,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-<<<<<<< HEAD
-Route::inertia('meal', 'meal/MealForm')->name('meal');
-Route::inertia('who-first', 'who/WhoFirst')->name('who-first');
-=======
->>>>>>> dev
+// Chemin temporaire pour dev
+Route::inertia('user', 'user/User')->name('user');
 
 //Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');

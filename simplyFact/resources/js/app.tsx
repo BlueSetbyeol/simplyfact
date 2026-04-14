@@ -21,7 +21,7 @@ createInertiaApp({
             case name.startsWith('meal/'):
             case name === 'home':
                 return null;
-            case name.startsWith('who/'):
+            case name.startsWith('user/'):
                 return null;
             default:
                 return AppLayout;
