@@ -1,4 +1,4 @@
-import AppLayout from '@/layouts/AppLayout';
+import Header from '@/layouts/Header';
 import {
     Head,
     // Link, usePage
@@ -15,7 +15,7 @@ export default function Home() {
     // const { auth } = usePage().props;
 
     return (
-        <AppLayout showback={false}>
+        <Header showback={false}>
             <Head title="Accueil"></Head>
             <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full max-w-xl">
 
@@ -27,6 +27,6 @@ export default function Home() {
                 <Button variant="contained" fullWidth className="!mt-5" sx={{ backgroundColor: '#2D6A2D', '&:hover': { backgroundColor: '#1F4F1F'}}}>Faire une note de frais</Button>
 
             </div>
-        </AppLayout>
+        </Header>
     );
 }

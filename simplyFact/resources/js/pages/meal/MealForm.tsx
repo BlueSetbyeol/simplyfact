@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { Button, TextField, styled } from "@mui/material"
 import { CloudUploadIcon } from "lucide-react"
-import AppLayout from "@/layouts/AppLayout"
 import { Head } from "@inertiajs/react"
 import { useForm, router } from '@inertiajs/react';
+import Header from "@/layouts/Header"
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -53,7 +53,7 @@ export default function MealForm({ expensesClaim, meal }: MealFormProps) {
     const [proofDocument, setProofDocument] = useState<File[]>([]);
 
     return (
-        <AppLayout>
+        <Header>
             <Head title="Repas" />
             <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
 
@@ -148,6 +148,6 @@ export default function MealForm({ expensesClaim, meal }: MealFormProps) {
 
                 </form>
             </div>
-        </AppLayout>
+        </Header>
     );
 }

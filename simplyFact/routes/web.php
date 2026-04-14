@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-// Chemin temporaire pour dev
+// Chemins temporaires pour dev
 Route::inertia('user', 'user/User')->name('user');
+Route::inertia('informations', 'user/Informations')->name('informations');
 
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');

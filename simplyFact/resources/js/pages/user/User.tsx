@@ -1,4 +1,4 @@
-import AppLayout from "@/layouts/AppLayout";
+import Header from "@/layouts/Header";
 import { Head, router, useForm } from "@inertiajs/react";
 import { Button, Link, TextField } from "@mui/material";
 
@@ -42,7 +42,7 @@ export default function User({ user }: UserProps) {
 
     return(
 
-        <AppLayout>
+        <Header>
             <Head title="Informations personnelles"></Head>
             
             <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full max-w-xl">
@@ -160,7 +160,7 @@ export default function User({ user }: UserProps) {
                 </form>
                 
             </div>
-        </AppLayout>
+        </Header>
 
     )
 }
