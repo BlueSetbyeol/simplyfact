@@ -30,6 +30,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
         // data validation
         $validated = $request->validate([
             'firstname' => 'required|string|max:150|min:3',
@@ -43,8 +44,7 @@ class UserController extends Controller
         ]
         );
 
-        User::create([
-            'commitee_name' => $validated['commitee_name'],
+        $user = User::create([
             'firstname' => $validated['firstname'],
             'lastname' => $validated['lastname'],
             'address_street' => $validated['address_street'],
@@ -55,9 +55,9 @@ class UserController extends Controller
             'phone_number' => $validated['phone_number'],
         ]);
 
-        // auth();
+        // Auth::login($user);
 
-        return redirect('user')->route('expenses-claims');
+        return redirect('')->route('expenses-claims.create');
     }
 
     /**

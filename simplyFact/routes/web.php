@@ -4,9 +4,12 @@ use App\Http\Controllers\ExpensesClaimController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\UserController;
+use App\Services\ExpenseClaimPdfService;
+use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Laravel\Fortify\Features;
+
+// Chemins temporaires pour dev
+Route::inertia('informations', 'user/Informations')->name('informations');
 
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');
@@ -43,6 +46,14 @@ Route::prefix('expenses-claims/{expensesClaim}/flow')
 // Route::delete('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'destroy'])->name('expensesClaim.destroy');
 
 // Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
+
+Route::get('/pdf-preview', function () {
+    $service = new ExpenseClaimPdfService(
+        new PdfGenerator
+    );
+
+    return $service->previewFake();
+})->name('pdf.preview');
 
 require __DIR__.'/settings.php';
 

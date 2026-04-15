@@ -20,7 +20,7 @@ class MealController extends Controller
         // 'meals'    => Meal::where('expenses_claim_id', $claimId)->get(),
         // 'flowStep' => $flowSteps[$stepIndex] ?? null,
 
-        $meal = Meal::with('expenses_claim');
+        $meal = Meal::with('expenses_claim')->get();
 
         return Inertia::render('meal/MealForm', [
             'meal' => $meal,
@@ -33,7 +33,7 @@ class MealController extends Controller
      */
     public function create()
     {
-        $meal = Meal::with('expenses_claim');
+        $meal = Meal::with('expenses_claim')->get();
 
         return Inertia::render('meal/MealForm', [
             'meal' => $meal,
@@ -63,7 +63,7 @@ class MealController extends Controller
         Meal::create($validated);
 
         // Go back to meal.index (the hub) via the flow
-        return redirect('meals')->route('flow.return-parent');
+        return redirect('meals')->route('expenses-claims.flow.complete-step');
     }
 
     /**

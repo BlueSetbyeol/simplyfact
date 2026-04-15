@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('expenses_claims', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->constrained();
             $table->string('committee_name', 150);
             $table->string('action_name', 255);
             $table->string('action_dates', 255);
@@ -28,7 +28,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('expenses_claim');
+        Schema::dropIfExists('expenses_claims');
     }
 };
 

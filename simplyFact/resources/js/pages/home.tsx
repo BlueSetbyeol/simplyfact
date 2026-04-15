@@ -4,7 +4,7 @@ import {
     // usePage
 } from '@inertiajs/react';
 import { Button } from '@mui/material';
-import AppLayout from '@/layouts/AppLayout';
+import Header from '@/layouts/Header';
 // import { dashboard, login, register } from '@/routes';
 
 export default function Home() {
@@ -16,8 +16,8 @@ export default function Home() {
     // const { auth } = usePage().props;
 
     return (
-        <AppLayout showback={false}>
-            <Head title="Home"></Head>
+        <Header showback={false}>
+            <Head title="Accueil"></Head>
             <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
                 <h1 className="text-xl font-medium text-gray-900">
                     Déclaration de notes de frais
@@ -45,6 +45,6 @@ export default function Home() {
                     </Button>
                 </Link>
             </div>
-        </AppLayout>
+        </Header>
     );
 }

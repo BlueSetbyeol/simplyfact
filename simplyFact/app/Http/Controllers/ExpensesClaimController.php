@@ -16,7 +16,7 @@ class ExpensesClaimController extends Controller
     public function index()
     {
         // $expenses_claim = Expenses_claim::all();
-        return Inertia::render('expensesClaim/ExpensesClaimForm', [
+        return Inertia::render('user/Informations', [
             'expensesClaim' => ExpensesClaim::latest()->get(),
         ]);
     }
@@ -28,7 +28,7 @@ class ExpensesClaimController extends Controller
     {
         $expenses_claim = ExpensesClaim::with('user')->get();
 
-        return Inertia::render('expenses-claims', ['expenses_claim' => $expenses_claim]);
+        return Inertia::render('user/Informations', ['expenses_claim' => $expenses_claim]);
     }
 
     /**
@@ -63,7 +63,7 @@ class ExpensesClaimController extends Controller
 
         ]);
 
-        return redirect('expenses_claim')->route('flow.start');
+        return redirect('expenses_claim')->route('expenses-claims.flow.start');
     }
 
     /**
@@ -79,7 +79,7 @@ class ExpensesClaimController extends Controller
      */
     public function edit(ExpensesClaim $expensesClaim)
     {
-        return Inertia::render('expensesClaim/Edit', [
+        return Inertia::render('user/Informations', [
             'expensesClaim' => $expensesClaim,
         ]);
     }
