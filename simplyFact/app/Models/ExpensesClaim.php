@@ -4,13 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Str;
 
-class Meal extends Model
+class ExpensesClaim extends Model
 {
     protected $fillable = [
-        'number_of_meal',
-        'total_price',
+        'committee_name',
+        'action_name',
+        'action_dates',
+        'total_given' => 'decimal:2',
+        'total_reimbursed' => 'decimal:2',
     ];
 
     // Generation d'un UUID à la place d'un id en integer
@@ -25,8 +29,13 @@ class Meal extends Model
         });
     }
 
-    public function expenses_claim(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(ExpensesClaim::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function meals(): HasMany
+    {
+        return $this->hasMany(Meal::class);
     }
 }

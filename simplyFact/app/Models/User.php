@@ -11,9 +11,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Str;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+#[Fillable(['firstname', 'lastname', 'address_street', 'address_zipcode', 'address_city', 'address_country', 'email_address', 'phone_number'])]
+// #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -24,16 +26,44 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+
+    // protected function casts(): array
+    // {
+    //     return [
+    //         'address_zipcode' => 'integer',
+    //     ];
+    // }
+
+    protected $fillable = [
+        'firstname',
+        'lastname',
+        'address_street',
+        'address_zipcode',
+        'address_city',
+        'address_country',
+        'email_address',
+        'phone_number',
+    ];
+
+    // Generation d'un UUID à la place d'un id en integer
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
+    public static function booted()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'two_factor_confirmed_at' => 'datetime',
-        ];
+        static::creating(function ($model) {
+            $model->id = Str::uuid();
+        });
     }
 
-    public function expenses_claim(): HasMany {
-        return $this->hasMany('expenses_claim'::class);
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function expensesClaims(): HasMany
+    {
+        return $this->hasMany(ExpensesClaim::class);
     }
 }

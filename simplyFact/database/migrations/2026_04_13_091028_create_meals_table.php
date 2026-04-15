@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('meals', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('expenses_claim_id');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('expenses_claim_id')
+                ->constrained()
+                ->cascadeOnDelete();
             $table->integer('number_of_meal');
             $table->float('total_price');
             $table->float('reimbursed_price');
