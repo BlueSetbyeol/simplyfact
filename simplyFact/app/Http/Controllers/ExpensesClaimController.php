@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ExpensesClaim;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 // use Inertia\Inertia;
@@ -24,11 +25,13 @@ class ExpensesClaimController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $expenses_claim = ExpensesClaim::with('user')->get();
+        Log::debug($request->query('user'));
 
-        return Inertia::render('user/Informations', ['expenses_claim' => $expenses_claim]);
+        return Inertia::render('user/Informations', [
+            'userId' => session('user_id'),
+        ]);
     }
 
     /**
@@ -36,6 +39,12 @@ class ExpensesClaimController extends Controller
      */
     public function store(Request $request)
     {
+        $userId = session('user_id');
+
+        if (! $userId) {
+            return redirect()->route('users.create');
+        }
+
         // data validation
         $validated = $request->validate([
             'committee_name' => 'required|string|max:150|min:3',
@@ -44,14 +53,12 @@ class ExpensesClaimController extends Controller
         ]
         );
 
-        ExpensesClaim::create([
-            'user_id' => null,
-            'committee_name' => $validated['committee_name'],
-            'action_name' => $validated['action_name'],
-            'action_dates' => $validated['action_dates'],
+        $expensesClaim = ExpensesClaim::create([
+            'user_id' => $userId,
+            ...$validated,
         ]);
 
-        return redirect('')->route('expenses-claims.flow.start');
+        return redirect()->route('expenses-claims.flow.start', $expensesClaim);
     }
 
     /**
