@@ -41,15 +41,6 @@ class ExpensesClaimController extends Controller
             'committee_name' => 'required|string|max:150|min:3',
             'action_name' => 'required|string|max:255|min:5',
             'action_dates' => 'required|string|max:255|min:8',
-            'total_given' => 'nullable|numeric',
-            'total_reimbursed' => 'nullable|numeric',
-        ], [
-            'committee_name.required' => "Merci d'ajouter le nom de votre Commission",
-            'commitee_name.min' => 'Le nom doit obligatoirement avoir 3 caractères minimum',
-            'action_name.required' => "Merci d'indiquer le sujet de votre Note de Frais",
-            'action_name.min' => "Le nom de l'action doit obligatoirement avoir 5 caractères minimum",
-            'action_dates.required' => "Merci d'indiquer les dates auxquels ont eu lieu votre action",
-            'action_dates.min' => "La date de l'action doit obligatoirement avoir 8 caractères minimum",
         ]
         );
 
@@ -58,12 +49,9 @@ class ExpensesClaimController extends Controller
             'committee_name' => $validated['committee_name'],
             'action_name' => $validated['action_name'],
             'action_dates' => $validated['action_dates'],
-            'total_given' => $validated['total_given'],
-            'total_reimbursed' => $validated['total_reimbursed'],
-
         ]);
 
-        return redirect('expenses_claim')->route('expenses-claims.flow.start');
+        return redirect('')->route('expenses-claims.flow.start');
     }
 
     /**
