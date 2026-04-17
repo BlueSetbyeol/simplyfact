@@ -26,11 +26,7 @@ export default function Choices({expensesClaim}: ChoicesProps) {
             if (hasMeal) steps.push('meal')
             if (hasOther) steps.push('other_expense')
 
-            router.get('/pathway', {steps, expensesClaimId: expensesClaim?.id}, {
-                onSuccess: () => {
-                    completStep()
-                }
-            });
+            router.get('/pathway', {steps, expensesClaimId: expensesClaim?.id});
     }
 
     return(

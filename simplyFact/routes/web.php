@@ -7,11 +7,18 @@ use App\Http\Controllers\UserController;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 // Chemins temporaires pour dev
 Route::inertia('informations', 'user/Informations')->name('informations');
 Route::inertia('choices', 'choices/Choices')->name('choices');
-Route::inertia('pathway', 'choices/SumChoices')->name('pathway');
+Route::get('/pathway', function (Request $request) {
+    return Inertia::render('choices/SumChoices', [
+        'steps' => $request->input('steps', []),
+        'expensesClaimId' => $request->input('expensesClaimId'),
+    ]);
+})->name('pathway');
 
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');
