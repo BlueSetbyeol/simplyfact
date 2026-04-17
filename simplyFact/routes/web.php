@@ -13,6 +13,7 @@ use Laravel\Fortify\Features;
 Route::inertia('user', 'user/User')->name('user');
 Route::inertia('informations', 'user/Informations')->name('informations');
 Route::inertia('choices', 'choices/Choices')->name('choices');
+Route::inertia('pathway', 'choices/SumChoices')->name('pathway');
 
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');

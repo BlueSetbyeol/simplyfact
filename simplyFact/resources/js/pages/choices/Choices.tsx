@@ -3,7 +3,6 @@ import { useState } from "react";
 import Header from "@/layouts/Header";
 import { Button } from "@mui/material"
 
-
 interface ChoicesProps {
     expensesClaim?: { id: number };
 }
@@ -16,10 +15,6 @@ export default function Choices({expensesClaim}: ChoicesProps) {
     const [hasMeal, setHasMeal] = useState(false);
     const [hasOther, setHasOther] = useState(false);
 
-    function completStep() {
-        router.post('flow.complete-step');
-    }
-
     function submitChoices(e: {
         preventDefault: () => void }) {
             e.preventDefault();
@@ -31,7 +26,7 @@ export default function Choices({expensesClaim}: ChoicesProps) {
             if (hasMeal) steps.push('meal')
             if (hasOther) steps.push('other_expense')
 
-            router.post('/flow/start', { steps }, {
+            router.get('/pathway', {steps, expensesClaimId: expensesClaim?.id}, {
                 onSuccess: () => {
                     completStep()
                 }
