@@ -10,6 +10,7 @@ use Str;
 class ExpensesClaim extends Model
 {
     protected $fillable = [
+        'user_id',
         'committee_name',
         'action_name',
         'action_dates',

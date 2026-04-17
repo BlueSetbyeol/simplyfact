@@ -1,7 +1,7 @@
+import { Button, styled } from '@mui/material';
+import { CloudUploadIcon } from 'lucide-react';
 import { useRef, useState } from 'react';
 import * as proofs from '@/routes/expenses-claims/proofs';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 type UploadedFile = {
     path: string;
@@ -9,12 +9,21 @@ type UploadedFile = {
 };
 
 type FileUploadProps = {
-    expensesClaimId: number;
+    expensesClaimId: string;
     accept?: string;
     label?: string;
+    maxSizeMb?: number;
 };
 
-// ─── CSRF token helper ────────────────────────────────────────────────────────
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 function getCsrfToken(): string {
     return (
@@ -23,71 +32,94 @@ function getCsrfToken(): string {
     );
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
 export default function FileUpload({
     expensesClaimId,
     accept = '.jpg,.jpeg,.png,.pdf',
-    label = 'Add a proof document',
+    label = 'Ajouter des justificatifs',
+    maxSizeMb = 20,
 }: FileUploadProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
     const [uploading, setUploading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    // ── Upload ────────────────────────────────────────────────────────────────
+    const [errors, setErrors] = useState<string[]>([]);
 
     async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0];
+        const files = Array.from(e.target.files || []);
 
-        if (!file) {
+        if (files.length === 0) {
             return;
         }
 
         setUploading(true);
-        setError(null);
+        setErrors([]);
 
-        const formData = new FormData();
-        formData.append('file', file);
+        const newErrors: string[] = [];
+        const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        const maxSizeBytes = maxSizeMb * 1024 * 1024;
 
-        try {
-            const response = await fetch(proofs.store(expensesClaimId).url, {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': getCsrfToken() },
-                body: formData,
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                const message =
-                    data?.errors?.file?.[0] ??
-                    data?.message ??
-                    'Upload failed. Please try again.';
-                setError(message);
-
-                return;
+        for (const file of files) {
+            // Vérification type côté front
+            if (!allowedTypes.includes(file.type)) {
+                newErrors.push(
+                    `${file.name} — Seuls les fichiers JPG, PNG et PDF sont acceptés.`,
+                );
+                continue;
             }
 
-            setUploadedFiles((prev) => [
-                ...prev,
-                {
-                    path: data.path,
-                    originalName: data.originalName,
-                },
-            ]);
-        } catch {
-            setError('Upload failed. Please try again.');
-        } finally {
-            setUploading(false);
+            // Vérification taille côté front
+            if (file.size > maxSizeBytes) {
+                newErrors.push(
+                    `${file.name} — Le fichier dépasse la taille maximale de ${maxSizeMb} Mo.`,
+                );
+                continue;
+            }
 
-            if (inputRef.current) {
-                inputRef.current.value = '';
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch(
+                    proofs.store(expensesClaimId).url,
+                    {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': getCsrfToken() },
+                        body: formData,
+                    },
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    const message =
+                        data?.errors?.file?.[0] ??
+                        data?.message ??
+                        "Échec de l'envoi.";
+                    newErrors.push(`${file.name} — ${message}`);
+                    continue;
+                }
+
+                setUploadedFiles((prev) => [
+                    ...prev,
+                    {
+                        path: data.path,
+                        originalName: data.originalName,
+                    },
+                ]);
+            } catch (err) {
+                console.log('catch error:', err);
+                newErrors.push(
+                    `${file.name} — Échec de l'envoi. Veuillez réessayer.`,
+                );
             }
         }
-    }
 
-    // ── Delete ────────────────────────────────────────────────────────────────
+        setErrors(newErrors);
+        setUploading(false);
+
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
+    }
 
     async function handleDelete(path: string) {
         try {
@@ -101,67 +133,78 @@ export default function FileUpload({
             });
 
             if (!response.ok) {
-                setError('Failed to delete file. Please try again.');
+                setErrors(['Échec de la suppression. Veuillez réessayer.']);
 
                 return;
             }
 
             setUploadedFiles((prev) => prev.filter((f) => f.path !== path));
         } catch {
-            setError('Failed to delete file. Please try again.');
+            setErrors(['Échec de la suppression. Veuillez réessayer.']);
         }
     }
 
-    // ── Render ────────────────────────────────────────────────────────────────
-
     return (
         <div className="flex flex-col gap-3">
-            <button
-                type="button"
-                onClick={() => inputRef.current?.click()}
+            <Button
+                component="label"
+                role={undefined}
+                variant="outlined"
+                fullWidth
                 disabled={uploading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-600 transition hover:border-green-600 hover:text-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+                startIcon={<CloudUploadIcon />}
+                sx={{
+                    color: '#2D6A2D',
+                    borderColor: '#2D6A2D',
+                    '&:hover': {
+                        borderColor: '#1F4F1F',
+                        backgroundColor: '#F0F7F0',
+                    },
+                }}
             >
-                {uploading ? 'Uploading...' : label}
-            </button>
+                {uploading ? 'Envoi en cours...' : label}
+                <VisuallyHiddenInput
+                    ref={inputRef}
+                    type="file"
+                    accept={accept}
+                    multiple
+                    onChange={handleFileChange}
+                />
+            </Button>
 
-            <input
-                ref={inputRef}
-                type="file"
-                accept={accept}
-                className="hidden"
-                onChange={handleFileChange}
-            />
-
-            {error && <p className="text-xs text-red-500">{error}</p>}
-
-            {uploadedFiles.length > 0 ? (
-                <ul className="flex flex-col gap-2">
-                    {uploadedFiles.map((file) => (
-                        <li
-                            key={file.path}
-                            className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-sm"
-                        >
-                            <span className="truncate text-gray-700">
-                                {file.originalName}
-                            </span>
-                            <button
-                                type="button"
-                                onClick={() => handleDelete(file.path)}
-                                className="ml-3 shrink-0 text-xs text-red-500 hover:text-red-700"
-                            >
-                                Remove
-                            </button>
+            {errors.length > 0 && (
+                <ul className="flex flex-col gap-1">
+                    {errors.map((err, i) => (
+                        <li key={i} className="text-xs text-red-500">
+                            {err}
                         </li>
                     ))}
                 </ul>
-            ) : (
-                !uploading && (
-                    <p className="text-xs text-gray-400">
-                        No document selected
-                    </p>
-                )
             )}
+
+            {uploadedFiles.length > 0
+                ? uploadedFiles.map((file) => (
+                      <div
+                          key={file.path}
+                          className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-sm"
+                      >
+                          <span className="truncate text-gray-700">
+                              {file.originalName}
+                          </span>
+                          <button
+                              type="button"
+                              onClick={() => handleDelete(file.path)}
+                              className="ml-3 shrink-0 text-xs text-red-500 hover:text-red-700"
+                          >
+                              Supprimer
+                          </button>
+                      </div>
+                  ))
+                : !uploading && (
+                      <p className="text-sm text-gray-500">
+                          Aucun document sélectionné
+                      </p>
+                  )}
         </div>
     );
 }
