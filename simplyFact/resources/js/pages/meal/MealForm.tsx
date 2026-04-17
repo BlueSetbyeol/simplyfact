@@ -1,19 +1,8 @@
 import { Head } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
-import { Button, TextField, styled } from '@mui/material';
-import { CloudUploadIcon } from 'lucide-react';
-import { useState } from 'react';
+import { Button, TextField } from '@mui/material';
+import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
-
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    whiteSpace: 'nowrap',
-    width: 1,
-});
 
 interface MealFormProps {
     expensesClaim: { id: string };
@@ -50,8 +39,6 @@ export default function MealForm({ meal }: MealFormProps) {
             },
         });
     }
-
-    const [proofDocument, setProofDocument] = useState<File[]>([]);
 
     return (
         <Header>
@@ -125,56 +112,14 @@ export default function MealForm({ meal }: MealFormProps) {
                         </div>
                     </div>
 
-                    <div>
-                        <Button
-                            component="label"
-                            variant="outlined"
-                            fullWidth
-                            startIcon={<CloudUploadIcon />}
-                            sx={{
-                                color: '#2D6A2D',
-                                borderColor: '#2D6A2D',
-                                '&:hover': {
-                                    borderColor: '#1F4F1F',
-                                    backgroundColor: '#F0F7F0',
-                                },
-                            }}
-                        >
-                            Document justificatif
-                            <VisuallyHiddenInput
-                                type="file"
-                                onChange={(e) => {
-                                    const files = Array.from(
-                                        e.target.files || [],
-                                    );
-                                    setProofDocument((prev) => [
-                                        ...prev,
-                                        ...files,
-                                    ]);
-                                }}
-                            />
-                        </Button>
-                        {proofDocument.length > 0 ? (
-                            proofDocument.map((file, index) => (
-                                <p
-                                    key={index}
-                                    className="mt-1 text-sm text-gray-500"
-                                >
-                                    {file.name}
-                                </p>
-                            ))
-                        ) : (
-                            <p className="mt-2 text-sm text-gray-500">
-                                Aucun document sélectionné
-                            </p>
-                        )}
-                    </div>
+                    {/* TO DO : change to <FileUpload expensesClaimId={expensesClaim.id} />*/}
+                    <FileUpload expensesClaimId="554fa61a-2b1b-4355-8c05-a2c30efd97ac" />
 
                     <Button
                         type="submit"
                         variant="contained"
                         fullWidth
-                        className="!mt-5"
+                        className="mt-5!"
                         sx={{
                             backgroundColor: '#2D6A2D',
                             '&:hover': { backgroundColor: '#1F4F1F' },
