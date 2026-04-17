@@ -71,7 +71,7 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                         />
 
                         <TextField
-                            label="Date de début"
+                            label="Dates de l'action"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
                                 data.action_dates !== ''
