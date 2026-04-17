@@ -13,17 +13,10 @@ class MealController extends Controller
      */
     public function index()
     {
-        // Pass existing meals for the current claim => flow
-        // $flowSteps = session('flow_steps', []);
-        // $stepIndex = session('step_index', 0);
-        // $claimId = session('expenses_claim_id');
-        // 'meals'    => Meal::where('expenses_claim_id', $claimId)->get(),
-        // 'flowStep' => $flowSteps[$stepIndex] ?? null,
-
-        $meal = Meal::with('expenses_claim')->get();
+        $claimId = session('expenses_claim_id');
 
         return Inertia::render('meal/MealForm', [
-            'meal' => $meal,
+            'meals' => Meal::where('expenses_claim_id', $claimId)->get(),
             'expensesClaim' => ['exists:expensesClaim'],
         ]);
     }
@@ -52,10 +45,6 @@ class MealController extends Controller
             'total_price' => 'required|decimal:0,2|min:0',
             'reimbursed_price' => 'decimal:0,2',
             // TODO reimbursed_price a recalculer dans le back
-            'expenses_claim_id' => ['exists:expensesClaim.id'],
-        ], [
-            'number_of_meal.required' => "Merci d'ajouter le nombre de repas",
-            'total_price.required' => 'Merci de préciser le total du prix des repas consommés',
         ]
         );
 
@@ -63,8 +52,7 @@ class MealController extends Controller
 
         Meal::create($validated);
 
-        // Go back to meal.index (the hub) via the flow
-        return redirect('meals')->route('expenses-claims.flow.complete-step');
+        return redirect('')->route('expenses-claims.flow.complete-step');
     }
 
     /**

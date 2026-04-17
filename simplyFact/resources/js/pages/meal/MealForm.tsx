@@ -14,8 +14,7 @@ interface MealFormProps {
     } | null;
 }
 
-// export default function MealForm({ expensesClaim, meal }: MealFormProps) {
-export default function MealForm({ meal }: MealFormProps) {
+export default function MealForm({ expensesClaim, meal }: MealFormProps) {
     const { data, setData, post, errors, reset } = useForm({
         number_of_meal: meal?.number_of_meal || 0,
         total_price: meal?.total_price || 0,
@@ -24,16 +23,13 @@ export default function MealForm({ meal }: MealFormProps) {
 
     const totalRefund = Math.min(data.total_price, 25 * data.number_of_meal);
 
-    console.log(data, totalRefund);
-
     if (data.reimbursed_price !== totalRefund) {
         setData('reimbursed_price', totalRefund);
     }
 
     function submitMeal(e: { preventDefault: () => void }) {
         e.preventDefault();
-        // post(`/expenses-claims/${expensesClaim.id}/meals`, {
-        post(`/meals`, {
+        post(`/expenses-claims/${expensesClaim.id}/meals`, {
             onSuccess: () => {
                 reset();
             },
@@ -112,7 +108,7 @@ export default function MealForm({ meal }: MealFormProps) {
                         </div>
                     </div>
 
-                    {/* TO DO : change to <FileUpload expensesClaimId={expensesClaim.id} />*/}
+                    {/* TODO : change to <FileUpload expensesClaimId={expensesClaim.id} />*/}
                     <FileUpload expensesClaimId="554fa61a-2b1b-4355-8c05-a2c30efd97ac" />
 
                     <Button
