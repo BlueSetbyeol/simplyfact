@@ -4,17 +4,17 @@ import Header from '@/layouts/Header';
 
 interface InformationsProps {
     expensesClaim?: {
-        commitee_name: string;
+        committee_name: string;
         action_name: string;
         action_dates: string;
-    };
+    } | null;
 }
 
 export default function Informations({ expensesClaim }: InformationsProps) {
     const { data, setData, post, errors, reset } = useForm({
-        commitee_name: expensesClaim ? expensesClaim.commitee_name : '',
-        action_name: expensesClaim ? expensesClaim.action_name : '',
-        action_dates: expensesClaim ? expensesClaim.action_dates : '',
+        committee_name: expensesClaim?.committee_name || '',
+        action_name: expensesClaim?.action_name || '',
+        action_dates: expensesClaim?.action_dates || '',
     });
 
     function submitInformations(e: { preventDefault: () => void }) {
@@ -42,21 +42,18 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                             label="Commission"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
-                                data.commitee_name !== ''
-                                    ? data.commitee_name
+                                data.committee_name !== ''
+                                    ? data.committee_name
                                     : ''
                             }
                             onChange={(e) =>
-                                setData('commitee_name', e.target.value)
+                                setData('committee_name', e.target.value)
                             }
                             fullWidth
                             size="small"
-                            error={!!errors['commitee_name']}
-                            helperText={errors['commitee_name']}
+                            error={!!errors['committee_name']}
+                            helperText={errors['committee_name']}
                         />
-                        {errors.commitee_name && (
-                            <span>{errors.commitee_name}</span>
-                        )}
 
                         <TextField
                             label="Objet de l'action"
@@ -72,12 +69,9 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                             error={!!errors['action_name']}
                             helperText={errors['action_name']}
                         />
-                        {errors.action_name && (
-                            <span>{errors.action_name}</span>
-                        )}
 
                         <TextField
-                            label="Date de début"
+                            label="Dates de l'action"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
                                 data.action_dates !== ''
@@ -92,9 +86,6 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                             error={!!errors['action_dates']}
                             helperText={errors['action_dates']}
                         />
-                        {errors.action_dates && (
-                            <span>{errors.action_dates}</span>
-                        )}
                     </div>
 
                     <Button

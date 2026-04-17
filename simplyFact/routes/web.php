@@ -31,9 +31,7 @@ Route::resource('users', UserController::class);
 Route::resource('expenses-claims', ExpensesClaimController::class);
 
 // Nested resources
-// Route::resource('expenses-claims.meals', MealController::class);
-
-Route::resource('meals', MealController::class);
+Route::resource('expenses-claims.meals', MealController::class);
 
 // Flow (wizard)
 Route::prefix('expenses-claims/{expensesClaim}/flow')
