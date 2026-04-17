@@ -3,14 +3,12 @@
 use App\Http\Controllers\ExpensesClaimController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
+use App\Http\Controllers\UserController;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
 // Chemins temporaires pour dev
-Route::inertia('user', 'user/User')->name('user');
 Route::inertia('informations', 'user/Informations')->name('informations');
 Route::inertia('choices', 'choices/Choices')->name('choices');
 Route::inertia('pathway', 'choices/SumChoices')->name('pathway');
@@ -20,10 +18,14 @@ Route::inertia('/', 'home')->name('home');
 // A ajouter si on veut avoir une vérification d'identification avant complétion
 //      , ['canRegister' => Features::enabled(Features::registration()),]
 
+Route::resource('users', UserController::class);
+
 Route::resource('expenses-claims', ExpensesClaimController::class);
 
 // Nested resources
-Route::resource('expenses-claims.meals', MealController::class);
+// Route::resource('expenses-claims.meals', MealController::class);
+
+Route::resource('meals', MealController::class);
 
 // Flow (wizard)
 Route::prefix('expenses-claims/{expensesClaim}/flow')
@@ -44,20 +46,6 @@ Route::prefix('expenses-claims/{expensesClaim}/flow')
 // Route::get('/expenses-claims/{expensesClaim}/edit', [ExpensesClaimController::class, 'edit'])->name('expensesClaim.edit');
 // Route::put('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'update'])->name('expensesClaim.update');
 // Route::delete('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'destroy'])->name('expensesClaim.destroy');
-
-// Route::post('/flow/start',          [FlowController::class, 'start'])->name('flow.start');
-// Route::get('/flow/next',            [FlowController::class, 'next'])->name('flow.next');
-// Route::post('/flow/enter-child',    [FlowController::class, 'enterChild'])->name('flow.enter-child');
-// Route::post('/flow/return-parent',  [FlowController::class, 'returnToParent'])->name('flow.return-parent');
-// Route::post('/flow/complete-step',  [FlowController::class, 'completeStep'])->name('flow.complete-step');
-// Route::get('/flow/done',            [FlowController::class, 'done'])->name('flow.done');
-
-// // Route::inertia('meal', 'meal/MealForm')->name('meal'); ==> taken into MealController.php
-// Route::get('/expenses-claims/{expensesClaim}/meal',           [MealController::class, 'index'])->name('meal.index');
-// Route::post('/expenses-claims/{expensesClaim}/meal',          [MealController::class, 'store'])->name('meal.store');
-// Route::get('/expenses-claims/{expensesClaim}/meal/{meal}/edit',    [MealController::class, 'edit'])->name('meal.edit');
-// Route::put('/expenses-claims/{expensesClaim}/meal/{meal}',         [MealController::class, 'update'])->name('meal.update');
-// Route::delete('/expenses-claims/{expensesClaim}/meal/{meal}',      [MealController::class, 'destroy'])->name('meal.destroy');
 
 // Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
 

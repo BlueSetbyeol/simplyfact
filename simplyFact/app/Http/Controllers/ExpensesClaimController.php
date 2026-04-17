@@ -16,8 +16,8 @@ class ExpensesClaimController extends Controller
     public function index()
     {
         // $expenses_claim = Expenses_claim::all();
-        return Inertia::render('expensesClaim/ExpensesClaimForm', [
-            'expensesClaim'    => ExpensesClaim::get(),
+        return Inertia::render('user/Informations', [
+            'expensesClaim' => ExpensesClaim::latest()->get(),
         ]);
     }
 
@@ -26,8 +26,9 @@ class ExpensesClaimController extends Controller
      */
     public function create()
     {
-        $expenses_claim = ExpensesClaim::with('user');
-        return view('', ['expenses_claim'=> $expenses_claim]);
+        $expenses_claim = ExpensesClaim::with('user')->get();
+
+        return Inertia::render('user/Informations', ['expenses_claim' => $expenses_claim]);
     }
 
     /**
@@ -35,16 +36,16 @@ class ExpensesClaimController extends Controller
      */
     public function store(Request $request)
     {
-        //data validation
-        $validated = $request -> validate([
-            'commitee_name' => 'required|string|max:150|min:3',
+        // data validation
+        $validated = $request->validate([
+            'committee_name' => 'required|string|max:150|min:3',
             'action_name' => 'required|string|max:255|min:5',
             'action_dates' => 'required|string|max:255|min:8',
-            'total_given' => 'nullable|float',
-            'total_reimbursed' => 'nullable|float',
+            'total_given' => 'nullable|numeric',
+            'total_reimbursed' => 'nullable|numeric',
         ], [
-            'commitee_name.required' => "Merci d'ajouter le nom de votre Commission",
-            'commitee_name.min' => "Le nom doit obligatoirement avoir 3 caractères minimum",
+            'committee_name.required' => "Merci d'ajouter le nom de votre Commission",
+            'commitee_name.min' => 'Le nom doit obligatoirement avoir 3 caractères minimum',
             'action_name.required' => "Merci d'indiquer le sujet de votre Note de Frais",
             'action_name.min' => "Le nom de l'action doit obligatoirement avoir 5 caractères minimum",
             'action_dates.required' => "Merci d'indiquer les dates auxquels ont eu lieu votre action",
@@ -53,16 +54,16 @@ class ExpensesClaimController extends Controller
         );
 
         ExpensesClaim::create([
-            'user_id'=> null,
-            'commitee_name'=> $validated['commitee_name'],
-            'action_name'=> $validated['action_name'],
-            'action_dates'=> $validated['action_dates'],
-            'total_given'=> $validated['total_given'],
-            'total_given'=> $validated['total_given'],
-            
+            'user_id' => null,
+            'committee_name' => $validated['committee_name'],
+            'action_name' => $validated['action_name'],
+            'action_dates' => $validated['action_dates'],
+            'total_given' => $validated['total_given'],
+            'total_reimbursed' => $validated['total_reimbursed'],
+
         ]);
 
-        return redirect('expenses_claim')->with('success', 'Claim created, ready to start completing')->route('flow.start');
+        return redirect('expenses_claim')->route('expenses-claims.flow.start');
     }
 
     /**
@@ -76,9 +77,11 @@ class ExpensesClaimController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(ExpensesClaim $expensesClaim)
     {
-        return view('expensesClaim.edit', compact('expenses_claim'));
+        return Inertia::render('user/Informations', [
+            'expensesClaim' => $expensesClaim,
+        ]);
     }
 
     /**
@@ -86,11 +89,11 @@ class ExpensesClaimController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //Not sure if we do authorize the modification at the end or not
+        // Not sure if we do authorize the modification at the end or not
 
-        //Validate
+        // Validate
         // $validated = $request->validate([
-            // 'message' => 'required|string|max:255',
+        // 'message' => 'required|string|max:255',
         // ]);
         // Update
         // $expenses_claim->update($validated);
@@ -102,9 +105,9 @@ class ExpensesClaimController extends Controller
      */
     public function destroy(string $id)
     {
-        //Not sure if we do authorize the deletion at the end or not, what if someone give up midway ?
+        // Not sure if we do authorize the deletion at the end or not, what if someone give up midway ?
 
-        //$expenses_claim->delete();
-        //return redirect('/')->with('success', 'Expenses Claim deleted!');
+        // $expenses_claim->delete();
+        // return redirect('/')->with('success', 'Expenses Claim deleted!');
     }
 }
