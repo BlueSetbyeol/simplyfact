@@ -45,11 +45,12 @@ class MealController extends Controller
      */
     public function store(Request $request)
     {
+
         // validation de la data
         $validated = $request->validate([
             'number_of_meal' => 'required|integer|min:1',
-            'total_price' => 'required|float|min:0',
-            'reimbursed_price' => 'float',
+            'total_price' => 'required|decimal:0,2|min:0',
+            'reimbursed_price' => 'decimal:0,2',
             // TODO reimbursed_price a recalculer dans le back
             'expenses_claim_id' => ['exists:expensesClaim.id'],
         ], [
