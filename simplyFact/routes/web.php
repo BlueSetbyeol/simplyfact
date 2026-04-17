@@ -3,6 +3,7 @@
 use App\Http\Controllers\ExpensesClaimController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
+use App\Http\Controllers\ProofController;
 use App\Http\Controllers\UserController;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
@@ -63,6 +64,16 @@ Route::get('/pdf-preview', function () {
 
     return $service->previewFake();
 })->name('pdf.preview');
+
+Route::post(
+    '/expenses-claims/{expensesClaim}/proofs',
+    [ProofController::class, 'store']
+)->name('expenses-claims.proofs.store');
+
+Route::delete(
+    '/expenses-claims/{expensesClaim}/proofs',
+    [ProofController::class, 'destroy']
+)->name('expenses-claims.proofs.destroy');
 
 require __DIR__.'/settings.php';
 
