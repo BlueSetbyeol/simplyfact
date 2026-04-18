@@ -5,11 +5,12 @@ use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\ProofController;
 use App\Http\Controllers\UserController;
+use App\Models\ExpensesClaim;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Illuminate\Http\Request;
 
 // Chemins temporaires pour dev
 Route::inertia('informations', 'user/Informations')->name('informations');
@@ -29,6 +30,12 @@ Route::inertia('/', 'home')->name('home');
 Route::resource('users', UserController::class);
 
 Route::resource('expenses-claims', ExpensesClaimController::class);
+
+Route::get('/expenses-claims/{expensesClaim}/choices', function (ExpensesClaim $expensesClaim) {
+    return Inertia::render('choices/Choices', [
+        'expensesClaim' => $expensesClaim,
+    ]);
+})->name('expenses-claims.choices');
 
 // Nested resources
 Route::resource('expenses-claims.meals', MealController::class);
