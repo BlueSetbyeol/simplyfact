@@ -58,7 +58,7 @@ class ExpensesClaimController extends Controller
             ...$validated,
         ]);
 
-        return redirect()->route('expenses-claims.flow.start', $expensesClaim);
+        return redirect()->route('expenses-claims.flow.choices', $expensesClaim);
     }
 
     /**
@@ -74,6 +74,7 @@ class ExpensesClaimController extends Controller
      */
     public function edit(ExpensesClaim $expensesClaim)
     {
+        // TODO Il va falloir créer une autre page pour présenter la claim dans son ensemble en fonction de là où on en est.
         return Inertia::render('user/Informations', [
             'expensesClaim' => $expensesClaim,
         ]);

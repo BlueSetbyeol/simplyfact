@@ -18,7 +18,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
     function submitChoices(e: { preventDefault: () => void }) {
         e.preventDefault();
         router.post(`/expenses-claims/${expensesClaim.id}/flow/choices`, {
-            chosenSteps,
+            steps: chosenSteps,
             expensesClaimId: expensesClaim.id,
         });
     }
