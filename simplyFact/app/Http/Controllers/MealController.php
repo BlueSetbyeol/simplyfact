@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ExpensesClaim;
 use App\Models\Meal;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -36,7 +37,7 @@ class MealController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, ExpensesClaim $expensesClaim)
     {
 
         // validation de la data
@@ -48,11 +49,12 @@ class MealController extends Controller
         ]
         );
 
-        $validated['expenses_claim_id'] = session('expenses_claim_id');
+        Meal::create([
+            'expenses_claim_id' => $expensesClaim,
+            ...$validated,
+        ]);
 
-        Meal::create($validated);
-
-        return redirect('')->route('expenses-claims.flow.complete-step');
+        return redirect('')->route('expenses-claims.flow.complete-step', $expensesClaim);
     }
 
     /**
@@ -77,7 +79,7 @@ class MealController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Meal $meal)
+    public function update(Request $request, Meal $meal, ExpensesClaim $expensesClaim)
     {
         $validated = $request->validate([
             'number_of_meal' => 'required|integer|min:1',
@@ -90,16 +92,16 @@ class MealController extends Controller
         $meal->update($validated);
 
         // Edit/update stays on the same page, no flow movement
-        return redirect()->route('flow.return-parent');
+        return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Meal $meal)
+    public function destroy(Meal $meal, ExpensesClaim $expensesClaim)
     {
         $meal->delete();
 
-        return redirect()->route('flow.return-parent');
+        return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
     }
 }
