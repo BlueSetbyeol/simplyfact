@@ -15,7 +15,6 @@ class ExpensesClaimController extends Controller
      */
     public function index()
     {
-        // $expenses_claim = Expenses_claim::all();
         return Inertia::render('user/Informations', [
             'expensesClaim' => ExpensesClaim::latest()->get(),
         ]);
