@@ -15,7 +15,8 @@ class ExpensesClaimController extends Controller
      */
     public function index()
     {
-        return Inertia::render('user/Informations', [
+        // $expenses_claim = Expenses_claim::all();
+        return Inertia::render('claim/Informations', [
             'expensesClaim' => ExpensesClaim::latest()->get(),
         ]);
     }
@@ -25,7 +26,7 @@ class ExpensesClaimController extends Controller
      */
     public function create(Request $request)
     {
-        return Inertia::render('user/Informations');
+        return Inertia::render('claim/Informations');
     }
 
     /**
@@ -69,7 +70,7 @@ class ExpensesClaimController extends Controller
     public function edit(ExpensesClaim $expensesClaim)
     {
         // TODO Il va falloir créer une autre page pour présenter la claim dans son ensemble en fonction de là où on en est.
-        return Inertia::render('user/Informations', [
+        return Inertia::render('claim/Informations', [
             'expensesClaim' => $expensesClaim,
         ]);
     }

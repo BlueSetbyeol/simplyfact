@@ -5,7 +5,7 @@ import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
 interface MealFormProps {
-    expensesClaim: { id: string };
+    expensesClaim: { id: string }[];
     meal: {
         id: number;
         number_of_meal: number;
@@ -27,9 +27,11 @@ export default function MealForm({ expensesClaim, meal }: MealFormProps) {
         setData('reimbursed_price', totalRefund);
     }
 
+    console.log(expensesClaim, expensesClaim[0].id);
+
     function submitMeal(e: { preventDefault: () => void }) {
         e.preventDefault();
-        post(`/expenses-claims/${expensesClaim.id}/meals`, {
+        post(`/expenses-claims/${expensesClaim[0].id}/meals`, {
             onSuccess: () => {
                 reset();
             },

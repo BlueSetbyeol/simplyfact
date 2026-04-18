@@ -12,26 +12,26 @@ class MealController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(ExpensesClaim $expensesClaim)
     {
         $claimId = session('expenses_claim_id');
 
         return Inertia::render('meal/MealForm', [
             'meals' => Meal::where('expenses_claim_id', $claimId)->get(),
-            'expensesClaim' => ['exists:expensesClaim'],
+            'expensesClaim' => [$expensesClaim],
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(ExpensesClaim $expensesClaim)
     {
         $meal = Meal::with('expenses_claim')->get();
 
         return Inertia::render('meal/MealForm', [
             'meal' => $meal,
-            'expensesClaim' => ['exists:expensesClaim']]);
+            'expensesClaim' => $expensesClaim]);
     }
 
     /**
@@ -50,11 +50,11 @@ class MealController extends Controller
         );
 
         Meal::create([
-            'expenses_claim_id' => $expensesClaim,
+            'expenses_claim_id' => $expensesClaim->id,
             ...$validated,
         ]);
 
-        return redirect('')->route('expenses-claims.flow.complete-step', $expensesClaim);
+        return (new FlowController)->completeStep($expensesClaim);
     }
 
     /**
@@ -70,10 +70,10 @@ class MealController extends Controller
      */
     public function edit(Meal $meal)
     {
-        return Inertia::render('meal/MealForm', [
-            'meal' => $meal,
-            'expensesClaim' => ['exists:expensesClaim'],
-        ]);
+        // return Inertia::render('meal/MealForm', [
+        //     'meal' => $meal,
+        //     'expensesClaim' => ['exists:expensesClaim'],
+        // ]);
     }
 
     /**
