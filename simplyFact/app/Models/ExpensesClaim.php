@@ -38,7 +38,7 @@ class ExpensesClaim extends Model
     // public function travels(): HasMany{ return $this->hasMany(Travel::class); }
     // public function accommodations(): HasMany{ return $this->hasMany(Accommodation::class); }
 
-    public function meals(): HasMany
+    public function meals(): HasMany // TODO a changé pour HasOne parce qu'il y aura qu'un seul repas déclaré (total)
     {
         return $this->hasMany(Meal::class);
     }

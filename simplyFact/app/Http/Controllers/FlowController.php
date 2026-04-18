@@ -84,10 +84,10 @@ class FlowController extends Controller
     public function next(ExpensesClaim $expensesClaim)
     {
         $steps = session('flow_steps_'.$expensesClaim->id, []);
-        $index = session('step_index', 0);
+        $index = session('step_index_'.$expensesClaim->id, 0);
 
         if (! isset($steps[$index])) {
-            return redirect()->route('expenses-claims.flow.done', $expensesClaim);
+            return redirect()->route('expenses-claims.flow.checkingClaims', $expensesClaim);
         }
 
         return $this->routeToStep($steps[$index]['name'], $expensesClaim);
@@ -154,6 +154,18 @@ class FlowController extends Controller
         ]);
 
         return redirect()->route('expenses-claims.flow.next', $expensesClaim);
+    }
+
+    public function checkingClaims(ExpensesClaim $expensesClaim)
+    {
+
+        // $claim = ExpensesClaim::with(['travels', 'accommodations', 'meal', 'otherExpenses'])->findOrFail($expensesClaim->id);
+        $claim = ExpensesClaim::with(['meals'])->findOrFail($expensesClaim->id);
+
+        return Inertia::render('claim/ClaimSummary', [
+            'expensesClaim' => $claim,
+        ]);
+
     }
 
     public function done(ExpensesClaim $expensesClaim)

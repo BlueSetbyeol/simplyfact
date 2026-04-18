@@ -54,7 +54,7 @@ class MealController extends Controller
             ...$validated,
         ]);
 
-        return redirect('')->route('expenses-claims.flow.complete-step', $expensesClaim);
+        return (new FlowController)->completeStep($expensesClaim);
     }
 
     /**
