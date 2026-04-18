@@ -35,7 +35,7 @@ class FlowController extends Controller
         $selectedSteps = session('pending_steps');
 
         if (! $selectedSteps) {
-            return redirect()->route('expenses-claims.flow.choices');
+            return redirect()->route('expenses-claims.flow.choices', $expensesClaim);
         }
 
         return Inertia::render('choices/SumChoices', [
