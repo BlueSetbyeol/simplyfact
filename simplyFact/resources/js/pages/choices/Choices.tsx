@@ -15,7 +15,8 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
     const [hasOther, setHasOther] = useState(false);
     const [chosenSteps, setChosenSteps] = useState<string[]>([]);
 
-    function submitChoices() {
+    function submitChoices(e: { preventDefault: () => void }) {
+        e.preventDefault();
         router.post(`/expenses-claims/${expensesClaim.id}/flow/choices`, {
             steps: chosenSteps,
             expensesClaimId: expensesClaim.id,

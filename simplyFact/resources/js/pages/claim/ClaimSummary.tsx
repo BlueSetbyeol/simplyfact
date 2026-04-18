@@ -20,12 +20,12 @@ interface ClaimSummaryProps {
     } | null;
 }
 export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
-    const labels: Record<string, string> = {
-        travel: 'Déplacements',
-        accommodation: 'Hébergements',
-        meal: 'Repas',
-        other_expense: 'Autre frais',
-    };
+    // const labels: Record<string, string> = {
+    //     travel: 'Déplacements',
+    //     accommodation: 'Hébergements',
+    //     meal: 'Repas',
+    //     other_expense: 'Autre frais',
+    // };
 
     const expensesClaimed = [];
 
@@ -54,7 +54,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                 <div className="mb-2 flex flex-col rounded-xl bg-gray-50 px-4 py-2">
                     {expensesClaim?.claimed_items.map((item, index) => (
                         <article key={index}>
-                            <p className="mb-1 text-gray-500">{labels[step]}</p>
+                            {/* <p className="mb-1 text-gray-500">{labels[step]}</p> */}
                         </article>
                     ))}
                 </div>

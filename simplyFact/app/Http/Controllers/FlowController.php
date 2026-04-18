@@ -87,7 +87,7 @@ class FlowController extends Controller
         $index = session('step_index', 0);
 
         if (! isset($steps[$index])) {
-            return redirect()->route('expenses-claims.flow.checkingClaims', $expensesClaim);
+            return redirect()->route('expenses-claims.flow.done', $expensesClaim);
         }
 
         return $this->routeToStep($steps[$index]['name'], $expensesClaim);
@@ -154,22 +154,6 @@ class FlowController extends Controller
         ]);
 
         return redirect()->route('expenses-claims.flow.next', $expensesClaim);
-    }
-
-    public function checkingClaims(ExpensesClaim $expensesClaim)
-    {
-        // $claim = ExpensesClaim::with(['travels', 'accommodations', 'meal', 'otherExpenses'])->findOrFail($expensesClaim->id);
-        $claim = ExpensesClaim::with(['meal'])->findOrFail($expensesClaim->id);
-
-        return Inertia::render('claim/ClaimSummary', [
-            'expensesClaim' => $claim,
-        ]);
-    }
-
-    public function reStart(ExpensesClaim $expensesClaim)
-    {
-        // TODO in case of modification choice, get the flow_steps and
-        // change status to 'done' => false, so user can restart their claim
     }
 
     public function done(ExpensesClaim $expensesClaim)
