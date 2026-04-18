@@ -2,15 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ExpensesClaim;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class FlowController extends Controller
 {
-    public function start(Request $request)
+    // Montre la page de choix
+    public function choices(ExpensesClaim $expensesClaim)
     {
-        $requested = $request->input('steps', []);
+        return Inertia::render('choices/Choices', [
+            'expensesClaim' => $expensesClaim,
+        ]);
+    }
+
+    // Récupère les choix de l'utilisateur et renvoie vers la page suivante qui résume les choix
+    public function saveChoices(Request $request, ExpensesClaim $expensesClaim)
+    {
+        $selected = $request->input('steps', []);
+
+        $valid = ['travel', 'accommodation', 'meal', 'other_expense'];
+        $selected = array_values(array_intersect($selected, $valid));
+
+        session(['pending_steps' => $selected]);
+
+        return redirect()->route('flow.summary', $expensesClaim);
+    }
+
+    public function summary(ExpensesClaim $expensesClaim)
+    {
+        return Inertia::render('choices/SumChoices', [
+            'expensesClaim' => $expensesClaim,
+            'selectedSteps' => session('pending_steps', []),
+        ]);
+    }
+
+    public function start(ExpensesClaim $expensesClaim)
+    {
+        $requested = session('pending_steps', []);
 
         $definitions = [
             'travel' => [
@@ -37,27 +67,27 @@ class FlowController extends Controller
         }
 
         session([
-            'flow_steps' => $steps,
-            'step_index' => 0,
+            'flow_steps_'.$expensesClaim->id => $steps,
+            'step_index_'.$expensesClaim->id => 0,
         ]);
 
-        return redirect()->route('flow.next');
+        return redirect()->route('flow.next', $expensesClaim);
     }
 
-    // Advance to the next undone top-level step.
-    public function next()
+    // Continuer à l'étape suivante
+    public function next(ExpensesClaim $expensesClaim)
     {
-        $steps = session('flow_steps', []);
+        $steps = session('flow_steps_'.$expensesClaim->id, []);
         $index = session('step_index', 0);
 
         if (! isset($steps[$index])) {
-            return redirect()->route('flow.done');
+            return redirect()->route('flow.done', $expensesClaim);
         }
 
         return $this->routeToStep($steps[$index]['name']);
     }
 
-    // Choose to enter to the next child, stays on the parent step
+    // Choix d'aller à une étape intermédiaire
     public function enterChild(Request $request)
     {
         $childName = $request->input('child_name');
@@ -69,14 +99,14 @@ class FlowController extends Controller
         return $this->routeToStep($childName);
     }
 
-    // Finish child step and return to parent step
-    public function returnToParent()
+    // Fin de l'étape intermédiaire et retour à l'étape première
+    public function returnToParent(ExpensesClaim $expensesClaim)
     {
-        $steps = session('flow_steps', []);
+        $steps = session('flow_steps_'.$expensesClaim->id, []);
         $index = session('step_index', 0);
         $childName = session('current_child');
 
-        // Mark child as done (optional)
+        // Marquer l'étape intermédiaire comme complète (option)
         if (isset($steps[$index]['children'])) {
             foreach ($steps[$index]['children'] as &$child) {
                 if ($child['name'] === $childName) {
@@ -87,7 +117,7 @@ class FlowController extends Controller
         }
 
         session([
-            'flow_steps' => $steps,
+            'flow_steps_'.$expensesClaim->id => $steps,
             'current_child' => null,
         ]);
 
@@ -95,8 +125,8 @@ class FlowController extends Controller
         return $this->routeToStep($steps[$index]['name']);
     }
 
-    // validates the entire current step
-    public function completeStep()
+    // validation de l'étape en cours
+    public function completeStep(ExpensesClaim $expensesClaim)
     {
         $steps = session('flow_steps', []);
         $index = session('step_index', 0);
@@ -107,24 +137,24 @@ class FlowController extends Controller
 
         $nextIndex = $index + 1;
 
-        // Skip any steps already marked done
+        // Aller directement à la prochaine étape non faite
         while (isset($steps[$nextIndex]) && $steps[$nextIndex]['done']) {
             $nextIndex++;
         }
 
         session([
-            'flow_steps' => $steps,
-            'step_index' => $nextIndex,
+            'flow_steps_'.$expensesClaim->id => $steps,
+            'step_index_'.$expensesClaim->id => $nextIndex,
         ]);
 
-        return redirect()->route('flow.next');
+        return redirect()->route('flow.next', $expensesClaim);
     }
 
-    public function done()
+    public function done(ExpensesClaim $expensesClaim)
     {
         session()->forget(['flow_steps', 'step_index']);
 
-        return Inertia::render('Flow/Done');
+        return Inertia::render('flow.done', $expensesClaim);
     }
 
     private function routeToStep(string $step): RedirectResponse
