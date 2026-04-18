@@ -5,12 +5,12 @@ use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\ProofController;
 use App\Http\Controllers\UserController;
+use App\Models\ExpensesClaim;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');
 // A ajouter si on veut avoir une vérification d'identification avant complétion
 //      , ['canRegister' => Features::enabled(Features::registration()),]
@@ -23,7 +23,6 @@ Route::resource('users', UserController::class);
 
 Route::resource('expenses-claims', ExpensesClaimController::class);
 
-// Resources nesté
 Route::resource('expenses-claims.meals', MealController::class);
 // Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
 

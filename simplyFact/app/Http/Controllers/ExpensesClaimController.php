@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\ExpensesClaim;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 // use Inertia\Inertia;
@@ -27,11 +26,7 @@ class ExpensesClaimController extends Controller
      */
     public function create(Request $request)
     {
-        Log::debug($request->query('user'));
-
-        return Inertia::render('user/Informations', [
-            'userId' => session('user_id'),
-        ]);
+        return Inertia::render('user/Informations');
     }
 
     /**
