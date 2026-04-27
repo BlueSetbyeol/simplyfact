@@ -170,15 +170,24 @@ possiblement `vehicule`
 | total_price      | number                   |
 | reimbursed_price | number                   |
 
-`other_expense`
+`training_expense`
 
 | champ               | caractéristiques         |
 | ------------------- | ------------------------ |
 | id                  | uuid PK                  |
 | expenses_claim      | uuid FK (expenses_claim) |
-| expense_name        | string                   |
-| expense_price       | number                   |
 | nb_days_of_training | number                   |
+| training_price      | number                   |
+
+`other_expense`
+
+| champ            | caractéristiques         |
+| ---------------- | ------------------------ |
+| id               | uuid PK                  |
+| expenses_claim   | uuid FK (expenses_claim) |
+| expense_name     | string                   |
+| total_price      | number                   |
+| reimbursed_price | number                   |
 
 `driven_trip`
 
