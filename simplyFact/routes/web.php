@@ -11,6 +11,20 @@ use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+
+// Chemins temporaires pour dev
+Route::inertia('informations', 'user/Informations')->name('informations');
+Route::inertia('choices', 'choices/Choices')->name('choices');
+Route::get('/pathway', function (Request $request) {
+    return Inertia::render('choices/SumChoices', [
+        'steps' => $request->input('steps', []),
+        'expensesClaimId' => $request->input('expensesClaimId'),
+    ]);
+})->name('pathway');
+Route::inertia('accommodation', 'accommodation/Accommodation')->name('accomodation');
+Route::inertia('accommodation-details', 'accommodation/AccommodationDetails')->name('accomodation-details');
+
+// Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');
 // A ajouter si on veut avoir une vérification d'identification avant complétion
 //      , ['canRegister' => Features::enabled(Features::registration()),]

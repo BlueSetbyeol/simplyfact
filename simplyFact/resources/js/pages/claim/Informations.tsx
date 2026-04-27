@@ -65,7 +65,6 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                                 setData('action_name', e.target.value)
                             }
                             fullWidth
-                            size="small"
                             error={!!errors['action_name']}
                             helperText={errors['action_name']}
                         />
@@ -82,7 +81,6 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                                 setData('action_dates', e.target.value)
                             }
                             fullWidth
-                            size="small"
                             error={!!errors['action_dates']}
                             helperText={errors['action_dates']}
                         />
