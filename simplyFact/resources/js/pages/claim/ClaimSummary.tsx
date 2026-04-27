@@ -36,7 +36,7 @@ interface ClaimSummaryProps {
 }
 
 export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
-    const { data, setData, post, errors, reset } = useForm({
+    const { data, setData, put, errors, reset } = useForm({
         id: expensesClaim?.id,
         committee_name: expensesClaim?.committee_name,
         action_name: expensesClaim?.action_name,
@@ -74,9 +74,10 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
     const totalReimbursed =
         data.total_given !== 0 ? totalSpend - data.total_given : totalSpend;
 
-    function endFlow() {
+    function endFlow(e: { preventDefault: () => void }) {
+        e.preventDefault();
         setData('total_reimbursed', totalReimbursed);
-        post(`/expenses-claims/${expensesClaim?.id}/flow/done`, {
+        put(`/expenses-claims/${expensesClaim?.id}`, {
             onSuccess: () => {
                 reset();
             },

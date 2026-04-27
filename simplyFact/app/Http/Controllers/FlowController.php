@@ -172,8 +172,9 @@ class FlowController extends Controller
     {
         session()->forget(['flow_steps', 'step_index']);
 
+        return Inertia::render('end/End');
         // TODO préparer la prochaine fonction de destination pour la page de confirmation
-        return Inertia::render('expenses-claims.flow.done', $expensesClaim);
+        // return Inertia::render('expenses-claims.flow.done', $expensesClaim);
         // return (new FlowController)->completeClaim ??($expensesClaim); expensesClaim.edit ?
     }
 
