@@ -28,6 +28,8 @@ createInertiaApp({
                 return null;
             case name.startsWith('accommodation/'):
                 return null
+            case name.startsWith('end/'):
+                return null;
             default:
                 return AppLayout;
         }

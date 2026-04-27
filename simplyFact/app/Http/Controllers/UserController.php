@@ -57,7 +57,9 @@ class UserController extends Controller
 
         // Auth::login($user);
 
-        return redirect('')->route('expenses-claims.create');
+        session(['user_id' => $user->id]);
+
+        return redirect()->route('expenses-claims.create');
     }
 
     /**

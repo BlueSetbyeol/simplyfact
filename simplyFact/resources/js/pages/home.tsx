@@ -29,7 +29,7 @@ export default function Home() {
                     src="/img/speleo_Philippe_Crochet-SP23-1570.jpg"
                     alt="Image de la fédération"
                     className="mb-6 rounded-lg"
-                ></img>
+                />
 
                 <Link href={'/users'}>
                     <Button

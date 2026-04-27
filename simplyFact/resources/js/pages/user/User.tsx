@@ -36,8 +36,6 @@ export default function User({ user }: UserProps) {
         });
     }
 
-    console.log(errors);
-
     return (
         <Header>
             <Head title="Informations personnelles"></Head>

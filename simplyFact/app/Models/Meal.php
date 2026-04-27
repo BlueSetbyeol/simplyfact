@@ -9,8 +9,10 @@ use Str;
 class Meal extends Model
 {
     protected $fillable = [
+        'expenses_claim_id',
         'number_of_meal',
         'total_price',
+        'reimbursed_price',
     ];
 
     // Generation d'un UUID à la place d'un id en integer

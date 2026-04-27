@@ -16,7 +16,7 @@ class ExpensesClaimController extends Controller
     public function index()
     {
         // $expenses_claim = Expenses_claim::all();
-        return Inertia::render('user/Informations', [
+        return Inertia::render('claim/Informations', [
             'expensesClaim' => ExpensesClaim::latest()->get(),
         ]);
     }
@@ -24,11 +24,9 @@ class ExpensesClaimController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $expenses_claim = ExpensesClaim::with('user')->get();
-
-        return Inertia::render('user/Informations', ['expenses_claim' => $expenses_claim]);
+        return Inertia::render('claim/Informations');
     }
 
     /**
@@ -36,34 +34,26 @@ class ExpensesClaimController extends Controller
      */
     public function store(Request $request)
     {
+        $userId = session('user_id');
+
+        if (! $userId) {
+            return redirect()->route('users.create');
+        }
+
         // data validation
         $validated = $request->validate([
             'committee_name' => 'required|string|max:150|min:3',
             'action_name' => 'required|string|max:255|min:5',
             'action_dates' => 'required|string|max:255|min:8',
-            'total_given' => 'nullable|numeric',
-            'total_reimbursed' => 'nullable|numeric',
-        ], [
-            'committee_name.required' => "Merci d'ajouter le nom de votre Commission",
-            'commitee_name.min' => 'Le nom doit obligatoirement avoir 3 caractères minimum',
-            'action_name.required' => "Merci d'indiquer le sujet de votre Note de Frais",
-            'action_name.min' => "Le nom de l'action doit obligatoirement avoir 5 caractères minimum",
-            'action_dates.required' => "Merci d'indiquer les dates auxquels ont eu lieu votre action",
-            'action_dates.min' => "La date de l'action doit obligatoirement avoir 8 caractères minimum",
         ]
         );
 
-        ExpensesClaim::create([
-            'user_id' => null,
-            'committee_name' => $validated['committee_name'],
-            'action_name' => $validated['action_name'],
-            'action_dates' => $validated['action_dates'],
-            'total_given' => $validated['total_given'],
-            'total_reimbursed' => $validated['total_reimbursed'],
-
+        $expensesClaim = ExpensesClaim::create([
+            'user_id' => $userId,
+            ...$validated,
         ]);
 
-        return redirect('expenses_claim')->route('expenses-claims.flow.start');
+        return redirect()->route('expenses-claims.flow.choices', $expensesClaim);
     }
 
     /**
@@ -79,7 +69,8 @@ class ExpensesClaimController extends Controller
      */
     public function edit(ExpensesClaim $expensesClaim)
     {
-        return Inertia::render('user/Informations', [
+        // TODO Il va falloir créer une autre page pour présenter la claim dans son ensemble en fonction de là où on en est.
+        return Inertia::render('claim/Informations', [
             'expensesClaim' => $expensesClaim,
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ExpensesClaim;
 use App\Models\Meal;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,59 +12,49 @@ class MealController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(ExpensesClaim $expensesClaim)
     {
-        // Pass existing meals for the current claim => flow
-        // $flowSteps = session('flow_steps', []);
-        // $stepIndex = session('step_index', 0);
-        // $claimId = session('expenses_claim_id');
-        // 'meals'    => Meal::where('expenses_claim_id', $claimId)->get(),
-        // 'flowStep' => $flowSteps[$stepIndex] ?? null,
-
-        $meal = Meal::with('expenses_claim')->get();
+        $claimId = session('expenses_claim_id');
 
         return Inertia::render('meal/MealForm', [
-            'meal' => $meal,
-            'expensesClaim' => ['exists:expensesClaim'],
+            'meals' => Meal::where('expenses_claim_id', $claimId)->get(),
+            'expensesClaim' => [$expensesClaim],
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(ExpensesClaim $expensesClaim)
     {
         $meal = Meal::with('expenses_claim')->get();
 
         return Inertia::render('meal/MealForm', [
             'meal' => $meal,
-            'expensesClaim' => ['exists:expensesClaim']]);
+            'expensesClaim' => $expensesClaim]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, ExpensesClaim $expensesClaim)
     {
+
         // validation de la data
         $validated = $request->validate([
             'number_of_meal' => 'required|integer|min:1',
-            'total_price' => 'required|float|min:0',
-            'reimbursed_price' => 'float',
+            'total_price' => 'required|decimal:0,2|min:0',
+            'reimbursed_price' => 'decimal:0,2',
             // TODO reimbursed_price a recalculer dans le back
-            'expenses_claim_id' => ['exists:expensesClaim.id'],
-        ], [
-            'number_of_meal.required' => "Merci d'ajouter le nombre de repas",
-            'total_price.required' => 'Merci de préciser le total du prix des repas consommés',
         ]
         );
 
-        $validated['expenses_claim_id'] = session('expenses_claim_id');
+        Meal::create([
+            'expenses_claim_id' => $expensesClaim->id,
+            ...$validated,
+        ]);
 
-        Meal::create($validated);
-
-        // Go back to meal.index (the hub) via the flow
-        return redirect('meals')->route('expenses-claims.flow.complete-step');
+        return (new FlowController)->completeStep($expensesClaim);
     }
 
     /**
@@ -79,16 +70,16 @@ class MealController extends Controller
      */
     public function edit(Meal $meal)
     {
-        return Inertia::render('meal/MealForm', [
-            'meal' => $meal,
-            'expensesClaim' => ['exists:expensesClaim'],
-        ]);
+        // return Inertia::render('meal/MealForm', [
+        //     'meal' => $meal,
+        //     'expensesClaim' => ['exists:expensesClaim'],
+        // ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Meal $meal)
+    public function update(Request $request, Meal $meal, ExpensesClaim $expensesClaim)
     {
         $validated = $request->validate([
             'number_of_meal' => 'required|integer|min:1',
@@ -101,16 +92,16 @@ class MealController extends Controller
         $meal->update($validated);
 
         // Edit/update stays on the same page, no flow movement
-        return redirect()->route('flow.return-parent');
+        return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Meal $meal)
+    public function destroy(Meal $meal, ExpensesClaim $expensesClaim)
     {
         $meal->delete();
 
-        return redirect()->route('flow.return-parent');
+        return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
     }
 }

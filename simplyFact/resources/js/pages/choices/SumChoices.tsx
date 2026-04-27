@@ -1,61 +1,56 @@
-import Header from "@/layouts/Header";
-import { Head, router } from "@inertiajs/react";
-import { Button } from "@mui/material";
+import { Head, useForm } from '@inertiajs/react';
+import { Button } from '@mui/material';
+import Header from '@/layouts/Header';
 
 interface SumChoicesProps {
-    steps:  string[];
-    expensesClaimId: number;
+    steps: string[];
+    expensesClaim: { id: number };
 }
 
-export default function SumChoices(
-    { steps, expensesClaimId }: SumChoicesProps){
-
+export default function SumChoices({ steps, expensesClaim }: SumChoicesProps) {
     const labels: Record<string, string> = {
         travel: 'Déplacements',
         accommodation: 'Hébergements',
         meal: 'Repas',
         other_expense: 'Autre frais',
-    }
+    };
+
+    const { post, processing } = useForm();
 
     function startFlow() {
-        router.post('/flow/start', {
-            steps,
-            expensesClaimId
-        })
+        post(`/expenses-claims/${expensesClaim.id}/flow/start`);
     }
 
-    return(
+    return (
         <Header>
             <Head title="Résumé des choix"></Head>
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full max-w-xl">
-                <h1 className="text-xl font-medium text-gray-900 mb-6">Vous allez faire une note de frais pour:</h1>
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+                <h1 className="mb-6 text-xl font-medium text-gray-900">
+                    Vous allez faire une note de frais pour:
+                </h1>
 
-                <div className= "bg-gray-50 rounded-xl px-4 py-2 flex flex-col mb-2">
+                <div className="mb-2 flex flex-col rounded-xl bg-gray-50 px-4 py-2">
                     {steps.map((step, index) => (
-                        <p className="text-gray-500 mb-1" key={index}>{labels[step]}</p>
+                        <p className="mb-1 text-gray-500" key={index}>
+                            {labels[step]}
+                        </p>
                     ))}
                 </div>
 
-                <form onSubmit={startFlow}>
-                    <Button 
-                        type="submit"
-                        variant="contained"
-                        fullWidth
-                        className="!mt-6"
-                        sx={{
-                            backgroundColor: '#2D6A2D',
-                            '&:hover': { backgroundColor: '#1F4F1F' },
-                        }}
-                    >
-                        Commencer
-                    </Button>
-                </form>
-
-
-
+                <Button
+                    onClick={startFlow}
+                    disabled={processing}
+                    variant="contained"
+                    fullWidth
+                    className="!mt-6"
+                    sx={{
+                        backgroundColor: '#2D6A2D',
+                        '&:hover': { backgroundColor: '#1F4F1F' },
+                    }}
+                >
+                    Commencer
+                </Button>
             </div>
-
         </Header>
-    )
-    
+    );
 }

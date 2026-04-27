@@ -5,30 +5,33 @@ import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
 interface MealFormProps {
-    expensesClaim: { id: string };
+    expensesClaim: { id: string }[];
     meal: {
         id: number;
         number_of_meal: number;
         total_price: number;
         reimbursed_price: number;
-    };
+    } | null;
 }
 
-// export default function MealForm({ expensesClaim, meal }: MealFormProps) {
-export default function MealForm({ meal }: MealFormProps) {
+export default function MealForm({ expensesClaim, meal }: MealFormProps) {
     const { data, setData, post, errors, reset } = useForm({
-        number_of_meal: meal ? meal.number_of_meal : 0,
-        total_price: meal ? meal.total_price : 0,
+        number_of_meal: meal?.number_of_meal || 0,
+        total_price: meal?.total_price || 0,
         reimbursed_price: 0,
     });
 
     const totalRefund = Math.min(data.total_price, 25 * data.number_of_meal);
 
+    if (data.reimbursed_price !== totalRefund) {
+        setData('reimbursed_price', totalRefund);
+    }
+
+    console.log(expensesClaim, expensesClaim[0].id);
+
     function submitMeal(e: { preventDefault: () => void }) {
         e.preventDefault();
-        setData('reimbursed_price', totalRefund);
-        // post(`/expenses-claims/${expensesClaim.id}/meals`, {
-        post(`/meals`, {
+        post(`/expenses-claims/${expensesClaim[0].id}/meals`, {
             onSuccess: () => {
                 reset();
             },
@@ -99,7 +102,7 @@ export default function MealForm({ meal }: MealFormProps) {
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
-                                {totalRefund}€
+                                {data.reimbursed_price}€
                             </p>
                             <p className="mt-1 text-xs text-gray-400">
                                 Plafond : 25 € par repas
@@ -107,7 +110,7 @@ export default function MealForm({ meal }: MealFormProps) {
                         </div>
                     </div>
 
-                    {/* TO DO : change to <FileUpload expensesClaimId={expensesClaim.id} />*/}
+                    {/* TODO : change to <FileUpload expensesClaimId={expensesClaim.id} />*/}
                     <FileUpload expensesClaimId="554fa61a-2b1b-4355-8c05-a2c30efd97ac" />
 
                     <Button

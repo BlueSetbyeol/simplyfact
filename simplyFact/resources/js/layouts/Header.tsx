@@ -1,3 +1,5 @@
+import { Link } from "@inertiajs/react";
+
 export default function AppLayout({ children, showback =true }: { children: React.ReactNode, showback?: boolean }) {
     return (
         <div className="min-h-screen bg-gray-100">
@@ -6,8 +8,10 @@ export default function AppLayout({ children, showback =true }: { children: Reac
                     <button onClick={() => window.history.back()} className="text-sm text-gray-300 hover:text-gray-100 transition-colors duration-200">
                         ← Retour
                     </button>
-                )}  
-                <img src="/img/ffs-xs-logo.svg" alt="Logo Fédération Française de Spéléologie"></img>
+                )}
+                <Link href="/">
+                    <img src="/img/ffs-xs-logo.svg" alt="Logo Fédération Française de Spéléologie"></img>
+                </Link>  
             </div>
             <main className="flex items-center justify-center p-8"> 
                 {children}
