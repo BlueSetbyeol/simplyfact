@@ -10,7 +10,7 @@ interface ChoicesProps {
 export default function Choices({ expensesClaim }: ChoicesProps) {
     // Déclaration des états pour chaque choix
     const [hasTravel, setHasTravel] = useState(false);
-    const [hasAccomodation, setHasAccomodation] = useState(false);
+    const [hasAccommodation, setHasAccommodation] = useState(false);
     const [hasMeal, setHasMeal] = useState(false);
     const [hasOther, setHasOther] = useState(false);
     const [chosenSteps, setChosenSteps] = useState<string[]>([]);
@@ -122,17 +122,17 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                             <div className="flex flex-row gap-2">
                                 <Button
                                     variant={
-                                        hasAccomodation
+                                        hasAccommodation
                                             ? 'contained'
                                             : 'outlined'
                                     }
                                     onClick={() => {
-                                        setHasAccomodation(true);
+                                        setHasAccommodation(true);
                                         chosenSteps.push('accommodation');
                                         setChosenSteps(chosenSteps);
                                     }}
                                     sx={
-                                        hasAccomodation
+                                        hasAccommodation
                                             ? {
                                                   backgroundColor: '#2D6A2D',
                                                   '&:hover': {
@@ -155,12 +155,12 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                 </Button>
                                 <Button
                                     variant={
-                                        !hasAccomodation
+                                        !hasAccommodation
                                             ? 'contained'
                                             : 'outlined'
                                     }
                                     onClick={() => {
-                                        setHasAccomodation(false);
+                                        setHasAccommodation(false);
                                         setChosenSteps(
                                             chosenSteps.filter(
                                                 (e) => e !== 'accommodation',
@@ -168,7 +168,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                         );
                                     }}
                                     sx={
-                                        !hasAccomodation
+                                        !hasAccommodation
                                             ? {
                                                   backgroundColor: '#2D6A2D',
                                                   '&:hover': {
