@@ -18,6 +18,8 @@ interface ClaimSummaryProps {
         }[];
         accommodations: {
             id: number;
+            accommodation_type: string;
+            nb_of_night: number;
             total_price: number;
             reimbursed_price: number;
         }[];
@@ -127,8 +129,17 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                             {expensesClaim?.accommodations.map(
                                 (lodge, index) => (
                                     <Card key={index} className="mb-1 p-2">
-                                        <p>To be determined : {lodge.id}</p>
-                                        {/* <p className="mb-1 text-gray-500">{labels[step]}</p> */}
+                                        <p className="mb-1 text-gray-500">
+                                            {lodge.accommodation_type}
+                                        </p>
+                                        <p className="mb-1 text-gray-500">
+                                            Nombre de nuits :{' '}
+                                            {lodge.nb_of_night}
+                                        </p>
+                                        <p className="mb-1 text-gray-500">
+                                            Total remboursé :{' '}
+                                            {lodge.reimbursed_price}
+                                        </p>
                                     </Card>
                                 ),
                             )}
