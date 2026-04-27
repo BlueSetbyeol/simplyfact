@@ -1,6 +1,6 @@
-#SimplyFact - Create expense claims for FFS
+# SimplyFact - Create expense claims for FFS
 
-##Send email
+## Send email
 
 To test email sending locally:
 
@@ -28,7 +28,7 @@ mailpit
 
 - Mailpit UI available at http://localhost:8025
 
-##s3 storage
+## s3 storage
 Our app uses s3 storage and signed url to stock uploaded files.
 You need to :
 
