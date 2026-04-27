@@ -4,6 +4,7 @@ use App\Http\Controllers\AccommodationController;
 use App\Http\Controllers\ExpensesClaimController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
+use App\Http\Controllers\OtherExpenseController;
 use App\Http\Controllers\ProofController;
 use App\Http\Controllers\UserController;
 use App\Services\ExpenseClaimPdfService;
@@ -26,6 +27,8 @@ Route::resource('expenses-claims', ExpensesClaimController::class);
 
 Route::resource('expenses-claims.accommodations', AccommodationController::class);
 Route::resource('expenses-claims.meals', MealController::class);
+Route::resource('expenses-claims.other-expenses', OtherExpenseController::class);
+
 // Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
 
 // Flow (parcours de l'utilisateur)
@@ -44,12 +47,6 @@ Route::prefix('expenses-claims/{expensesClaim}/flow')
         Route::get('/checkingClaims', 'checkingClaims')->name('checkingClaims');
         Route::get('/done', 'done')->name('done');
     });
-
-// Route::get('/expenses-claims', [ExpensesClaimController::class, 'index'])->name('expensesClaim.index');
-// Route::post('/expenses-claims', [ExpensesClaimController::class, 'store'])->name('expensesClaim.store');
-// Route::get('/expenses-claims/{expensesClaim}/edit', [ExpensesClaimController::class, 'edit'])->name('expensesClaim.edit');
-// Route::put('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'update'])->name('expensesClaim.update');
-// Route::delete('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'destroy'])->name('expensesClaim.destroy');
 
 // création du pdf avant envoi
 Route::get('/pdf-preview', function () {

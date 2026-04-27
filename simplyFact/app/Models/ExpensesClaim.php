@@ -46,5 +46,8 @@ class ExpensesClaim extends Model
         return $this->hasMany(Meal::class);
     }
 
-    // public function otherExpenses(): HasMany { return $this->hasMany(OtherExpense::class); }
+    public function otherExpenses(): HasMany
+    {
+        return $this->hasMany(OtherExpense::class);
+    }
 }

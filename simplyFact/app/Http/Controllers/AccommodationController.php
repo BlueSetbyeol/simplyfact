@@ -7,7 +7,7 @@ use App\Models\ExpensesClaim;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class accommodationController extends Controller
+class AccommodationController extends Controller
 {
     public function index(ExpensesClaim $expensesClaim)
     {
