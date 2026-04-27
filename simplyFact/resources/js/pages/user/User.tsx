@@ -107,7 +107,6 @@ export default function User({ user }: UserProps) {
                                 setData('firstname', e.target.value)
                             }
                             fullWidth
-                            size="small"
                             error={!!errors['firstname']}
                             helperText={errors['firstname']}
                         />
@@ -126,7 +125,6 @@ export default function User({ user }: UserProps) {
                                 setData('address_street', e.target.value)
                             }
                             fullWidth
-                            size="small"
                             error={!!errors['address_street']}
                             helperText={errors['address_street']}
                         />
@@ -145,7 +143,6 @@ export default function User({ user }: UserProps) {
                                 setData('address_zipcode', e.target.value)
                             }
                             fullWidth
-                            size="small"
                             error={!!errors['address_zipcode']}
                             helperText={errors['address_zipcode']}
                         />
@@ -161,7 +158,6 @@ export default function User({ user }: UserProps) {
                                 setData('address_city', e.target.value)
                             }
                             fullWidth
-                            size="small"
                             error={!!errors['address_city']}
                             helperText={errors['address_city']}
                         />
@@ -180,7 +176,6 @@ export default function User({ user }: UserProps) {
                                 setData('email_address', e.target.value)
                             }
                             fullWidth
-                            size="small"
                             error={!!errors['email_address']}
                             helperText={errors['email_address']}
                         />
@@ -199,7 +194,6 @@ export default function User({ user }: UserProps) {
                                 setData('phone_number', e.target.value)
                             }
                             fullWidth
-                            size="small"
                             error={!!errors['phone_number']}
                             helperText={errors['phone_number']}
                         />
