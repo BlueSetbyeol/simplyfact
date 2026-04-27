@@ -345,7 +345,7 @@
   @endif
 
   {{-- ─── POUR INFORMATION ───────────────────────────────────── --}}
-  <section class="mt-4 border border-2 border-gray-200 rounded-xl px-5 py-4 text-xs text-gray-600">
+  <section class="mt-4 border-2 border-gray-200 rounded-xl px-5 py-4 text-xs text-gray-600">
     <p class="font-semibold mb-2 text-gray-700 uppercase tracking-widest text-xs">Pour information</p>
     <div class="flex justify-between py-1 border-b border-gray-100">
       <span>En cas de règlement total</span>

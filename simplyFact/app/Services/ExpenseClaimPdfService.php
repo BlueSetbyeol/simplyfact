@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Mail\ExpenseClaimMail;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
 
 class ExpenseClaimPdfService
 {
@@ -28,9 +30,27 @@ class ExpenseClaimPdfService
 
     /**
      * Preview avec données fictives pour tester le rendu PDF.
-     * À supprimer quand la méthode generate() sera implémentée et que les données réelles seront disponibles.
      */
     public function previewFake(): Response
+    {
+        return $this->buildFakePdf()->inlineResponse('preview-note-de-frais.pdf');
+    }
+
+    /**
+     * Envoie le PDF par email avec des données fictives.
+     */
+    public function sendFakeByEmail(string $toEmail): void
+    {
+        $pdfContent = $this->buildFakePdf()->getDocument();
+
+        Mail::to($toEmail)->send(new ExpenseClaimMail($pdfContent));
+    }
+
+    /**
+     * Prépare le PdfGenerator avec les données fictives.
+     * Partagé entre previewFake() et sendFakeByEmail().
+     */
+    private function buildFakePdf(): PdfGenerator
     {
         // Use fake data for now
         $user = (object) [
@@ -109,7 +129,7 @@ class ExpenseClaimPdfService
         );
 
         return $this->pdfGenerator
-            ->view('pdf.expense_claim', [
+            ->view('pdf.expense-claim-pdf', [
                 'logoBase64' => base64_encode(file_get_contents(public_path('images/logo-ffs.jpg'))),
                 'user' => $user,
                 'expensesClaim' => $expensesClaim,
@@ -121,8 +141,7 @@ class ExpenseClaimPdfService
                 'otherExpenses' => $otherExpenses,
                 'computed' => $computed,
             ])
-            ->merge($this->fakeJustificatifs())
-            ->inlineResponse('preview-note-de-frais.pdf');
+            ->merge($this->fakeJustificatifs());
     }
 
     /**

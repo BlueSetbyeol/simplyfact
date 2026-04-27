@@ -67,15 +67,6 @@ Route::prefix('expenses-claims/{expensesClaim}/flow')
 // Route::put('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'update'])->name('expensesClaim.update');
 // Route::delete('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'destroy'])->name('expensesClaim.destroy');
 
-// création du pdf avant envoi
-Route::get('/pdf-preview', function () {
-    $service = new ExpenseClaimPdfService(
-        new PdfGenerator
-    );
-
-    return $service->previewFake();
-})->name('pdf.preview');
-
 // upload de documents justificatif
 Route::post(
     '/expenses-claims/{expensesClaim}/proofs',
@@ -89,3 +80,23 @@ Route::delete(
 )->name('expenses-claims.proofs.destroy');
 
 require __DIR__.'/settings.php';
+
+// Dev only - preview du PDF dans le browser
+Route::get('/pdf-preview', function () {
+    $service = new ExpenseClaimPdfService(
+        new PdfGenerator
+    );
+
+    return $service->previewFake();
+})->name('pdf.preview');
+
+// Dev only - test envoi email PDF fictif
+Route::get('/pdf-send-email', function () {
+    $service = new ExpenseClaimPdfService(
+        new PdfGenerator
+    );
+
+    $service->sendFakeByEmail('john.doe@email.com');
+
+    return 'Email envoyé - voir storage/logs/laravel.log';
+})->name('pdf.send-email');
