@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Mail\ExpenseClaimMail;
+use App\Models\ExpensesClaim;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 
 class ExpenseClaimPdfService
@@ -19,13 +19,38 @@ class ExpenseClaimPdfService
      * Génère le PDF d'une note de frais depuis la BDD.
      * À implémenter quand les Models seront disponibles.
      */
-    public function generate(string $expenseClaimId): string
+    public function generateAndSend(string $expenseClaimId): void
     {
-        // TODO: implémenter quand la BDD est prête
-        // $claim = ExpenseClaim::with([...])->findOrFail($expenseClaimId);
-        // $computed = $this->computeAmounts(...);
-        // return $this->pdfGenerator->view('pdf.expense_claim', [...]);
-        throw new \RuntimeException('Not implemented yet');
+        $expensesClaim = ExpensesClaim::with([
+            'user',
+            // 'vehicle',
+            // 'drivenTrips',
+            // 'otherTrips',
+            // 'accommodations',
+            'meals',
+            // 'otherExpenses',
+        ])->findOrFail($expenseClaimId);
+
+        dd($expensesClaim->toArray());
+
+        $computed = $this->computeAmounts($expensesClaim);
+
+        $pdfContent = $this->pdfGenerator
+            ->view('pdf.expense-claim-pdf', [
+                'logoBase64' => base64_encode(file_get_contents(public_path('images/logo-ffs.jpg'))),
+                'user' => $expensesClaim->user,
+                'expensesClaim' => $expensesClaim,
+                'vehicle' => null, // TODO: $expensesClaim->vehicle
+                'drivenTrips' => $computed->drivenTrips,
+                'otherTrips' => collect(), // TODO: $expensesClaim->otherTrips
+                'accommodations' => collect(), // TODO: $expensesClaim->accommodations
+                'meals' => $expensesClaim->meals,
+                'otherExpenses' => collect(), // TODO: $expensesClaim->otherExpenses
+                'computed' => $computed,
+            ])->getDocument();
+
+        Mail::to(config('mail.to_accountant'))
+            ->send(new ExpenseClaimMail($pdfContent));
     }
 
     /**
@@ -53,7 +78,56 @@ class ExpenseClaimPdfService
     private function buildFakePdf(): PdfGenerator
     {
         // Use fake data for now
-        $user = (object) [
+        $fakeExpensesClaim = (object) [
+            'action_name' => 'Stage fédéral spéléologie',
+            'action_dates' => '15-17 mars 2026',
+            'committee_name' => 'Commission Formation',
+            'total_given' => 133.25,
+            'total_reimbursed' => null,
+            // Fake relations
+            'vehicle' => (object) [
+                'vehicule_type' => 'voiture',
+                'electrical' => false,
+                'number_plate' => 'AB-123-CD',
+                'power' => '6',
+            ],
+            'drivenTrips' => collect([
+                (object) [
+                    'starting_city' => 'Lyon',
+                    'ending_city' => 'Grenoble',
+                    'trip_type' => 'Aller-retour',
+                    'total_distance' => 220,
+                    'total_distance_given' => 50,
+                    'total_price_given' => 33.25,
+                ],
+            ]),
+            'otherTrips' => collect([
+                (object) ['expense_name' => 'Péages autoroute', 'expense_price' => 12.40],
+                (object) ['expense_name' => 'Train Lyon - Paris', 'expense_price' => 67.00],
+            ]),
+            'accommodations' => collect([
+                (object) [
+                    'accomodation_type' => 'Hôtel province hors cœur de ville',
+                    'nb_of_night' => 2,
+                    'total_price' => 160.00,
+                    'reimbursed_price' => 140.00,
+                ],
+            ]),
+            'meals' => collect([
+                (object) [
+                    'nb_of_meal' => 3,
+                    'total_price' => 78.00,
+                    'reimbursed_price' => 75.00,
+                ],
+            ]),
+            'otherExpenses' => collect([
+                (object) ['expense_name' => 'Fournitures de bureau', 'expense_price' => 14.50, 'nb_days_of_training' => null],
+                (object) ['expense_name' => 'Timbres', 'expense_price' => 3.20, 'nb_days_of_training' => null],
+                (object) ['expense_name' => 'Stage fédéral - participation frais matériels', 'expense_price' => 63.90, 'nb_days_of_training' => 3],
+            ]),
+        ];
+
+        $fakeUser = (object) [
             'firstname' => 'John',
             'lastname' => 'Doe',
             'address_street' => '6 impasse Gord',
@@ -64,81 +138,19 @@ class ExpenseClaimPdfService
             'phone_number' => '06 12 34 56 78',
         ];
 
-        $expensesClaim = (object) [
-            'action_name' => 'Stage fédéral spéléologie',
-            'action_dates' => '15-17 mars 2026',
-            'commitee_name' => 'Commission Formation',
-            'total_given' => 133.25,
-            'total_reimbursed' => null,
-        ];
-
-        $vehicle = (object) [
-            'vehicule_type' => 'voiture',
-            'electrical' => false,
-            'number_plate' => 'AB-123-CD',
-            'power' => '6',
-        ];
-
-        $drivenTrips = collect([
-            (object) [
-                'starting_city' => 'Lyon',
-                'ending_city' => 'Grenoble',
-                'trip_type' => 'Aller-retour',
-                'total_distance' => 220,
-                'total_distance_given' => 50,
-                'total_price_given' => 33.25, // 50 × 0,665 € (barème URSSAF 6CV non électrique)
-            ],
-        ]);
-
-        $otherTrips = collect([
-            (object) ['expense_name' => 'Péages autoroute', 'expense_price' => 12.40],
-            (object) ['expense_name' => 'Train Lyon - Paris', 'expense_price' => 67.00],
-        ]);
-
-        $accommodations = collect([
-            (object) [
-                'accomodation_type' => 'Hôtel province hors cœur de ville',
-                'nb_of_night' => 2,
-                'total_price' => 160.00,
-                'reimbursed_price' => 140.00,
-            ],
-        ]);
-
-        $meals = collect([
-            (object) [
-                'nb_of_meal' => 3,
-                'total_price' => 78.00,
-                'reimbursed_price' => 75.00,
-            ],
-        ]);
-
-        $otherExpenses = collect([
-            (object) ['expense_name' => 'Fournitures de bureau', 'expense_price' => 14.50, 'nb_days_of_training' => null],
-            (object) ['expense_name' => 'Timbres', 'expense_price' => 3.20, 'nb_days_of_training' => null],
-            (object) ['expense_name' => 'Stage fédéral - participation frais matériels', 'expense_price' => 63.90, 'nb_days_of_training' => 3],
-        ]);
-
-        $computed = $this->computeAmounts(
-            $vehicle,
-            $expensesClaim,
-            $drivenTrips,
-            $otherTrips,
-            $accommodations,
-            $meals,
-            $otherExpenses
-        );
+        $computed = $this->computeAmounts($fakeExpensesClaim);
 
         return $this->pdfGenerator
             ->view('pdf.expense-claim-pdf', [
                 'logoBase64' => base64_encode(file_get_contents(public_path('images/logo-ffs.jpg'))),
-                'user' => $user,
-                'expensesClaim' => $expensesClaim,
-                'vehicle' => $vehicle,
+                'user' => $fakeUser,
+                'expensesClaim' => $fakeExpensesClaim,
+                'vehicle' => $fakeExpensesClaim->vehicle,
                 'drivenTrips' => $computed->drivenTrips,
-                'otherTrips' => $otherTrips,
-                'accommodations' => $accommodations,
-                'meals' => $meals,
-                'otherExpenses' => $otherExpenses,
+                'otherTrips' => $fakeExpensesClaim->otherTrips,
+                'accommodations' => $fakeExpensesClaim->accommodations,
+                'meals' => $fakeExpensesClaim->meals,
+                'otherExpenses' => $fakeExpensesClaim->otherExpenses,
                 'computed' => $computed,
             ])
             ->merge($this->fakeJustificatifs());
@@ -147,47 +159,51 @@ class ExpenseClaimPdfService
     /**
      * Calcul des montants à rembourser pour chaque type de dépense.
      */
-    private function computeAmounts(
-        object $vehicle,
-        object $expensesClaim,
-        Collection $drivenTrips,
-        Collection $otherTrips,
-        Collection $accommodations,
-        Collection $meals,
-        Collection $otherExpenses,
-    ): object {
+    private function computeAmounts(object $expensesClaim): object
+    {
+        $vehicle = $expensesClaim->vehicle ?? null;
+        $drivenTrips = $expensesClaim->drivenTrips ?? collect();
+        $otherTrips = $expensesClaim->otherTrips ?? collect();
+        $accommodations = $expensesClaim->accommodations ?? collect();
+        $meals = $expensesClaim->meals ?? collect();
+        $otherExpenses = $expensesClaim->otherExpenses ?? collect();
 
-        // Taux FFS (remboursement effectif)
-        $rate = $vehicle->vehicule_type === 'moto'
-            ? ($vehicle->electrical ? 0.168 : 0.14)
-            : ($vehicle->electrical ? 0.432 : 0.36);
+        $rate = 0;
+        $rateUrssaf = 0;
 
-        // Barèmes URSSAF 2025
-        $urssafVoiture = [
-            '3' => ['standard' => 0.529, 'electrique' => 0.635],
-            '4' => ['standard' => 0.606, 'electrique' => 0.727],
-            '5' => ['standard' => 0.636, 'electrique' => 0.763],
-            '6' => ['standard' => 0.665, 'electrique' => 0.798],
-            '7' => ['standard' => 0.697, 'electrique' => 0.836],
-        ];
+        if ($vehicle) {
+            // Taux FFS (remboursement effectif)
+            $rate = $vehicle->vehicule_type === 'moto'
+                ? ($vehicle->electrical ? 0.168 : 0.14)
+                : ($vehicle->electrical ? 0.432 : 0.36);
 
-        $urssafMoto = [
-            '1' => ['standard' => 0.395, 'electrique' => 0.474],
-            '2' => ['standard' => 0.395, 'electrique' => 0.474],
-            '3' => ['standard' => 0.468, 'electrique' => 0.562],
-            '4' => ['standard' => 0.468, 'electrique' => 0.562],
-            '5' => ['standard' => 0.468, 'electrique' => 0.562],
-            '6' => ['standard' => 0.606, 'electrique' => 0.727],
-        ];
+            // Barèmes URSSAF 2025
+            $urssafVoiture = [
+                '3' => ['standard' => 0.529, 'electrique' => 0.635],
+                '4' => ['standard' => 0.606, 'electrique' => 0.727],
+                '5' => ['standard' => 0.636, 'electrique' => 0.763],
+                '6' => ['standard' => 0.665, 'electrique' => 0.798],
+                '7' => ['standard' => 0.697, 'electrique' => 0.836],
+            ];
 
-        $isMoto = $vehicle->vehicule_type === 'moto';
-        $power = min((int) $vehicle->power, $isMoto ? 6 : 7);
-        $typeKey = $vehicle->electrical ? 'electrique' : 'standard';
-        $baremeUrssaf = $isMoto ? $urssafMoto : $urssafVoiture;
-        $rateUrssaf = $baremeUrssaf[(string) $power][$typeKey];
+            $urssafMoto = [
+                '1' => ['standard' => 0.395, 'electrique' => 0.474],
+                '2' => ['standard' => 0.395, 'electrique' => 0.474],
+                '3' => ['standard' => 0.468, 'electrique' => 0.562],
+                '4' => ['standard' => 0.468, 'electrique' => 0.562],
+                '5' => ['standard' => 0.468, 'electrique' => 0.562],
+                '6' => ['standard' => 0.606, 'electrique' => 0.727],
+            ];
 
-        if (! $rateUrssaf) {
-            throw new \RuntimeException("Taux URSSAF introuvable pour puissance {$vehicle->power} ({$typeKey})");
+            $isMoto = $vehicle->vehicule_type === 'moto';
+            $power = min((int) $vehicle->power, $isMoto ? 6 : 7);
+            $typeKey = $vehicle->electrical ? 'electrique' : 'standard';
+            $baremeUrssaf = $isMoto ? $urssafMoto : $urssafVoiture;
+            $rateUrssaf = $baremeUrssaf[(string) $power][$typeKey];
+
+            if (! $rateUrssaf) {
+                throw new \RuntimeException("Taux URSSAF introuvable pour puissance {$vehicle->power} ({$typeKey})");
+            }
         }
 
         // Déplacements

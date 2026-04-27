@@ -17,6 +17,7 @@ MAIL_USERNAME=null
 MAIL_PASSWORD=null
 MAIL_FROM_ADDRESS="noreply@simplyfact.fr"
 MAIL_FROM_NAME="${APP_NAME}"
+MAIL_TO_ACCOUNTANT="comptable@ffs.fr"
 ```
 
 - Start Mailpit in a terminal:
