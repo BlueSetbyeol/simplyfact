@@ -69,7 +69,13 @@ class ExpensesClaimController extends Controller
      */
     public function edit(ExpensesClaim $expensesClaim)
     {
+        $claim = ExpensesClaim::with(['meals'])->findOrFail($expensesClaim->id);
+
         // TODO Il va falloir créer une autre page pour présenter la claim dans son ensemble en fonction de là où on en est.
+
+        // return Inertia::render('claim/ClaimSummary', [
+        //     'expensesClaim' => $claim,
+        // ]);
         return Inertia::render('claim/Informations', [
             'expensesClaim' => $expensesClaim,
         ]);
@@ -78,17 +84,19 @@ class ExpensesClaimController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ExpensesClaim $expensesClaim, Request $request)
     {
         // Not sure if we do authorize the modification at the end or not
 
-        // Validate
-        // $validated = $request->validate([
-        // 'message' => 'required|string|max:255',
-        // ]);
-        // Update
-        // $expenses_claim->update($validated);
-        // return redirect('/')->with('success', 'Expenses Claim updated!');
+        // ajout des valeurs de fin de note de frais
+        $validated = $request->validate([
+            'total_reimbursed' => 'decimal:0,2',
+            'total_given' => 'nullable|decimal:0,2',
+        ]);
+
+        $expensesClaim->update($validated);
+
+        return redirect()->route('expenses-claims.flow.done', $expensesClaim);
     }
 
     /**
