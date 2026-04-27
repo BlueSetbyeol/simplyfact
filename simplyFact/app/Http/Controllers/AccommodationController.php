@@ -11,9 +11,9 @@ class accommodationController extends Controller
 {
     public function index(ExpensesClaim $expensesClaim)
     {
-        return Inertia::render('accommodation/accommodation', [
+        return Inertia::render('accommodation/Accommodation', [
             'accommodations' => Accommodation::where('expenses_claim_id', $expensesClaim->id)->get(),
-            'expensesClaim' => [$expensesClaim],
+            'expensesClaimId' => $expensesClaim->id,
         ]);
     }
 
@@ -21,9 +21,9 @@ class accommodationController extends Controller
     {
         $accommodation = Accommodation::with('expenses_claim')->get();
 
-        return Inertia::render('accommodation/accommodation', [
+        return Inertia::render('accommodation/AccommodationDetails', [
             'accommodation' => $accommodation,
-            'expensesClaim' => $expensesClaim]);
+            'expensesClaimId' => $expensesClaim->id]);
     }
 
     public function store(Request $request, ExpensesClaim $expensesClaim)
@@ -44,7 +44,7 @@ class accommodationController extends Controller
             ...$validated,
         ]);
 
-        return (new FlowController)->completeStep($expensesClaim);
+        return (new FlowController)->enterChild('accommodation', $expensesClaim);
     }
 
     public function show(Accommodation $accommodation)

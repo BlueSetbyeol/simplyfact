@@ -1,37 +1,20 @@
 <?php
 
+use App\Http\Controllers\AccommodationController;
 use App\Http\Controllers\ExpensesClaimController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\ProofController;
 use App\Http\Controllers\UserController;
-use App\Models\ExpensesClaim;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-
-// Chemins temporaires pour dev
-Route::inertia('informations', 'user/Informations')->name('informations');
-Route::inertia('choices', 'choices/Choices')->name('choices');
-Route::get('/pathway', function (Request $request) {
-    return Inertia::render('choices/SumChoices', [
-        'steps' => $request->input('steps', []),
-        'expensesClaimId' => $request->input('expensesClaimId'),
-    ]);
-})->name('pathway');
-Route::inertia('accommodation', 'accommodation/Accommodation')->name('accomodation');
-Route::inertia('accommodation-details', 'accommodation/AccommodationDetails')->name('accomodation-details');
-
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');
 // A ajouter si on veut avoir une vérification d'identification avant complétion
 //      , ['canRegister' => Features::enabled(Features::registration()),]
-
-// Route pour le développement
-Route::inertia('/end', 'end/End') -> name('end');
-
 
 Route::resource('users', UserController::class);
 // Route pour identification avant d'atteindre ces pages
@@ -41,6 +24,7 @@ Route::resource('users', UserController::class);
 
 Route::resource('expenses-claims', ExpensesClaimController::class);
 
+Route::resource('expenses-claims.accommodations', AccommodationController::class);
 Route::resource('expenses-claims.meals', MealController::class);
 // Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
 

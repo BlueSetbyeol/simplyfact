@@ -16,7 +16,7 @@ class MealController extends Controller
     {
         return Inertia::render('meal/MealForm', [
             'meals' => Meal::where('expenses_claim_id', $expensesClaim->id)->get(),
-            'expensesClaim' => [$expensesClaim],
+            'expensesClaimId' => $expensesClaim->id,
         ]);
     }
 
