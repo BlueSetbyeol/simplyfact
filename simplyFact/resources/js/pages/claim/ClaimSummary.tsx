@@ -1,5 +1,5 @@
-import { Head, useForm } from '@inertiajs/react';
-import { Button, TextField, Card } from '@mui/material';
+import { useForm, Head } from '@inertiajs/react';
+import { Button, TextField, Card, Checkbox } from '@mui/material';
 import { useMemo, useState } from 'react';
 import Header from '@/layouts/Header';
 
@@ -36,7 +36,7 @@ interface ClaimSummaryProps {
 }
 
 export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
-    const { data, setData, post, errors, processing, reset } = useForm({
+    const { data, setData, post, errors, reset } = useForm({
         id: expensesClaim?.id,
         committee_name: expensesClaim?.committee_name,
         action_name: expensesClaim?.action_name,
@@ -64,6 +64,12 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
     }, [expensesClaim]);
 
     const [willGive, setWillGive] = useState<boolean>(false);
+    const [informationConfirmed, setInformationConfirmed] =
+        useState<boolean>(false);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInformationConfirmed(event.target.checked);
+    };
 
     const totalReimbursed =
         data.total_given !== 0 ? totalSpend - data.total_given : totalSpend;
@@ -103,7 +109,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                         <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
                             <h3>Les Trajets</h3>
                             {expensesClaim?.travels.map((travel, index) => (
-                                <Card key={index}>
+                                <Card key={index} className="mb-1 p-2">
                                     <p>To be determined : {travel.id}</p>
                                     {/* <p className="mb-1 text-gray-500">{labels[step]}</p> */}
                                 </Card>
@@ -115,7 +121,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                             <h3>Les Hébergements</h3>
                             {expensesClaim?.accommodations.map(
                                 (lodge, index) => (
-                                    <Card key={index}>
+                                    <Card key={index} className="mb-1 p-2">
                                         <p>To be determined : {lodge.id}</p>
                                         {/* <p className="mb-1 text-gray-500">{labels[step]}</p> */}
                                     </Card>
@@ -127,7 +133,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                         <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
                             <h3>Les Repas</h3>
                             {expensesClaim?.meals.map((meal, index) => (
-                                <Card key={index}>
+                                <Card key={index} className="mb-1 p-2">
                                     <p className="mb-1 text-gray-500">
                                         Nombre de repas : {meal.number_of_meal}
                                     </p>
@@ -144,7 +150,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                             <h3>Les autres Frais</h3>
                             {expensesClaim?.other_expenses.map(
                                 (lodge, index) => (
-                                    <Card key={index}>
+                                    <Card key={index} className="mb-1 p-2">
                                         <p>To be determined : {lodge.id}</p>
                                         {/* <p className="mb-1 text-gray-500">{labels[step]}</p> */}
                                     </Card>
@@ -209,8 +215,11 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                         </Button>
                     </div>
                     {willGive ? (
-                        <form onSubmit={endFlow}>
-                            <div className="mt-6 mb-2 flex flex-col gap-5">
+                        <form
+                            onSubmit={endFlow}
+                            className="flex w-full flex-col items-center justify-between"
+                        >
+                            <div className="my-2 flex w-[70%] flex-col items-center justify-between gap-5">
                                 <TextField
                                     label="Somme abandonnée"
                                     slotProps={{ inputLabel: { shrink: true } }}
@@ -233,35 +242,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                     <span>{errors.total_given}</span>
                                 )}
                             </div>
-                            <div className="mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">
-                                <div>
-                                    <p className="text-sm text-gray-500">
-                                        Total remboursé
-                                    </p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-2xl font-medium text-gray-900">
-                                        {data.total_reimbursed}€
-                                    </p>
-                                </div>
-                            </div>
-
-                            <Button
-                                type="submit"
-                                disabled={processing}
-                                variant="contained"
-                                fullWidth
-                                sx={{
-                                    backgroundColor: '#2D6A2D',
-                                    '&:hover': { backgroundColor: '#1F4F1F' },
-                                }}
-                            >
-                                Valider la note de frais
-                            </Button>
-                        </form>
-                    ) : (
-                        <div className="m-4 mb-6 flex w-full flex-col items-center justify-between rounded-xl p-4">
-                            <div className="mb-2 flex w-[70%] items-center justify-between rounded-xl bg-gray-50 p-4">
+                            <div className="flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <div>
                                     <p className="text-sm text-gray-500">
                                         Total remboursé
@@ -273,11 +254,65 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                     </p>
                                 </div>
                             </div>
+
+                            <section className="flex w-[70%] items-center justify-between py-3">
+                                <Checkbox
+                                    checked={informationConfirmed}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <p>
+                                    Je confirme que toutes les informations
+                                    données sont exacte et que j'ai fournis tous
+                                    les documents de justificatif.
+                                </p>
+                            </section>
+
+                            <Button
+                                type="submit"
+                                disabled={informationConfirmed ? false : true}
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: '#2D6A2D',
+                                    '&:hover': { backgroundColor: '#1F4F1F' },
+                                    width: '70%',
+                                }}
+                            >
+                                Valider la note de frais
+                            </Button>
+                        </form>
+                    ) : (
+                        <div className="m-4 mb-6 flex w-full flex-col items-center justify-between rounded-xl p-4">
+                            <div className="flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                                <div>
+                                    <p className="text-sm text-gray-500">
+                                        Total remboursé
+                                    </p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-2xl font-medium text-gray-900">
+                                        {totalReimbursed}€
+                                    </p>
+                                </div>
+                            </div>
+
+                            <section className="flex w-[70%] items-center justify-between py-3">
+                                <Checkbox
+                                    checked={informationConfirmed}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <p>
+                                    Je confirme que toutes les informations
+                                    données sont exacte et que j'ai fournis tous
+                                    les documents de justificatif.
+                                </p>
+                            </section>
+
                             <Button
                                 onClick={endFlow}
-                                disabled={processing}
+                                disabled={informationConfirmed ? false : true}
                                 variant="contained"
-                                fullWidth
                                 sx={{
                                     backgroundColor: '#2D6A2D',
                                     '&:hover': { backgroundColor: '#1F4F1F' },
