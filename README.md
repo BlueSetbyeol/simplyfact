@@ -27,3 +27,19 @@ mailpit
 ```
 
 - Mailpit UI available at http://localhost:8025
+
+##s3 storage
+Our app uses s3 storage and signed url to stock uploaded files.
+You need to :
+
+- configure your own s3 bucket and add a user with appropriate policies in IAM.
+- complete env variables as needed
+
+```env
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=tour_secret_access_key
+AWS_DEFAULT_REGION=eu-west-3
+AWS_BUCKET=simplyfact
+AWS_USE_PATH_STYLE_ENDPOINT=false
+
+```
