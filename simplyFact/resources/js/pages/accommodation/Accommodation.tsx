@@ -1,10 +1,11 @@
-import { Head, useForm } from "@inertiajs/react";
-import Header from '@/layouts/Header';
+import { Head, router } from "@inertiajs/react";
 import { Button } from "@mui/material";
+import Header from '@/layouts/Header';
 
-interface AccomodationPropos {
+interface AccomodationProps {
     expensesClaim: {id: string};
-    accommodation: {
+    accommodations: {
+        id: string;
         accomodation_type: string;
         nb_of_night: number;
         total_price: number;
@@ -12,13 +13,17 @@ interface AccomodationPropos {
     }[];
 } 
 
-export default function Accomodation({ expensesClaim, accommodation}: AccomodationPropos) {
+export default function Accomodation({ expensesClaim = {id: ''}, accommodations = []}: AccomodationProps) {
 
-    /* const totalRefund = accommodation.reduce((sum, item) => sum + item.reimbursed_price, 0)
-    et dans le JSX :
-    {accommodation.length === 0 && (
-        <p className="text-sm text-gray-400 mt-4">Aucun hébergement ajouté</p>
-    )} */
+    const totalReimbursed = accommodations.reduce((sum, accomodation) => sum + accomodation.reimbursed_price, 0)
+
+    function handleClick() {
+        router.get(`/expenses-claims/${expensesClaim.id}/accommodation-details`)
+    }
+
+    function completeStep() {
+        router.post('/flow/complete-step')
+    }
 
     return(
         <Header>
@@ -32,12 +37,30 @@ export default function Accomodation({ expensesClaim, accommodation}: Accomodati
                             sx={{
                                 backgroundColor: '#2D6A2D',
                                 '&:hover': { backgroundColor: '#1F4F1F' },
-                            }}>+
+                            }}
+                            onClick={handleClick}>
+                                +
                     </Button>
                 </div>
 
+                {accommodations.length === 0 ? (
+                    <p className="text-sm text-gray-400 mt-4">Aucun hébergement ajouté</p>
+                ) : (
+                    accommodations.map((accomodation) => (
+                        <div key={accomodation.id} className="bg-gray-50 rounded-xl p-4 mt-3">
+                            <p className="text-sm font-medium">{accomodation.accomodation_type}</p>
+                            <p className="text-xs text-gray-500">{accomodation.nb_of_night} nuit(s) - {accomodation.total_price}€ payés - {accomodation.reimbursed_price}€ remboursés</p>
+                        </div>
+                    ))
+                )}
+
+                <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center mt-6 mb-6">
+                    <p className="text-sm text-gray-500">Total des hébergements à rembourser</p>
+                    <p className="text-2xl font-medium text-gray-900">{totalReimbursed}€</p>
+                    
+                </div>
+
                 <Button
-                        type="submit"
                         variant="contained"
                         fullWidth
                         className="mt-5!"
@@ -45,19 +68,10 @@ export default function Accomodation({ expensesClaim, accommodation}: Accomodati
                             backgroundColor: '#2D6A2D',
                             '&:hover': { backgroundColor: '#1F4F1F' },
                         }}
+                        onClick={completeStep}
                     >
                         Suivant
                 </Button>
-
-                {accommodation.map((accommodation, index) => (
-                    <div key={index} className="bg-gray-50 rounded-xl p-4 mt-3">
-                        <p className="text-sm font-medium">{accommodation.accomodation_type}</p>
-                        <p className="text-xs text-gray-500">{accommodation.nb_of_night} nuit(s) — {accommodation.reimbursed_price}€</p>
-                    </div>
-                ))}
-
-                
-
             </div>
 
         </Header>

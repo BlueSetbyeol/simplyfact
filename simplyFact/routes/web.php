@@ -22,6 +22,7 @@ Route::get('/pathway', function (Request $request) {
     ]);
 })->name('pathway');
 Route::inertia('accommodation', 'accommodation/Accommodation')->name('accomodation');
+Route::inertia('accommodation-details', 'accommodation/AccommodationDetails')->name('accomodation-details');
 
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');
