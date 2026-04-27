@@ -30,8 +30,7 @@ Route::inertia('/', 'home')->name('home');
 //      , ['canRegister' => Features::enabled(Features::registration()),]
 
 // Route pour le développement
-Route::inertia('/end', 'end/End') -> name('end');
-
+Route::inertia('/end', 'end/End')->name('end');
 
 Route::resource('users', UserController::class);
 // Route pour identification avant d'atteindre ces pages
@@ -98,5 +97,5 @@ Route::get('/pdf-send-email', function () {
 
     $service->sendFakeByEmail('john.doe@email.com');
 
-    return 'Email envoyé - voir storage/logs/laravel.log';
+    return 'Email envoyé - voir http://localhost:8025';
 })->name('pdf.send-email');
