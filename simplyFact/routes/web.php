@@ -15,6 +15,10 @@ Route::inertia('/', 'home')->name('home');
 // A ajouter si on veut avoir une vérification d'identification avant complétion
 //      , ['canRegister' => Features::enabled(Features::registration()),]
 
+// Route pour le développement
+Route::inertia('/end', 'end/End') -> name('end');
+
+
 Route::resource('users', UserController::class);
 // Route pour identification avant d'atteindre ces pages
 // Route::middleware(['auth', 'verified'])->group(function () {
