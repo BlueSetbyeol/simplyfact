@@ -14,8 +14,8 @@ class ExpensesClaim extends Model
         'committee_name',
         'action_name',
         'action_dates',
-        'total_given' => 'decimal:2',
-        'total_reimbursed' => 'decimal:2',
+        'total_given',
+        'total_reimbursed',
     ];
 
     // Generation d'un UUID à la place d'un id en integer

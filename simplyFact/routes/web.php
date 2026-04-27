@@ -5,32 +5,15 @@ use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\ProofController;
 use App\Http\Controllers\UserController;
-use App\Models\ExpensesClaim;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-
-// Chemins temporaires pour dev
-Route::inertia('informations', 'user/Informations')->name('informations');
-Route::inertia('choices', 'choices/Choices')->name('choices');
-Route::get('/pathway', function (Request $request) {
-    return Inertia::render('choices/SumChoices', [
-        'steps' => $request->input('steps', []),
-        'expensesClaimId' => $request->input('expensesClaimId'),
-    ]);
-})->name('pathway');
-Route::inertia('accommodation', 'accommodation/Accommodation')->name('accomodation');
-Route::inertia('accommodation-details', 'accommodation/AccommodationDetails')->name('accomodation-details');
-
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');
 // A ajouter si on veut avoir une vérification d'identification avant complétion
 //      , ['canRegister' => Features::enabled(Features::registration()),]
-
-// Route pour le développement
-Route::inertia('/end', 'end/End')->name('end');
 
 Route::resource('users', UserController::class);
 // Route pour identification avant d'atteindre ces pages
@@ -41,6 +24,7 @@ Route::resource('users', UserController::class);
 Route::resource('expenses-claims', ExpensesClaimController::class);
 
 Route::resource('expenses-claims.meals', MealController::class);
+
 // Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
 
 // Flow (parcours de l'utilisateur)
@@ -60,12 +44,6 @@ Route::prefix('expenses-claims/{expensesClaim}/flow')
         Route::get('/done', 'done')->name('done');
     });
 
-// Route::get('/expenses-claims', [ExpensesClaimController::class, 'index'])->name('expensesClaim.index');
-// Route::post('/expenses-claims', [ExpensesClaimController::class, 'store'])->name('expensesClaim.store');
-// Route::get('/expenses-claims/{expensesClaim}/edit', [ExpensesClaimController::class, 'edit'])->name('expensesClaim.edit');
-// Route::put('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'update'])->name('expensesClaim.update');
-// Route::delete('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'destroy'])->name('expensesClaim.destroy');
-
 // upload de documents justificatif
 Route::post(
     '/expenses-claims/{expensesClaim}/proofs',
@@ -77,8 +55,6 @@ Route::delete(
     '/expenses-claims/{expensesClaim}/proofs',
     [ProofController::class, 'destroy']
 )->name('expenses-claims.proofs.destroy');
-
-require __DIR__.'/settings.php';
 
 // Dev only - preview du PDF dans le browser
 Route::get('/pdf-preview', function () {
@@ -99,3 +75,5 @@ Route::get('/pdf-send-email', function () {
 
     return 'Email envoyé - voir http://localhost:8025';
 })->name('pdf.send-email');
+
+require __DIR__.'/settings.php';

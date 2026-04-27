@@ -31,9 +31,8 @@ class ExpenseClaimPdfService
             // 'otherExpenses',
         ])->findOrFail($expenseClaimId);
 
-        dd($expensesClaim->toArray());
-
         $computed = $this->computeAmounts($expensesClaim);
+        // DEBUG temporaire
 
         $pdfContent = $this->pdfGenerator
             ->view('pdf.expense-claim-pdf', [
@@ -47,7 +46,9 @@ class ExpenseClaimPdfService
                 'meals' => $expensesClaim->meals,
                 'otherExpenses' => collect(), // TODO: $expensesClaim->otherExpenses
                 'computed' => $computed,
-            ])->getDocument();
+            ])
+            ->merge($this->fakeJustificatifs())
+            ->getDocument();
 
         Mail::to(config('mail.to_accountant'))
             ->send(new ExpenseClaimMail($pdfContent));
