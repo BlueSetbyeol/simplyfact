@@ -93,13 +93,9 @@ class FlowController extends Controller
         return $this->routeToStep($steps[$index]['name'], $expensesClaim);
     }
 
-    // Choix d'aller à une étape intermédiaire
-    public function enterChild(Request $request, ExpensesClaim $expensesClaim)
+    // Redirection vers la prochaine étape
+    public function enterChild(string $childName, ExpensesClaim $expensesClaim)
     {
-        $childName = $request->input('child_name');
-
-        // Store which child we're currently working on,
-        // so we know where to return after it's saved.
         session(['current_child' => $childName]);
 
         return $this->routeToStep($childName, $expensesClaim);
@@ -134,8 +130,8 @@ class FlowController extends Controller
     // validation de l'étape en cours
     public function completeStep(ExpensesClaim $expensesClaim)
     {
-        $steps = session('flow_steps', []);
-        $index = session('step_index', 0);
+        $steps = session('flow_steps_'.$expensesClaim->id, []);
+        $index = session('step_index_'.$expensesClaim->id, 0);
 
         if (isset($steps[$index])) {
             $steps[$index]['done'] = true;
@@ -160,7 +156,7 @@ class FlowController extends Controller
     {
 
         // $claim = ExpensesClaim::with(['travels', 'accommodations', 'meal', 'otherExpenses'])->findOrFail($expensesClaim->id);
-        $claim = ExpensesClaim::with(['meals'])->findOrFail($expensesClaim->id);
+        $claim = ExpensesClaim::with(['accommodations', 'meals'])->findOrFail($expensesClaim->id);
 
         return Inertia::render('claim/ClaimSummary', [
             'expensesClaim' => $claim,
@@ -181,14 +177,14 @@ class FlowController extends Controller
     private function routeToStep(string $step, ExpensesClaim $expensesClaim): RedirectResponse
     {
         return match ($step) {
-            'travel' => redirect()->route('expenses-claims.travel.index', $expensesClaim),
-            'vehicle' => redirect()->route('expenses-claims.travel.vehicle.create', $expensesClaim),
-            'driven_trip' => redirect()->route('expenses-claims.travel.driven_trip.create', $expensesClaim),
-            'other_trip' => redirect()->route('expenses-claims.travel.other_trip.create', $expensesClaim),
-            'accommodation' => redirect()->route('expenses-claims.accommodation.index', $expensesClaim),
-            'accommodation_detail' => redirect()->route('expenses-claims.accommodation.detail.create', $expensesClaim),
+            'travel' => redirect()->route('expenses-claims.travels.index', $expensesClaim),
+            'vehicle' => redirect()->route('expenses-claims.travels.vehicles.create', $expensesClaim),
+            'driven_trip' => redirect()->route('expenses-claims.travels.driven_trips.create', $expensesClaim),
+            'other_trip' => redirect()->route('expenses-claims.travels.other_trips.create', $expensesClaim),
+            'accommodation' => redirect()->route('expenses-claims.accommodations.index', $expensesClaim),
+            'accommodation_detail' => redirect()->route('expenses-claims.accommodations.detail.create', $expensesClaim),
             'meal' => redirect()->route('expenses-claims.meals.index', $expensesClaim),
-            'other_expense' => redirect()->route('expenses-claims.other_expense.index', $expensesClaim),
+            'other_expense' => redirect()->route('expenses-claims.other_expenses.index', $expensesClaim),
             default => redirect()->route('expenses-claims.flow.done', $expensesClaim),
         };
     }
