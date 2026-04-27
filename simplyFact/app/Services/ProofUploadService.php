@@ -20,7 +20,7 @@ class ProofUploadService
         $filename = Str::uuid().'.'.$extension;
         $directory = 'uploads/'.$expensesClaimId;
 
-        $file->storeAs($directory, $filename, 'local');
+        $file->storeAs($directory, $filename, 's3');
 
         return [
             'path' => $directory.'/'.$filename,
@@ -30,18 +30,15 @@ class ProofUploadService
 
     /**
      * Delete a specific proof file.
-     */
-    /**
-     * Delete a specific proof file.
      * Returns false if the file does not exist.
      */
     public function delete(string $path): bool
     {
-        if (! Storage::disk('local')->exists($path)) {
+        if (! Storage::disk('s3')->exists($path)) {
             return false;
         }
 
-        Storage::disk('local')->delete($path);
+        Storage::disk('s3')->delete($path);
 
         return true;
     }
@@ -52,21 +49,21 @@ class ProofUploadService
      */
     public function deleteAll(int|string $expensesClaimId): void
     {
-        Storage::disk('local')->deleteDirectory('uploads/'.$expensesClaimId);
+        Storage::disk('s3')->deleteDirectory('uploads/'.$expensesClaimId);
     }
 
     /**
      * Return absolute paths of all proof files for a given expenses claim.
      * Used by PdfGenerator for merging.
      */
-    public function getAbsolutePaths(int|string $expensesClaimId): array
+    public function getSignedUrls(int|string $expensesClaimId): array
     {
         $directory = 'uploads/'.$expensesClaimId;
 
-        $files = Storage::disk('local')->files($directory);
+        $files = Storage::disk('s3')->files($directory);
 
         return array_map(
-            fn (string $path) => Storage::disk('local')->path($path),
+            fn (string $path) => Storage::disk('s3')->temporaryUrl($path, now()->addMinutes(10)),
             $files
         );
     }

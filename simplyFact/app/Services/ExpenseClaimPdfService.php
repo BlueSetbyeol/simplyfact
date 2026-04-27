@@ -32,7 +32,15 @@ class ExpenseClaimPdfService
         ])->findOrFail($expenseClaimId);
 
         $computed = $this->computeAmounts($expensesClaim);
-        // DEBUG temporaire
+
+        // Proofs s3 signed URLs for merging in PDF
+        $proofService = new ProofUploadService;
+        $proofs = $proofService->getSignedUrls($expenseClaimId);
+        \Log::info('Proofs URLs:', $proofs);
+
+        if (empty($proofs)) {
+            throw new \RuntimeException('Impossible de générer le PDF : aucun justificatif fourni.');
+        }
 
         $pdfContent = $this->pdfGenerator
             ->view('pdf.expense-claim-pdf', [
@@ -47,7 +55,7 @@ class ExpenseClaimPdfService
                 'otherExpenses' => collect(), // TODO: $expensesClaim->otherExpenses
                 'computed' => $computed,
             ])
-            ->merge($this->fakeJustificatifs())
+            ->merge($proofs)
             ->getDocument();
 
         Mail::to(config('mail.to_accountant'))
