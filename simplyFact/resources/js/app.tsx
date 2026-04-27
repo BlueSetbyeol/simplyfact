@@ -25,6 +25,8 @@ createInertiaApp({
                 return null;
             case name.startsWith('choices/'):
                 return null;
+            case name.startsWith('end/'):
+                return null;
             default:
                 return AppLayout;
         }
