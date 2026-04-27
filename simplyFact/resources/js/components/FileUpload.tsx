@@ -54,7 +54,12 @@ export default function FileUpload({
         setErrors([]);
 
         const newErrors: string[] = [];
-        const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        const allowedTypes = [
+            'image/jpeg',
+            'image/png',
+            'application/pdf',
+            'image/webp',
+        ];
         const maxSizeBytes = maxSizeMb * 1024 * 1024;
 
         for (const file of files) {
@@ -78,6 +83,7 @@ export default function FileUpload({
             formData.append('file', file);
 
             try {
+                console.log('URL:', proofs.store(expensesClaimId));
                 const response = await fetch(
                     proofs.store(expensesClaimId).url,
                     {
