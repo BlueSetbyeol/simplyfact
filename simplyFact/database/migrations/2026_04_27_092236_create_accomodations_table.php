@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('accomodations', function (Blueprint $table) {
+        Schema::create('accommodations', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('expenses_claim_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->string('accomodation_type', 150);
+            $table->string('accommodation_type', 150);
             $table->integer('nb_of_night');
             $table->float('total_price');
             $table->float('reimbursed_price');
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('accomodations');
+        Schema::dropIfExists('accommodations');
     }
 };

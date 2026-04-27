@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Accomodation;
+use App\Models\Accommodation;
 use App\Models\ExpensesClaim;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class AccomodationController extends Controller
+class accommodationController extends Controller
 {
     public function index(ExpensesClaim $expensesClaim)
     {
-        return Inertia::render('accomodation/Accomodation', [
-            'accomodations' => Accomodation::where('expenses_claim_id', $expensesClaim->id)->get(),
+        return Inertia::render('accommodation/accommodation', [
+            'accommodations' => Accommodation::where('expenses_claim_id', $expensesClaim->id)->get(),
             'expensesClaim' => [$expensesClaim],
         ]);
     }
 
     public function create(ExpensesClaim $expensesClaim)
     {
-        $accomodation = Accomodation::with('expenses_claim')->get();
+        $accommodation = Accommodation::with('expenses_claim')->get();
 
-        return Inertia::render('accomodation/Accomodation', [
-            'accomodation' => $accomodation,
+        return Inertia::render('accommodation/accommodation', [
+            'accommodation' => $accommodation,
             'expensesClaim' => $expensesClaim]);
     }
 
@@ -31,7 +31,7 @@ class AccomodationController extends Controller
 
         // validation de la data
         $validated = $request->validate([
-            'accomodation_type' => 'required|string|min:5',
+            'accommodation_type' => 'required|string|min:5',
             'nb_of_night' => 'required|integer|min:1',
             'total_price' => 'required|decimal:0,2|min:0',
             'reimbursed_price' => 'decimal:0,2',
@@ -39,7 +39,7 @@ class AccomodationController extends Controller
         ]
         );
 
-        Accomodation::create([
+        Accommodation::create([
             'expenses_claim_id' => $expensesClaim->id,
             ...$validated,
         ]);
@@ -47,21 +47,21 @@ class AccomodationController extends Controller
         return (new FlowController)->completeStep($expensesClaim);
     }
 
-    public function show(Accomodation $accomodation)
+    public function show(Accommodation $accommodation)
     {
         //
     }
 
-    public function edit(Accomodation $accomodation)
+    public function edit(Accommodation $accommodation)
     {
         $claimId = session('expenses_claim_id');
-        $accomodations = Accomodation::where('expenses_claim_id', $claimId)->get();
+        $accommodations = Accommodation::where('expenses_claim_id', $claimId)->get();
     }
 
-    public function update(Request $request, Accomodation $accomodation, ExpensesClaim $expensesClaim)
+    public function update(Request $request, Accommodation $accommodation, ExpensesClaim $expensesClaim)
     {
         $validated = $request->validate([
-            'accomodation_type' => 'required|string|min:5',
+            'accommodation_type' => 'required|string|min:5',
             'nb_of_night' => 'required|integer|min:1',
             'total_price' => 'required|decimal:0,2|min:0',
             'reimbursed_price' => 'decimal:0,2',
@@ -69,15 +69,15 @@ class AccomodationController extends Controller
             'expenses_claim_id' => ['exists:expensesClaim,id'],
         ]);
 
-        $accomodation->update($validated);
+        $accommodation->update($validated);
 
         // Edit/update stays on the same page, no flow movement
         return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
     }
 
-    public function destroy(Accomodation $accomodation, ExpensesClaim $expensesClaim)
+    public function destroy(Accommodation $accommodation, ExpensesClaim $expensesClaim)
     {
-        $accomodation->delete();
+        $accommodation->delete();
 
         return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
     }

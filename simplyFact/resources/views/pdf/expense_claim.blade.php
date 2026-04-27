@@ -183,7 +183,7 @@
         <tbody class="divide-y divide-gray-100">
           @foreach($accommodations as $acc)
           <tr class="bg-white">
-            <td class="px-4 py-3 text-gray-900">{{ $acc->accomodation_type }}</td>
+            <td class="px-4 py-3 text-gray-900">{{ $acc->accommodation_type }}</td>
             <td class="px-4 py-3 text-right text-gray-600">{{ $acc->nb_of_night }}</td>
             <td class="px-4 py-3 text-right text-gray-600">
               {{ number_format($acc->total_price, 2, ',', ' ') }} €

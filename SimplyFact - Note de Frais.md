@@ -149,16 +149,16 @@ possiblement `vehicule`
 | total_reimbursed | number nullable      |
 | created_at       | timestamp            |
 
-`accomodation`
+`accommodation`
 
-| champ             | caractéristiques         |
-| ----------------- | ------------------------ |
-| id                | uuid PK                  |
-| expenses_claim    | uuid FK (expenses_claim) |
-| accomodation_type | string                   |
-| nb_of_night       | number                   |
-| total_price       | number                   |
-| reimbursed_price  | number                   |
+| champ              | caractéristiques         |
+| ------------------ | ------------------------ |
+| id                 | uuid PK                  |
+| expenses_claim     | uuid FK (expenses_claim) |
+| accommodation_type | string                   |
+| nb_of_night        | number                   |
+| total_price        | number                   |
+| reimbursed_price   | number                   |
 
 `meal`
 

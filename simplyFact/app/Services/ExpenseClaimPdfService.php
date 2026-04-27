@@ -77,7 +77,7 @@ class ExpenseClaimPdfService
 
         $accommodations = collect([
             (object) [
-                'accomodation_type' => 'Hôtel province hors cœur de ville',
+                'accommodation_type' => 'Hôtel province hors cœur de ville',
                 'nb_of_night' => 2,
                 'total_price' => 160.00,
                 'reimbursed_price' => 140.00,

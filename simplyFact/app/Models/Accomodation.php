@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Str;
 
-class Accomodation extends Model
+class Accommodation extends Model
 {
     protected $fillable = [
         'expenses_claim_id',
-        'accomodation_type',
+        'accommodation_type',
         'nb_of_night',
         'total_price',
         'reimbursed_price',
