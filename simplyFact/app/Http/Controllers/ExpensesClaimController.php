@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ExpensesClaim;
+use App\Services\ExpenseClaimPdfService;
+use App\Services\PdfGenerator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -95,6 +97,10 @@ class ExpensesClaimController extends Controller
         ]);
 
         $expensesClaim->update($validated);
+
+        // Génère PDF et envoie par email
+        $service = new ExpenseClaimPdfService(new PdfGenerator);
+        $service->generateAndSend($expensesClaim->id);
 
         return redirect()->route('expenses-claims.flow.done', $expensesClaim);
     }

@@ -18,14 +18,9 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
     const { data, setData, post, errors, reset } = useForm({
         number_of_meal: meal?.number_of_meal || 0,
         total_price: meal?.total_price || 0,
-        reimbursed_price: 0,
     });
 
     const totalRefund = Math.min(data.total_price, 25 * data.number_of_meal);
-
-    if (data.reimbursed_price !== totalRefund) {
-        setData('reimbursed_price', totalRefund);
-    }
 
     function submitMeal(e: { preventDefault: () => void }) {
         e.preventDefault();
@@ -100,7 +95,7 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
-                                {data.reimbursed_price}€
+                                {totalRefund}€
                             </p>
                             <p className="mt-1 text-xs text-gray-400">
                                 Plafond : 25 € par repas

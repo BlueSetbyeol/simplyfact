@@ -27,9 +27,9 @@ class ProofController extends Controller
                 'max:20480', // 20 MB
             ],
         ], [
-            'file.required' => 'Please select a file.',
-            'file.mimes' => 'Only JPG, PNG and PDF files are accepted.',
-            'file.max' => 'File size must not exceed 20 MB.',
+            'file.required' => 'Merci de sélectionner un fichier.',
+            'file.mimes' => 'Formats acceptés: JPG, PNG et PDF.',
+            'file.max' => 'La taille du fichier ne doit pas dépasser 20 Mo.',
         ]);
 
         $result = $this->uploadService->store(

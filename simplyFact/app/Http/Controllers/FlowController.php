@@ -105,7 +105,7 @@ class FlowController extends Controller
     public function returnToParent(ExpensesClaim $expensesClaim)
     {
         $steps = session('flow_steps_'.$expensesClaim->id, []);
-        $index = session('step_index', 0);
+        $index = session('step_index_'.$expensesClaim->id, 0);
         $childName = session('current_child');
 
         // Marquer l'étape intermédiaire comme complète (option)
@@ -166,7 +166,11 @@ class FlowController extends Controller
 
     public function done(ExpensesClaim $expensesClaim)
     {
-        session()->forget(['flow_steps', 'step_index']);
+        session()->forget(['flow_steps_'.$expensesClaim->id,
+            'step_index_'.$expensesClaim->id,
+            'pending_steps',
+            'current_child',
+        ]);
 
         return Inertia::render('end/End');
         // TODO préparer la prochaine fonction de destination pour la page de confirmation
