@@ -205,6 +205,7 @@ possiblement `vehicule`
 | total_price          | number                   |
 | total_distance_given | number nullable          |
 | total_price_given    | number nullable          |
+| description          | string nullable          |
 
 > question de savoir si on fait une table driven_trip_destination et destination ?
 

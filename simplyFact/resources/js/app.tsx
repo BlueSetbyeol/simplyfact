@@ -34,6 +34,8 @@ createInertiaApp({
                 return null;
             case name.startsWith('end/'):
                 return null;
+            case name.startsWith('travel/'):
+                return null;
             default:
                 return AppLayout;
         }
