@@ -28,7 +28,8 @@ mailpit
 
 - Mailpit UI available at http://localhost:8025
 
-## s3 storage
+## S3 storage
+
 Our app uses s3 storage and signed url to stock uploaded files.
 You need to :
 
@@ -41,5 +42,4 @@ AWS_SECRET_ACCESS_KEY=tour_secret_access_key
 AWS_DEFAULT_REGION=eu-west-3
 AWS_BUCKET=simplyfact
 AWS_USE_PATH_STYLE_ENDPOINT=false
-
 ```

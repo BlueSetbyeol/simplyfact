@@ -63,7 +63,7 @@ class ProofUploadService
         $files = Storage::disk('s3')->files($directory);
 
         return array_map(
-            fn (string $path) => Storage::disk('s3')->temporaryUrl($path, now()->addMinutes(10)),
+            fn (string $path) => Storage::disk('s3')->temporaryUrl($path, now()->addMinutes(100)),
             $files
         );
     }

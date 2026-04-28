@@ -41,9 +41,12 @@ readonly class PdfGenerator implements Responsable
         return $this;
     }
 
-    public function merge(iterable $pdfsUrl): self
+    public function merge(iterable $urls): self
     {
-        $this->merge = collect($pdfsUrl);
+        $this->merge = collect($urls)->map(fn ($url) => str_ends_with(parse_url($url, PHP_URL_PATH), '.pdf')
+            ? $url
+            : "{$this->apiUrl}?url={$url}"
+        );
 
         return $this;
     }
