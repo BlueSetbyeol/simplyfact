@@ -48,15 +48,6 @@ Route::prefix('expenses-claims/{expensesClaim}/flow')
         Route::get('/done', 'done')->name('done');
     });
 
-// création du pdf avant envoi
-Route::get('/pdf-preview', function () {
-    $service = new ExpenseClaimPdfService(
-        new PdfGenerator
-    );
-
-    return $service->previewFake();
-})->name('pdf.preview');
-
 // upload de documents justificatif
 Route::post(
     '/expenses-claims/{expensesClaim}/proofs',
@@ -68,5 +59,25 @@ Route::delete(
     '/expenses-claims/{expensesClaim}/proofs',
     [ProofController::class, 'destroy']
 )->name('expenses-claims.proofs.destroy');
+
+// Dev only - preview du PDF dans le browser
+Route::get('/pdf-preview', function () {
+    $service = new ExpenseClaimPdfService(
+        new PdfGenerator
+    );
+
+    return $service->previewFake();
+})->name('pdf.preview');
+
+// Dev only - test envoi email PDF fictif
+Route::get('/pdf-send-email', function () {
+    $service = new ExpenseClaimPdfService(
+        new PdfGenerator
+    );
+
+    $service->sendFakeByEmail('john.doe@email.com');
+
+    return 'Email envoyé - voir http://localhost:8025';
+})->name('pdf.send-email');
 
 require __DIR__.'/settings.php';

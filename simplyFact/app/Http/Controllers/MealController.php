@@ -15,7 +15,7 @@ class MealController extends Controller
     public function index(ExpensesClaim $expensesClaim)
     {
         return Inertia::render('meal/MealForm', [
-            'meals' => Meal::where('expenses_claim_id', $expensesClaim->id)->get(),
+            'meal' => Meal::where('expenses_claim_id', $expensesClaim->id)->get(),
             'expensesClaimId' => $expensesClaim->id,
         ]);
     }
@@ -42,10 +42,9 @@ class MealController extends Controller
         $validated = $request->validate([
             'number_of_meal' => 'required|integer|min:1',
             'total_price' => 'required|decimal:0,2|min:0',
-            'reimbursed_price' => 'decimal:0,2',
-            // TODO reimbursed_price a recalculer dans le back
-        ]
-        );
+        ]);
+        // Recalcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
+        $validated['reimbursed_price'] = min($validated['total_price'], 25 * $validated['number_of_meal']);
 
         Meal::create([
             'expenses_claim_id' => $expensesClaim->id,
@@ -81,11 +80,10 @@ class MealController extends Controller
     {
         $validated = $request->validate([
             'number_of_meal' => 'required|integer|min:1',
-            'total_price' => 'required|float|min:0',
-            'reimbursed_price' => 'float',
-            // TODO reimbursed_price a recalculer dans le back
-            'expenses_claim_id' => ['exists:expensesClaim,id'],
+            'total_price' => 'required|decimal:0,2|min:0',
         ]);
+        // Recalcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
+        $validated['reimbursed_price'] = min($validated['total_price'], 25 * $validated['number_of_meal']);
 
         $meal->update($validated);
 
