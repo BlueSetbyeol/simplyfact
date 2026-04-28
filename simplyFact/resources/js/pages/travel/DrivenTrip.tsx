@@ -21,7 +21,7 @@ interface DrivenTripsProps {
     modes: string[],
 }
 
-export default function DrivenTrips({expensesClaim = {id: ''}, drivenTrip, modes = ['Voiture']}: DrivenTripsProps) {
+export default function DrivenTrips({expensesClaim = {id: ''}, drivenTrip, modes = []}: DrivenTripsProps) {
 
     const {data, setData, post, errors, reset} = useForm({
         starting_city: drivenTrip ? drivenTrip.starting_city : '',

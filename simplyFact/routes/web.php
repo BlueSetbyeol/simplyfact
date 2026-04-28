@@ -17,6 +17,7 @@ Route::inertia('travel', 'travel/Travel')->name('travel');
 Route::inertia('travel-mode', 'travel/TravelMode')->name('travel-mode');
 Route::inertia('travel-vehicle', 'travel/Vehicle')->name('travel-vehicle');
 Route::inertia('travel-driven-trip', 'travel/DrivenTrip')->name('travel-driven-trip');
+Route::inertia('travel-other-trip', 'travel/OtherTrip')->name('travel-other-trip');
 
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');

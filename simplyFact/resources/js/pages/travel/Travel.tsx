@@ -34,7 +34,7 @@ export default function Travel({expensesClaim = {id: ''}, drivenTrips = [], othe
     const totalReimbursed = totalDrivenReimbursed + totalOtherReimbursed
 
     function handleClickAddTravel() {
-        router.get(`/expenses-claim/${expensesClaim}/travel-mode`)
+        router.get(`/expenses-claim/${expensesClaim.id}/travel-mode`)
     }
 
     function completeStep() {
