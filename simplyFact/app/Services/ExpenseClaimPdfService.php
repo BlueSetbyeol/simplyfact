@@ -51,7 +51,7 @@ class ExpenseClaimPdfService
                 'drivenTrips' => $computed->drivenTrips,
                 'otherTrips' => collect(), // TODO: $expensesClaim->otherTrips
                 'accommodations' => collect(), // TODO: $expensesClaim->accommodations
-                'meals' => $expensesClaim->meals,
+                'meal' => $expensesClaim->meals,
                 'otherExpenses' => collect(), // TODO: $expensesClaim->otherExpenses
                 'computed' => $computed,
             ])

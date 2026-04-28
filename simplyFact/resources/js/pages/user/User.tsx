@@ -93,7 +93,6 @@ export default function User({ user }: UserProps) {
                                 setData('lastname', e.target.value)
                             }
                             fullWidth
-                            size="small"
                             error={!!errors['lastname']}
                             helperText={errors['lastname']}
                         />

@@ -12,6 +12,7 @@ export default function SumChoices({ steps, expensesClaim }: SumChoicesProps) {
         travel: 'Déplacements',
         accommodation: 'Hébergements',
         meal: 'Repas',
+        training: 'Stages',
         other_expenses: 'Autre frais',
     };
 

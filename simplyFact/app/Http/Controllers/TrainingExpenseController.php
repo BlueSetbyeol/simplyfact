@@ -3,19 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\ExpensesClaim;
-use App\Models\Meal;
+use App\Models\TrainingExpense;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class MealController extends Controller
+class TrainingExpenseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(ExpensesClaim $expensesClaim)
     {
-        return Inertia::render('meal/MealForm', [
-            'meal' => Meal::where('expenses_claim_id', $expensesClaim->id)->get(),
+        return Inertia::render('trainingExpense/TrainingExpense', [
+            'trainingExpense' => TrainingExpense::where('expenses_claim_id', $expensesClaim->id)->get(),
             'expensesClaimId' => $expensesClaim->id,
         ]);
     }
@@ -25,10 +22,10 @@ class MealController extends Controller
      */
     public function create(ExpensesClaim $expensesClaim)
     {
-        $meal = Meal::with('expenses_claim')->get();
+        $trainingExpense = TrainingExpense::with('expenses_claim')->get();
 
-        return Inertia::render('meal/MealForm', [
-            'meal' => $meal,
+        return Inertia::render('trainingExpense/TrainingExpense', [
+            'trainingExpense' => $trainingExpense,
             'expensesClaim' => $expensesClaim]);
     }
 
@@ -40,15 +37,15 @@ class MealController extends Controller
 
         // validation de la data
         $validated = $request->validate([
-            'number_of_meal' => 'required|integer|min:1',
-            'total_price' => 'required|decimal:0,2|min:0',
+            'nb_days_of_training' => 'required|integer|min:1',
         ]);
 
+        $price_per_day = 21.30;
+        $max_reimbursed = 149.10;
         // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
-        $max_price_per_day = 25;
-        $validated['reimbursed_price'] = min($validated['total_price'], $max_price_per_day * $validated['number_of_meal']);
+        $validated['reimbursed_price'] = min($validated['nb_days_of_training'] * $price_per_day, $max_reimbursed);
 
-        Meal::create([
+        TrainingExpense::create([
             'expenses_claim_id' => $expensesClaim->id,
             ...$validated,
         ]);
@@ -59,7 +56,7 @@ class MealController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Meal $meal)
+    public function show(TrainingExpense $trainingExpense)
     {
         //
     }
@@ -67,10 +64,10 @@ class MealController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Meal $meal)
+    public function edit(TrainingExpense $trainingExpense)
     {
-        // return Inertia::render('meal/MealForm', [
-        //     'meal' => $meal,
+        // return Inertia::render('trainingExpense/TrainingExpense', [
+        //     'trainingExpense' => $trainingExpense,
         //     'expensesClaim' => ['exists:expensesClaim'],
         // ]);
     }
@@ -78,17 +75,19 @@ class MealController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Meal $meal, ExpensesClaim $expensesClaim)
+    public function update(Request $request, TrainingExpense $trainingExpense, ExpensesClaim $expensesClaim)
     {
+        // validation de la data
         $validated = $request->validate([
-            'number_of_meal' => 'required|integer|min:1',
-            'total_price' => 'required|decimal:0,2|min:0',
+            'nb_days_of_training' => 'required|integer|min:1',
         ]);
 
+        $price_per_day = 21.30;
+        $max_reimbursed = 149.10;
         // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
-        $validated['reimbursed_price'] = min($validated['total_price'], 25 * $validated['number_of_meal']);
+        $validated['reimbursed_price'] = min($validated['nb_days_of_training'] * $price_per_day, $max_reimbursed);
 
-        $meal->update($validated);
+        $trainingExpense->update($validated);
 
         // Edit/update stays on the same page, no flow movement
         return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
@@ -97,9 +96,9 @@ class MealController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Meal $meal, ExpensesClaim $expensesClaim)
+    public function destroy(TrainingExpense $trainingExpense, ExpensesClaim $expensesClaim)
     {
-        $meal->delete();
+        $trainingExpense->delete();
 
         return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
     }

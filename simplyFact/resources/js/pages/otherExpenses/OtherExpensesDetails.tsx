@@ -1,5 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import { Button, TextField } from '@mui/material';
+import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
@@ -9,7 +10,6 @@ interface OtherExpensesDetailsProps {
         id: string;
         expense_name: string;
         total_price: number;
-        reimbursed_price: number;
     };
 }
 
@@ -20,8 +20,9 @@ export default function OtherExpensesDetails({
     const { data, setData, post, errors, reset } = useForm({
         expense_name: otherExpense?.expense_name || '',
         total_price: otherExpense?.total_price || 0,
-        reimbursed_price: 0,
     });
+
+    const [reimbursedPrice, setReimbursedPrice] = useState<number>(0);
 
     function handleSubmit(e: { preventDefault: () => void }) {
         e.preventDefault();
@@ -74,10 +75,7 @@ export default function OtherExpensesDetails({
                                         'total_price',
                                         Number(e.target.value),
                                     );
-                                    setData(
-                                        'reimbursed_price',
-                                        Number(e.target.value),
-                                    );
+                                    setReimbursedPrice(Number(e.target.value));
                                 }}
                                 fullWidth
                                 error={!!errors['total_price']}
@@ -89,7 +87,7 @@ export default function OtherExpensesDetails({
                         </div>
                         <div className="mt-6 mb-6 flex items-center justify-center rounded-xl bg-gray-50 p-4">
                             <p className="text-2xl font-medium text-gray-900">
-                                {data.reimbursed_price}€
+                                {reimbursedPrice}€
                             </p>
                         </div>
 

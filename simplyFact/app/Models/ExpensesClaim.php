@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Str;
 
 class ExpensesClaim extends Model
@@ -41,9 +42,14 @@ class ExpensesClaim extends Model
         return $this->hasMany(Accommodation::class);
     }
 
-    public function meals(): HasMany // TODO a changé pour HasOne parce qu'il y aura qu'un seul repas déclaré (total)
+    public function meals(): HasOne
     {
-        return $this->hasMany(Meal::class);
+        return $this->hasOne(Meal::class);
+    }
+
+    public function trainingExpenses(): HasOne
+    {
+        return $this->hasOne(TrainingExpense::class);
     }
 
     public function otherExpenses(): HasMany

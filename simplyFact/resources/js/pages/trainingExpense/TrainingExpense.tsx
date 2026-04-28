@@ -4,26 +4,33 @@ import { Button, TextField } from '@mui/material';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
-interface MealFormProps {
+interface TrainingExpenseProps {
     expensesClaimId: string;
-    meal: {
+    trainingExpense: {
         id: number;
-        number_of_meal: number;
-        total_price: number;
+        nb_days_of_training: number;
     } | null;
 }
 
-export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
+export default function TrainingExpense({
+    expensesClaimId,
+    trainingExpense,
+}: TrainingExpenseProps) {
     const { data, setData, post, errors, reset } = useForm({
-        number_of_meal: meal?.number_of_meal || 0,
-        total_price: meal?.total_price || 0,
+        nb_days_of_training: trainingExpense?.nb_days_of_training || 0,
     });
 
-    const totalRefund = Math.min(data.total_price, 25 * data.number_of_meal);
+    const price_per_day = 21.3;
+    const max_reimbursed = 149.1;
+
+    const totalRefund = Math.min(
+        data.nb_days_of_training * price_per_day,
+        max_reimbursed,
+    ).toFixed(2);
 
     function submitMeal(e: { preventDefault: () => void }) {
         e.preventDefault();
-        post(`/expenses-claims/${expensesClaimId}/meals`, {
+        post(`/expenses-claims/${expensesClaimId}/training-expenses`, {
             onSuccess: () => {
                 reset();
             },
@@ -34,10 +41,11 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
         <Header>
             <Head title="Repas" />
             <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
-                <h1 className="text-xl font-medium text-gray-900">Vos repas</h1>
+                <h1 className="text-xl font-medium text-gray-900">
+                    Votre stage
+                </h1>
                 <p className="mt-1 mb-6 text-sm text-gray-500">
-                    Renseignez vos dépenses de repas effectuées lors de votre
-                    déplacement.
+                    Renseignez la durée (en jour) de votre stage
                 </p>
 
                 <hr className="mb-6 border-gray-100" />
@@ -45,42 +53,25 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                 <form onSubmit={submitMeal}>
                     <div className="flex flex-col gap-5">
                         <TextField
-                            label="Nombre de repas"
+                            label="Nombre de jour"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
-                                data.number_of_meal !== 0
-                                    ? data.number_of_meal
+                                data.nb_days_of_training !== 0
+                                    ? data.nb_days_of_training
                                     : ''
                             }
                             onChange={(e) =>
                                 setData(
-                                    'number_of_meal',
+                                    'nb_days_of_training',
                                     Number(e.target.value),
                                 )
                             }
                             fullWidth
-                            error={!!errors['number_of_meal']}
-                            helperText={errors['number_of_meal']}
+                            error={!!errors['nb_days_of_training']}
+                            helperText={errors['nb_days_of_training']}
                         />
-                        {errors.number_of_meal && (
-                            <span>{errors.number_of_meal}</span>
-                        )}
-
-                        <TextField
-                            label="Montant total"
-                            slotProps={{ inputLabel: { shrink: true } }}
-                            defaultValue={
-                                data.total_price !== 0 ? data.total_price : ''
-                            }
-                            onChange={(e) =>
-                                setData('total_price', Number(e.target.value))
-                            }
-                            fullWidth
-                            error={!!errors['total_price']}
-                            helperText={errors['total_price']}
-                        />
-                        {errors.total_price && (
-                            <span>{errors.total_price}</span>
+                        {errors.nb_days_of_training && (
+                            <span>{errors.nb_days_of_training}</span>
                         )}
                     </div>
 
@@ -89,7 +80,7 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                     <div className="mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">
                         <div>
                             <p className="text-sm text-gray-500">
-                                Total remboursé
+                                Total de la compensation
                             </p>
                         </div>
                         <div className="text-right">
@@ -97,7 +88,7 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                                 {totalRefund}€
                             </p>
                             <p className="mt-1 text-xs text-gray-400">
-                                Plafond : 25 € par repas
+                                Plafond : 149,10 € par stage
                             </p>
                         </div>
                     </div>

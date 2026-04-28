@@ -202,7 +202,7 @@
   @endif
 
   {{-- ─── REPAS ───────────────────────────────────────────────── --}}
-  @if($meals->isNotEmpty())
+  @if($meal->isNotEmpty())
   <section class="mb-6">
     <div class="flex items-baseline justify-between mb-3">
       <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400">Repas</h2>
@@ -219,7 +219,6 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
-          @foreach($meals as $meal)
           <tr class="bg-white">
             <td class="px-4 py-3 text-gray-900">Repas</td>
             <td class="px-4 py-3 text-right text-gray-600">{{ $meal->nb_of_meal ?? 0 }}</td>
@@ -230,7 +229,6 @@
               {{ number_format($meal->reimbursed_price ?? 0, 2, ',', ' ') }} €
             </td>
           </tr>
-          @endforeach
         </tbody>
       </table>
     </div>

@@ -159,7 +159,7 @@ class FlowController extends Controller
     {
 
         // $claim = ExpensesClaim::with(['travels', 'accommodations', 'meal', 'training', 'otherExpenses'])->findOrFail($expensesClaim->id);
-        $claim = ExpensesClaim::with(['accommodations', 'meals', 'otherExpenses'])->findOrFail($expensesClaim->id);
+        $claim = ExpensesClaim::with(['accommodations', 'meals', 'trainingExpenses', 'otherExpenses'])->findOrFail($expensesClaim->id);
 
         return Inertia::render('claim/ClaimSummary', [
             'expensesClaim' => $claim,
@@ -190,7 +190,7 @@ class FlowController extends Controller
             'accommodation' => redirect()->route('expenses-claims.accommodations.index', $expensesClaim),
             'accommodation_detail' => redirect()->route('expenses-claims.accommodations.detail.create', $expensesClaim),
             'meal' => redirect()->route('expenses-claims.meals.index', $expensesClaim),
-            'training' => redirect()->route('expenses-claims.trainings.index', $expensesClaim),
+            'training' => redirect()->route('expenses-claims.training-expenses.index', $expensesClaim),
             'other_expenses' => redirect()->route('expenses-claims.other-expenses.index', $expensesClaim),
             'other_expenses_detail' => redirect()->route('expenses-claims.other-expenses.detail.create', $expensesClaim),
             default => redirect()->route('expenses-claims.flow.done', $expensesClaim),
