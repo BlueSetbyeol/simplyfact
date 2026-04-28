@@ -44,7 +44,7 @@ Route::prefix('expenses-claims/{expensesClaim}/flow')
         Route::post('/enter-child', 'enterChild')->name('enter-child');
         Route::post('/return-parent', 'returnParent')->name('return-parent');
         Route::post('/complete-step', 'completeStep')->name('complete-step');
-        Route::get('/checkingClaims', 'checkingClaims')->name('checkingClaims');
+        Route::get('/checkingClaims', 'checkingClaims')->name('checking-claims');
         Route::get('/done', 'done')->name('done');
     });
 

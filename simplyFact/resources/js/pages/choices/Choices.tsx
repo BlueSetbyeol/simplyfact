@@ -263,7 +263,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                             </div>
                         </div>
 
-                        {/* Stage */}
+                        {/* Stage
                         <div className="flex flex-col gap-3">
                             <p className="text-gray-700">Un stage ?</p>
 
@@ -334,7 +334,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                     Non
                                 </Button>
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Autres frais */}
                         <div className="flex flex-col gap-3">

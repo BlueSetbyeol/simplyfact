@@ -29,6 +29,12 @@ interface ClaimSummaryProps {
             total_price: number;
             reimbursed_price: number;
         }[];
+        training: {
+            id: number;
+            nb_days_of_training: number;
+            total_price: number;
+            reimbursed_price: number;
+        };
         other_expenses: {
             id: number;
             expense_name: string;
@@ -168,25 +174,24 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                 ))}
                             </div>
                         )}
-                    {/* A changer pour 'Training' {expensesClaim?.other_expenses && expensesClaim?.other_expenses.length > 0 && (
+                    {expensesClaim?.training && (
                         <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
                             <h3>Les autres Frais</h3>
-                            {expensesClaim?.other_expenses.map(
-                                (expense, index) => (
-                                    <Card key={index} className="mb-1 p-2">
-                                        <p className="mb-1 text-gray-500">
-                                            Sujet de la dépense :{' '}
-                                            {expense.expense_name}
-                                        </p>
-                                        <p className="mb-1 text-gray-500">
-                                            Total remboursé :{' '}
-                                            {expense.reimbursed_price}
-                                        </p>
-                                    </Card>
-                                ),
-                            )}
+                            <Card className="mb-1 p-2">
+                                <p className="mb-1 text-gray-500">
+                                    Nombre de jour du stage :{' '}
+                                    {
+                                        expensesClaim?.training
+                                            .nb_days_of_training
+                                    }
+                                </p>
+                                <p className="mb-1 text-gray-500">
+                                    Total remboursé :{' '}
+                                    {expensesClaim?.training.reimbursed_price}
+                                </p>
+                            </Card>
                         </div>
-                    )} */}
+                    )}
                     {expensesClaim?.other_expenses &&
                         expensesClaim?.other_expenses.length > 0 && (
                             <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">

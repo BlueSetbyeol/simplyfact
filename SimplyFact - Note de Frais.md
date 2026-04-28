@@ -177,7 +177,8 @@ possiblement `vehicule`
 | id                  | uuid PK                  |
 | expenses_claim      | uuid FK (expenses_claim) |
 | nb_days_of_training | number                   |
-| training_price      | number                   |
+| total_price         | number                   |
+| reimbursed_price    | number                   |
 
 `other_expense`
 

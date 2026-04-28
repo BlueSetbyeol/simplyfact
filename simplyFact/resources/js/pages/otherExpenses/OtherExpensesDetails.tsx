@@ -23,10 +23,6 @@ export default function OtherExpensesDetails({
         reimbursed_price: 0,
     });
 
-    if (data.reimbursed_price !== data.total_price) {
-        setData('reimbursed_price', data.total_price);
-    }
-
     function handleSubmit(e: { preventDefault: () => void }) {
         e.preventDefault();
         post(`/expenses-claims/${expensesClaimId}/other-expenses`, {
@@ -76,6 +72,10 @@ export default function OtherExpensesDetails({
                                 onChange={(e) => {
                                     setData(
                                         'total_price',
+                                        Number(e.target.value),
+                                    );
+                                    setData(
+                                        'reimbursed_price',
                                         Number(e.target.value),
                                     );
                                 }}
