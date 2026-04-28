@@ -12,6 +12,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
     const [hasTravel, setHasTravel] = useState(false);
     const [hasAccommodation, setHasAccommodation] = useState(false);
     const [hasMeal, setHasMeal] = useState(false);
+    const [hasTraining, setHasTraining] = useState(false);
     const [hasOther, setHasOther] = useState(false);
     const [chosenSteps, setChosenSteps] = useState<string[]>([]);
 
@@ -263,22 +264,22 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                             </div>
                         </div>
 
-                        {/* Stage
+                        {/* Stage */}
                         <div className="flex flex-col gap-3">
                             <p className="text-gray-700">Un stage ?</p>
 
                             <div className="flex flex-row gap-2">
                                 <Button
                                     variant={
-                                        hasOther ? 'contained' : 'outlined'
+                                        hasTraining ? 'contained' : 'outlined'
                                     }
                                     onClick={() => {
-                                        setHasOther(true);
+                                        setHasTraining(true);
                                         chosenSteps.push('training');
                                         setChosenSteps(chosenSteps);
                                     }}
                                     sx={
-                                        hasOther
+                                        hasTraining
                                             ? {
                                                   backgroundColor: '#2D6A2D',
                                                   '&:hover': {
@@ -301,10 +302,10 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                 </Button>
                                 <Button
                                     variant={
-                                        !hasOther ? 'contained' : 'outlined'
+                                        !hasTraining ? 'contained' : 'outlined'
                                     }
                                     onClick={() => {
-                                        setHasOther(false);
+                                        setHasTraining(false);
                                         setChosenSteps(
                                             chosenSteps.filter(
                                                 (e) => e !== 'training',
@@ -312,7 +313,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                         );
                                     }}
                                     sx={
-                                        !hasOther
+                                        !hasTraining
                                             ? {
                                                   backgroundColor: '#2D6A2D',
                                                   '&:hover': {
@@ -334,7 +335,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                     Non
                                 </Button>
                             </div>
-                        </div> */}
+                        </div>
 
                         {/* Autres frais */}
                         <div className="flex flex-col gap-3">

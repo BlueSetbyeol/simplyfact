@@ -28,8 +28,8 @@ interface ClaimSummaryProps {
             number_of_meal: number;
             total_price: number;
             reimbursed_price: number;
-        }[];
-        training: {
+        };
+        training_expenses: {
             id: number;
             nb_days_of_training: number;
             total_price: number;
@@ -55,16 +55,19 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
         travels: expensesClaim?.travels,
         accommodations: expensesClaim?.accommodations,
         meals: expensesClaim?.meals,
+        training_expenses: expensesClaim?.training_expenses,
         other_expenses: expensesClaim?.other_expenses,
     });
 
     const totalSpend = useMemo(() => {
         let total = 0;
+
         expensesClaim?.travels?.forEach((t) => (total += t.reimbursed_price));
         expensesClaim?.accommodations?.forEach(
             (a) => (total += a.reimbursed_price),
         );
-        expensesClaim?.meals?.forEach((m) => (total += m.reimbursed_price));
+        total += expensesClaim?.meals?.reimbursed_price || 0;
+        total += expensesClaim?.training_expenses?.reimbursed_price || 0;
         expensesClaim?.other_expenses?.forEach(
             (e) => (total += e.reimbursed_price),
         );
@@ -95,8 +98,6 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
             },
         });
     }
-
-    console.log(expensesClaim?.meals);
 
     return (
         <Header>
@@ -155,38 +156,38 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                 )}
                             </div>
                         )}
-                    {expensesClaim?.meals &&
-                        expensesClaim?.meals.length > 0 && (
-                            <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
-                                <h3>Les Repas</h3>
-                                {expensesClaim?.meals.map((meal, index) => (
-                                    <Card key={index} className="mb-1 p-2">
-                                        <p className="mb-1 text-gray-500">
-                                            Nombre de repas :{' '}
-                                            {meal.number_of_meal}
-                                        </p>
-                                        <p className="mb-1 text-gray-500">
-                                            Total remboursé :{' '}
-                                            {meal.reimbursed_price}
-                                        </p>
-                                    </Card>
-                                ))}
-                            </div>
-                        )}
-                    {expensesClaim?.training && (
+                    {expensesClaim?.meals && (
+                        <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
+                            <h3>Les Repas</h3>
+                            <Card className="mb-1 p-2">
+                                <p className="mb-1 text-gray-500">
+                                    Nombre de repas :{' '}
+                                    {expensesClaim?.meals.number_of_meal}
+                                </p>
+                                <p className="mb-1 text-gray-500">
+                                    Total remboursé :{' '}
+                                    {expensesClaim?.meals.reimbursed_price}
+                                </p>
+                            </Card>
+                        </div>
+                    )}
+                    {expensesClaim?.training_expenses && (
                         <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
                             <h3>Les autres Frais</h3>
                             <Card className="mb-1 p-2">
                                 <p className="mb-1 text-gray-500">
                                     Nombre de jour du stage :{' '}
                                     {
-                                        expensesClaim?.training
+                                        expensesClaim?.training_expenses
                                             .nb_days_of_training
                                     }
                                 </p>
                                 <p className="mb-1 text-gray-500">
                                     Total remboursé :{' '}
-                                    {expensesClaim?.training.reimbursed_price}
+                                    {
+                                        expensesClaim?.training_expenses
+                                            .reimbursed_price
+                                    }
                                 </p>
                             </Card>
                         </div>

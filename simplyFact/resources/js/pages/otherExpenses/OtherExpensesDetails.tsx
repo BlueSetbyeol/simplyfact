@@ -75,7 +75,7 @@ export default function OtherExpensesDetails({
                                         'total_price',
                                         Number(e.target.value),
                                     );
-                                    setReimbursedPrice(data.total_price);
+                                    setReimbursedPrice(Number(e.target.value));
                                 }}
                                 fullWidth
                                 error={!!errors['total_price']}

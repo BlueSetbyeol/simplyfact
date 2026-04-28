@@ -11,7 +11,6 @@ class TrainingExpense extends Model
     protected $fillable = [
         'expenses_claim_id',
         'nb_days_of_training',
-        'total_price',
         'reimbursed_price',
     ];
 

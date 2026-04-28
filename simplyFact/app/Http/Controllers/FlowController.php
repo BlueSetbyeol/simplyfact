@@ -159,7 +159,7 @@ class FlowController extends Controller
     {
 
         // $claim = ExpensesClaim::with(['travels', 'accommodations', 'meal', 'training', 'otherExpenses'])->findOrFail($expensesClaim->id);
-        $claim = ExpensesClaim::with(['accommodations', 'meals', 'training', 'otherExpenses'])->findOrFail($expensesClaim->id);
+        $claim = ExpensesClaim::with(['accommodations', 'meals', 'trainingExpenses', 'otherExpenses'])->findOrFail($expensesClaim->id);
 
         return Inertia::render('claim/ClaimSummary', [
             'expensesClaim' => $claim,

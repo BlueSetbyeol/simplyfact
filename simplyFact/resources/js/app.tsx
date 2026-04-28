@@ -30,6 +30,8 @@ createInertiaApp({
                 return null;
             case name.startsWith('meal/'):
                 return null;
+            case name.startsWith('trainingExpense/'):
+                return null;
             case name.startsWith('otherExpenses/'):
                 return null;
             case name.startsWith('end/'):

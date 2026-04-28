@@ -38,12 +38,12 @@ class TrainingExpenseController extends Controller
         // validation de la data
         $validated = $request->validate([
             'nb_days_of_training' => 'required|integer|min:1',
-            'total_price' => 'required|decimal:0,2|min:0',
         ]);
 
+        $price_per_day = 21.30;
         $max_reimbursed = 149.10;
         // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
-        $validated['reimbursed_price'] = min($validated['total_price'], $max_reimbursed);
+        $validated['reimbursed_price'] = min($validated['nb_days_of_training'] * $price_per_day, $max_reimbursed);
 
         TrainingExpense::create([
             'expenses_claim_id' => $expensesClaim->id,
@@ -77,12 +77,15 @@ class TrainingExpenseController extends Controller
      */
     public function update(Request $request, TrainingExpense $trainingExpense, ExpensesClaim $expensesClaim)
     {
+        // validation de la data
         $validated = $request->validate([
             'nb_days_of_training' => 'required|integer|min:1',
-            'total_price' => 'required|decimal:0,2|min:0',
         ]);
 
+        $price_per_day = 21.30;
+        $max_reimbursed = 149.10;
         // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
+        $validated['reimbursed_price'] = min($validated['nb_days_of_training'] * $price_per_day, $max_reimbursed);
 
         $trainingExpense->update($validated);
 

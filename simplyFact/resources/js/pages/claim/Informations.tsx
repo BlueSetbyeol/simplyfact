@@ -50,7 +50,6 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                                 setData('committee_name', e.target.value)
                             }
                             fullWidth
-                            size="small"
                             error={!!errors['committee_name']}
                             helperText={errors['committee_name']}
                         />
