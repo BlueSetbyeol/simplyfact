@@ -1,9 +1,10 @@
 import { Head, router, useForm } from "@inertiajs/react"
-import { Checkbox, FormControlLabel, TextField } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, TextField, Tooltip } from "@mui/material";
+import { Info } from "lucide-react";
 import Header from '@/layouts/Header';
 
 interface DrivenTripsProps {
-    expensesClaim: {id: number},
+    expensesClaim: {id: string},
     drivenTrip?: {
         id: string,
         starting_city: string,
@@ -20,13 +21,13 @@ interface DrivenTripsProps {
     modes: string[],
 }
 
-export default function DrivenTrips({expensesClaim = {id: ''}, drivenTrip, modes = []}: DrivenTripsProps) {
+export default function DrivenTrips({expensesClaim = {id: ''}, drivenTrip, modes = ['Voiture']}: DrivenTripsProps) {
 
     const {data, setData, post, errors, reset} = useForm({
         starting_city: drivenTrip ? drivenTrip.starting_city : '',
-        starting_zip_code: drivenTrip ? drivenTrip.starting_zip_code : 0,
+        starting_zip_code: drivenTrip ? Number(drivenTrip.starting_zip_code) : 0,
         ending_city: drivenTrip ? drivenTrip.ending_city : '',
-        ending_zip_code: drivenTrip ? drivenTrip.ending_zip_code : 0,
+        ending_zip_code: drivenTrip ? Number(drivenTrip.ending_zip_code) : 0,
         trip_type: drivenTrip ? drivenTrip.trip_type : '',
         total_distance: drivenTrip ? drivenTrip.total_distance : 0,
         total_price: 0,
@@ -50,14 +51,20 @@ export default function DrivenTrips({expensesClaim = {id: ''}, drivenTrip, modes
 
     const totalPrice = rate * data.total_distance
 
-    const totalAbandonned = rate * data.total_price_given
+    const totalAbandonned = rate * data.total_distance_given
 
     const totalFinal = totalPrice - totalAbandonned
 
     function handleSubmit(e: {preventDefault: () => void}) {
         e.preventDefault();
-        setData('total_price', totalPrice);
         post(`/expenses-claims/${expensesClaim?.id}/driven-trips`, {
+            onBefore: () => {
+                setData({
+                    ...data,
+                    total_price: totalFinal,
+                    total_price_given: totalAbandonned,
+                })
+            },
             onSuccess: () => {
                 reset();
                 // Si l'utilisateur a choisi d'autres trajets
@@ -138,7 +145,7 @@ export default function DrivenTrips({expensesClaim = {id: ''}, drivenTrip, modes
                                 inputLabel: { shrink: true },
                                 htmlInput: { maxLength: 5, minLength: 5}
                              }}
-                            defaultValue={data.starting_zip_code}
+                            defaultValue={data.ending_zip_code}
                             onChange={(e) => setData('ending_zip_code', Number(e.target.value))}
                             error={!!errors['ending_zip_code']}
                             helperText={errors['ending_zip_code']}
@@ -151,10 +158,7 @@ export default function DrivenTrips({expensesClaim = {id: ''}, drivenTrip, modes
                             multiline
                             rows={3}
                             type="text"
-                            slotProps={{ 
-                                inputLabel: { shrink: true },
-                                htmlInput: { maxLength: 5, minLength: 5}
-                             }}
+                            slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={data.description}
                             onChange={(e) => setData('description', e.target.value)}
                     />
@@ -209,7 +213,15 @@ export default function DrivenTrips({expensesClaim = {id: ''}, drivenTrip, modes
 
                     <div className="flex flex-col gap-4 rounded-xl bg-gray-50 p-4">
 
-                        <p className="text-sm text-gray-500 font-medium mb-4">OPTIONNEL: Déclaration de km en abandon</p>
+                        <div className="flex items-baseline gap-2">
+                             <p className="text-sm text-gray-500 font-medium mb-4">OPTIONNEL: Déclaration de km en abandon</p>
+                            <Tooltip
+                                title="Les km en abandon seront pris en compte en tant que dons à l'association pour les impôts."
+                                arrow
+                            >
+                                <Info className="w-4 h-4 text-gray-400 cursor-pointer"/>
+                            </Tooltip>
+                        </div>
                         <TextField
                             label="Total des km abandonnés"
                             type="text"
@@ -227,18 +239,33 @@ export default function DrivenTrips({expensesClaim = {id: ''}, drivenTrip, modes
 
                     <hr className="border-gray-100 mb-4" />
 
-                    <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center mt-4 mb-4">
+                    <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center">
 
                         <div>
                             <p className="text-sm text-gray-500">Total à rembourser</p>
-                            <p className="text-xs text-gray-400 mt-1">Taux: {rate}€ par km</p>
+                            {data.total_distance_given > 0 && (
+                                <p className="text-xs text-gray-400 mt-1">
+                                    Dont {totalAbandonned.toFixed(2)}€ en abandon
+                                </p>
+                            )}
                         </div>
 
-                        <p className="text-2xl font-medium text-gray-900">{totalPrice.toFixed(2)}€</p>
+                        <p className="text-2xl font-medium text-gray-900">{totalFinal.toFixed(2)}€</p>
 
                     </div>
 
-
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        className="!mt-2"
+                        sx={{
+                            backgroundColor: '#2D6A2D',
+                            '&:hover': { backgroundColor: '#1F4F1F' },
+                        }}
+                    >
+                        Suivant
+                    </Button>
 
                 </form>
             </div>
