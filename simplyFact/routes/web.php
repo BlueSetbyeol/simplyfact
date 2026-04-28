@@ -13,16 +13,11 @@ use Inertia\Inertia;
 
 
 // Chemins temporaires pour dev
-Route::inertia('informations', 'user/Informations')->name('informations');
-Route::inertia('choices', 'choices/Choices')->name('choices');
-Route::get('/pathway', function (Request $request) {
-    return Inertia::render('choices/SumChoices', [
-        'steps' => $request->input('steps', []),
-        'expensesClaimId' => $request->input('expensesClaimId'),
-    ]);
-})->name('pathway');
-Route::inertia('accommodation', 'accommodation/Accommodation')->name('accomodation');
-Route::inertia('accommodation-details', 'accommodation/AccommodationDetails')->name('accomodation-details');
+Route::inertia('travel', 'travel/Travel')->name('travel');
+Route::inertia('travel-mode', 'travel/TravelMode')->name('travel-mode');
+Route::inertia('travel-vehicle', 'travel/Vehicle')->name('travel-vehicle');
+Route::inertia('travel-driven-trip', 'travel/DrivenTrip')->name('travel-driven-trip');
+
 
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');

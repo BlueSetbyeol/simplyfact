@@ -5,7 +5,7 @@ import Header from '@/layouts/Header';
 interface AccomodationProps {
     expensesClaim: {id: string};
     accommodations: {
-        id: string;
+        id: number;
         accomodation_type: string;
         nb_of_night: number;
         total_price: number;
@@ -57,7 +57,6 @@ export default function Accomodation({ expensesClaim = {id: ''}, accommodations 
                 <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center mt-6 mb-6">
                     <p className="text-sm text-gray-500">Total des hébergements à rembourser</p>
                     <p className="text-2xl font-medium text-gray-900">{totalReimbursed}€</p>
-                    
                 </div>
 
                 <Button
