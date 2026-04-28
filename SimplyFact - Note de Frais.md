@@ -149,16 +149,16 @@ possiblement `vehicule`
 | total_reimbursed | number nullable      |
 | created_at       | timestamp            |
 
-`accomodation`
+`accommodation`
 
-| champ             | caractéristiques         |
-| ----------------- | ------------------------ |
-| id                | uuid PK                  |
-| expenses_claim    | uuid FK (expenses_claim) |
-| accomodation_type | string                   |
-| nb_of_night       | number                   |
-| total_price       | number                   |
-| reimbursed_price  | number                   |
+| champ              | caractéristiques         |
+| ------------------ | ------------------------ |
+| id                 | uuid PK                  |
+| expenses_claim     | uuid FK (expenses_claim) |
+| accommodation_type | string                   |
+| nb_of_night        | number                   |
+| total_price        | number                   |
+| reimbursed_price   | number                   |
 
 `meal`
 
@@ -170,15 +170,25 @@ possiblement `vehicule`
 | total_price      | number                   |
 | reimbursed_price | number                   |
 
-`other_expense`
+`training_expense`
 
 | champ               | caractéristiques         |
 | ------------------- | ------------------------ |
 | id                  | uuid PK                  |
 | expenses_claim      | uuid FK (expenses_claim) |
-| expense_name        | string                   |
-| expense_price       | number                   |
 | nb_days_of_training | number                   |
+| total_price         | number                   |
+| reimbursed_price    | number                   |
+
+`other_expense`
+
+| champ            | caractéristiques         |
+| ---------------- | ------------------------ |
+| id               | uuid PK                  |
+| expenses_claim   | uuid FK (expenses_claim) |
+| expense_name     | string                   |
+| total_price      | number                   |
+| reimbursed_price | number                   |
 
 `driven_trip`
 
@@ -264,72 +274,4 @@ Q : possibilité de stocker les informations en plusieurs format (informatif ou 
 - Est-ce que le back redirige vers la page suivante ou vers sa propre page (code Laravel/php) et Inertia (avec React) fait la redirection vers la suite du programme ? ==> Flow
 - Il faudra surement créer un tableau pour le chemin prévu avec des objects identifiant les pages. Ex : page.name (string), page.path (string), page.resolved (boolean). Où / Comment garder en mémoire le choix des pages ? ==> Flow
 - Comment on fait pour montrer les prix kilométrique en fonction de la voiture déjà sélectionné ?
-
-###### Requête à garder en mémoire :
-
-I'm working on a project to make easier sending expenses claim to an accounting departement. The project is made with Laravel starter Kit and React + MySQL (sqlLite included in the kit) For reference, you will find our wireframe attached to this message. The difficulty I am trying to tackle right now is about the flow of going from one page to another, taking into account that the user can choose which page he will fill out to complete his expenses claim. Not all page would be included and some can include more than one call to add to the bdd. We had the idea of using a session that will have the flow chosen by the user in a variable (either a state or juste an array). On the Back side, here is the state of the page right now, but I'm still working on it :
-
-```php
-<?php
-
-namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-
-class FlowController extends Controller
-{
-    public function start(Request $request)
-    {
-        $steps = $request->input('steps', []);
-
-        $allowedSteps = ['travel', 'accommodation', 'meal', 'other_expense'];
-        $steps = array_values(array_intersect($steps, $allowedSteps));
-
-        session([
-            'flow_steps' => $steps,
-            'current_step' => 0
-        ]);
-
-        return redirect()->route('flow.next');
-    }
-
-    public function next()
-    {
-        $steps = session('flow_steps', []);
-        $index = session('current_step', 0);
-
-        if (!isset($steps[$index])) {
-            return redirect()->route('flow.done');
-        }
-
-        $step = $steps[$index];
-
-        return match ($step) {
-            'travel' => redirect()->route('travel.create'),
-            'accommodation' => redirect()->route('accommodation.create'),
-            'meal' => redirect()->route('meal.create'),
-            'other_expense' => redirect()->route('other_expense'),
-            default => redirect()->route('flow.done'),
-        };
-    }
-
-    public function done()
-    {
-        // nettoyage (important)
-        session()->forget(['flow_steps', 'current_step']);
-
-        return Inertia::render('Flow/Done');
-    }
-}
-```
-
-The thing is, as you can see on the wireframe, travel and accommodation are not to be filled once only and for travel, there is a few steps to be completed.
-
-So my question is if it's possible to change $steps to an array of object as such :
-
-```php
-['name'=>'accommodation','state'=>'false','children'=>['vehicle', 'driven_trip', 'other_trip']]
-```
-
-and then if there is children, it run as many time as the state is false before the goes to the next step ?
+- Est-ce qu'il faut que l'on affiche un nom d'Hotel pour l'UI/UX ? Ou juste le type de logement suffit amplement ?

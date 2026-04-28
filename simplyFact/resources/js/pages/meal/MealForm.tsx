@@ -5,7 +5,7 @@ import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
 interface MealFormProps {
-    expensesClaim: { id: string };
+    expensesClaimId: string;
     meal: {
         id: number;
         number_of_meal: number;
@@ -14,24 +14,17 @@ interface MealFormProps {
     } | null;
 }
 
-export default function MealForm({ expensesClaim, meal }: MealFormProps) {
+export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
     const { data, setData, post, errors, reset } = useForm({
         number_of_meal: meal?.number_of_meal || 0,
         total_price: meal?.total_price || 0,
-        reimbursed_price: 0,
     });
 
     const totalRefund = Math.min(data.total_price, 25 * data.number_of_meal);
 
-    if (data.reimbursed_price !== totalRefund) {
-        setData('reimbursed_price', totalRefund);
-    }
-
-    console.log(expensesClaim, expensesClaim.id);
-
     function submitMeal(e: { preventDefault: () => void }) {
         e.preventDefault();
-        post(`/expenses-claims/${expensesClaim.id}/meals`, {
+        post(`/expenses-claims/${expensesClaimId}/meals`, {
             onSuccess: () => {
                 reset();
             },
@@ -102,7 +95,7 @@ export default function MealForm({ expensesClaim, meal }: MealFormProps) {
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
-                                {data.reimbursed_price}€
+                                {totalRefund}€
                             </p>
                             <p className="mt-1 text-xs text-gray-400">
                                 Plafond : 25 € par repas
@@ -110,7 +103,7 @@ export default function MealForm({ expensesClaim, meal }: MealFormProps) {
                         </div>
                     </div>
 
-                    <FileUpload expensesClaimId={expensesClaim.id} />
+                    <FileUpload expensesClaimId={expensesClaimId} />
 
                     <Button
                         type="submit"

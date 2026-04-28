@@ -12,7 +12,7 @@ export default function SumChoices({ steps, expensesClaim }: SumChoicesProps) {
         travel: 'Déplacements',
         accommodation: 'Hébergements',
         meal: 'Repas',
-        other_expense: 'Autre frais',
+        other_expenses: 'Autre frais',
     };
 
     const { post, processing } = useForm();

@@ -18,6 +18,8 @@ interface ClaimSummaryProps {
         }[];
         accommodations: {
             id: number;
+            accommodation_type: string;
+            nb_of_night: number;
             total_price: number;
             reimbursed_price: number;
         }[];
@@ -27,8 +29,15 @@ interface ClaimSummaryProps {
             total_price: number;
             reimbursed_price: number;
         }[];
+        training: {
+            id: number;
+            nb_days_of_training: number;
+            total_price: number;
+            reimbursed_price: number;
+        };
         other_expenses: {
             id: number;
+            expense_name: string;
             total_price: number;
             reimbursed_price: number;
         }[];
@@ -36,7 +45,7 @@ interface ClaimSummaryProps {
 }
 
 export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
-    const { data, setData, put, errors, reset } = useForm({
+    const { data, setData, put, errors, reset, transform } = useForm({
         id: expensesClaim?.id,
         committee_name: expensesClaim?.committee_name,
         action_name: expensesClaim?.action_name,
@@ -48,6 +57,11 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
         meals: expensesClaim?.meals,
         other_expenses: expensesClaim?.other_expenses,
     });
+
+    transform((data) => ({
+        total_given: data.total_given,
+        total_reimbursed: totalReimbursed,
+    }));
 
     const totalSpend = useMemo(() => {
         let total = 0;
@@ -76,13 +90,14 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
 
     function endFlow(e: { preventDefault: () => void }) {
         e.preventDefault();
-        setData('total_reimbursed', totalReimbursed);
         put(`/expenses-claims/${expensesClaim?.id}`, {
             onSuccess: () => {
                 reset();
             },
         });
     }
+
+    console.log(expensesClaim?.meals);
 
     return (
         <Header>
@@ -106,59 +121,97 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
 
                 <section className="my-4 flex w-full flex-col items-center gap-2">
                     <h2>Toutes les dépenses effectuées</h2>
-                    {expensesClaim?.travels && (
-                        <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
-                            <h3>Les Trajets</h3>
-                            {expensesClaim?.travels.map((travel, index) => (
-                                <Card key={index} className="mb-1 p-2">
-                                    <p>To be determined : {travel.id}</p>
-                                    {/* <p className="mb-1 text-gray-500">{labels[step]}</p> */}
-                                </Card>
-                            ))}
-                        </div>
-                    )}
-                    {expensesClaim?.accommodations && (
-                        <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
-                            <h3>Les Hébergements</h3>
-                            {expensesClaim?.accommodations.map(
-                                (lodge, index) => (
+                    {expensesClaim?.travels &&
+                        expensesClaim?.travels.length > 0 && (
+                            <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
+                                <h3>Les Trajets</h3>
+                                {expensesClaim?.travels.map((travel, index) => (
                                     <Card key={index} className="mb-1 p-2">
-                                        <p>To be determined : {lodge.id}</p>
+                                        <p>To be determined : {travel.id}</p>
                                         {/* <p className="mb-1 text-gray-500">{labels[step]}</p> */}
                                     </Card>
-                                ),
-                            )}
-                        </div>
-                    )}
-                    {expensesClaim?.meals && (
-                        <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
-                            <h3>Les Repas</h3>
-                            {expensesClaim?.meals.map((meal, index) => (
-                                <Card key={index} className="mb-1 p-2">
-                                    <p className="mb-1 text-gray-500">
-                                        Nombre de repas : {meal.number_of_meal}
-                                    </p>
-                                    <p className="mb-1 text-gray-500">
-                                        Total remboursé :{' '}
-                                        {meal.reimbursed_price}
-                                    </p>
-                                </Card>
-                            ))}
-                        </div>
-                    )}{' '}
-                    {expensesClaim?.other_expenses && (
+                                ))}
+                            </div>
+                        )}
+                    {expensesClaim?.accommodations &&
+                        expensesClaim?.accommodations.length > 0 && (
+                            <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
+                                <h3>Les Hébergements</h3>
+                                {expensesClaim?.accommodations.map(
+                                    (lodge, index) => (
+                                        <Card key={index} className="mb-1 p-2">
+                                            <p className="mb-1 text-gray-500">
+                                                {lodge.accommodation_type}
+                                            </p>
+                                            <p className="mb-1 text-gray-500">
+                                                Nombre de nuits :{' '}
+                                                {lodge.nb_of_night}
+                                            </p>
+                                            <p className="mb-1 text-gray-500">
+                                                Total remboursé :{' '}
+                                                {lodge.reimbursed_price}
+                                            </p>
+                                        </Card>
+                                    ),
+                                )}
+                            </div>
+                        )}
+                    {expensesClaim?.meals &&
+                        expensesClaim?.meals.length > 0 && (
+                            <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
+                                <h3>Les Repas</h3>
+                                {expensesClaim?.meals.map((meal, index) => (
+                                    <Card key={index} className="mb-1 p-2">
+                                        <p className="mb-1 text-gray-500">
+                                            Nombre de repas :{' '}
+                                            {meal.number_of_meal}
+                                        </p>
+                                        <p className="mb-1 text-gray-500">
+                                            Total remboursé :{' '}
+                                            {meal.reimbursed_price}
+                                        </p>
+                                    </Card>
+                                ))}
+                            </div>
+                        )}
+                    {expensesClaim?.training && (
                         <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
                             <h3>Les autres Frais</h3>
-                            {expensesClaim?.other_expenses.map(
-                                (lodge, index) => (
-                                    <Card key={index} className="mb-1 p-2">
-                                        <p>To be determined : {lodge.id}</p>
-                                        {/* <p className="mb-1 text-gray-500">{labels[step]}</p> */}
-                                    </Card>
-                                ),
-                            )}
+                            <Card className="mb-1 p-2">
+                                <p className="mb-1 text-gray-500">
+                                    Nombre de jour du stage :{' '}
+                                    {
+                                        expensesClaim?.training
+                                            .nb_days_of_training
+                                    }
+                                </p>
+                                <p className="mb-1 text-gray-500">
+                                    Total remboursé :{' '}
+                                    {expensesClaim?.training.reimbursed_price}
+                                </p>
+                            </Card>
                         </div>
                     )}
+                    {expensesClaim?.other_expenses &&
+                        expensesClaim?.other_expenses.length > 0 && (
+                            <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
+                                <h3>Les autres Frais</h3>
+                                {expensesClaim?.other_expenses.map(
+                                    (expense, index) => (
+                                        <Card key={index} className="mb-1 p-2">
+                                            <p className="mb-1 text-gray-500">
+                                                Sujet de la dépense :{' '}
+                                                {expense.expense_name}
+                                            </p>
+                                            <p className="mb-1 text-gray-500">
+                                                Total remboursé :{' '}
+                                                {expense.reimbursed_price}
+                                            </p>
+                                        </Card>
+                                    ),
+                                )}
+                            </div>
+                        )}
                 </section>
 
                 <section className="my-4 flex w-full flex-col items-center gap-2 rounded-xl border border-gray-200 p-4">

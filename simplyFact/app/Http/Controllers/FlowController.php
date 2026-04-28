@@ -22,7 +22,7 @@ class FlowController extends Controller
     {
         $selected = $request->input('steps', []);
 
-        $valid = ['travel', 'accommodation', 'meal', 'other_expense'];
+        $valid = ['travel', 'accommodation', 'meal', 'training', 'other_expenses'];
         $selected = array_values(array_intersect($selected, $valid));
 
         session(['pending_steps' => $selected]);
@@ -58,7 +58,10 @@ class FlowController extends Controller
                 ['name' => 'accommodation_detail', 'done' => false],
             ],
             'meal' => [],
-            'other_expense' => [],
+            'training' => [],
+            'other_expenses' => [
+                ['name' => 'other_expenses_detail', 'done' => false],
+            ],
         ];
 
         $steps = [];
@@ -87,19 +90,15 @@ class FlowController extends Controller
         $index = session('step_index_'.$expensesClaim->id, 0);
 
         if (! isset($steps[$index])) {
-            return redirect()->route('expenses-claims.flow.checkingClaims', $expensesClaim);
+            return redirect()->route('expenses-claims.flow.checking-claims', $expensesClaim);
         }
 
         return $this->routeToStep($steps[$index]['name'], $expensesClaim);
     }
 
-    // Choix d'aller à une étape intermédiaire
-    public function enterChild(Request $request, ExpensesClaim $expensesClaim)
+    // Redirection vers la prochaine étape
+    public function enterChild(string $childName, ExpensesClaim $expensesClaim)
     {
-        $childName = $request->input('child_name');
-
-        // Store which child we're currently working on,
-        // so we know where to return after it's saved.
         session(['current_child' => $childName]);
 
         return $this->routeToStep($childName, $expensesClaim);
@@ -109,7 +108,7 @@ class FlowController extends Controller
     public function returnToParent(ExpensesClaim $expensesClaim)
     {
         $steps = session('flow_steps_'.$expensesClaim->id, []);
-        $index = session('step_index', 0);
+        $index = session('step_index_'.$expensesClaim->id, 0);
         $childName = session('current_child');
 
         // Marquer l'étape intermédiaire comme complète (option)
@@ -134,8 +133,8 @@ class FlowController extends Controller
     // validation de l'étape en cours
     public function completeStep(ExpensesClaim $expensesClaim)
     {
-        $steps = session('flow_steps', []);
-        $index = session('step_index', 0);
+        $steps = session('flow_steps_'.$expensesClaim->id, []);
+        $index = session('step_index_'.$expensesClaim->id, 0);
 
         if (isset($steps[$index])) {
             $steps[$index]['done'] = true;
@@ -159,8 +158,8 @@ class FlowController extends Controller
     public function checkingClaims(ExpensesClaim $expensesClaim)
     {
 
-        // $claim = ExpensesClaim::with(['travels', 'accommodations', 'meal', 'otherExpenses'])->findOrFail($expensesClaim->id);
-        $claim = ExpensesClaim::with(['meals'])->findOrFail($expensesClaim->id);
+        // $claim = ExpensesClaim::with(['travels', 'accommodations', 'meal', 'training', 'otherExpenses'])->findOrFail($expensesClaim->id);
+        $claim = ExpensesClaim::with(['accommodations', 'meals', 'otherExpenses'])->findOrFail($expensesClaim->id);
 
         return Inertia::render('claim/ClaimSummary', [
             'expensesClaim' => $claim,
@@ -170,25 +169,30 @@ class FlowController extends Controller
 
     public function done(ExpensesClaim $expensesClaim)
     {
-        session()->forget(['flow_steps', 'step_index']);
+        session()->forget(['flow_steps_'.$expensesClaim->id,
+            'step_index_'.$expensesClaim->id,
+            'pending_steps',
+            'current_child',
+        ]);
 
         return Inertia::render('end/End');
         // TODO préparer la prochaine fonction de destination pour la page de confirmation
-        // return Inertia::render('expenses-claims.flow.done', $expensesClaim);
         // return (new FlowController)->completeClaim ??($expensesClaim); expensesClaim.edit ?
     }
 
     private function routeToStep(string $step, ExpensesClaim $expensesClaim): RedirectResponse
     {
         return match ($step) {
-            'travel' => redirect()->route('expenses-claims.travel.index', $expensesClaim),
-            'vehicle' => redirect()->route('expenses-claims.travel.vehicle.create', $expensesClaim),
-            'driven_trip' => redirect()->route('expenses-claims.travel.driven_trip.create', $expensesClaim),
-            'other_trip' => redirect()->route('expenses-claims.travel.other_trip.create', $expensesClaim),
-            'accommodation' => redirect()->route('expenses-claims.accommodation.index', $expensesClaim),
-            'accommodation_detail' => redirect()->route('expenses-claims.accommodation.detail.create', $expensesClaim),
+            'travel' => redirect()->route('expenses-claims.travels.index', $expensesClaim),
+            'vehicle' => redirect()->route('expenses-claims.travels.vehicles.create', $expensesClaim),
+            'driven_trip' => redirect()->route('expenses-claims.travels.driven-trips.create', $expensesClaim),
+            'other_trip' => redirect()->route('expenses-claims.travels.other-trips.create', $expensesClaim),
+            'accommodation' => redirect()->route('expenses-claims.accommodations.index', $expensesClaim),
+            'accommodation_detail' => redirect()->route('expenses-claims.accommodations.detail.create', $expensesClaim),
             'meal' => redirect()->route('expenses-claims.meals.index', $expensesClaim),
-            'other_expense' => redirect()->route('expenses-claims.other_expense.index', $expensesClaim),
+            'training' => redirect()->route('expenses-claims.trainings.index', $expensesClaim),
+            'other_expenses' => redirect()->route('expenses-claims.other-expenses.index', $expensesClaim),
+            'other_expenses_detail' => redirect()->route('expenses-claims.other-expenses.detail.create', $expensesClaim),
             default => redirect()->route('expenses-claims.flow.done', $expensesClaim),
         };
     }

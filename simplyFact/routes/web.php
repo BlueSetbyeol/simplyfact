@@ -1,16 +1,16 @@
 <?php
 
+use App\Http\Controllers\AccommodationController;
 use App\Http\Controllers\ExpensesClaimController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
+use App\Http\Controllers\OtherExpenseController;
 use App\Http\Controllers\ProofController;
 use App\Http\Controllers\UserController;
-use App\Models\ExpensesClaim;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
 
 // Chemins temporaires pour dev
 Route::inertia('travel', 'travel/Travel')->name('travel');
@@ -18,15 +18,10 @@ Route::inertia('travel-mode', 'travel/TravelMode')->name('travel-mode');
 Route::inertia('travel-vehicle', 'travel/Vehicle')->name('travel-vehicle');
 Route::inertia('travel-driven-trip', 'travel/DrivenTrip')->name('travel-driven-trip');
 
-
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');
 // A ajouter si on veut avoir une vérification d'identification avant complétion
 //      , ['canRegister' => Features::enabled(Features::registration()),]
-
-// Route pour le développement
-Route::inertia('/end', 'end/End') -> name('end');
-
 
 Route::resource('users', UserController::class);
 // Route pour identification avant d'atteindre ces pages
@@ -36,7 +31,10 @@ Route::resource('users', UserController::class);
 
 Route::resource('expenses-claims', ExpensesClaimController::class);
 
+Route::resource('expenses-claims.accommodations', AccommodationController::class);
 Route::resource('expenses-claims.meals', MealController::class);
+Route::resource('expenses-claims.other-expenses', OtherExpenseController::class);
+
 // Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
 
 // Flow (parcours de l'utilisateur)
@@ -52,24 +50,9 @@ Route::prefix('expenses-claims/{expensesClaim}/flow')
         Route::post('/enter-child', 'enterChild')->name('enter-child');
         Route::post('/return-parent', 'returnParent')->name('return-parent');
         Route::post('/complete-step', 'completeStep')->name('complete-step');
-        Route::get('/checkingClaims', 'checkingClaims')->name('checkingClaims');
+        Route::get('/checkingClaims', 'checkingClaims')->name('checking-claims');
         Route::get('/done', 'done')->name('done');
     });
-
-// Route::get('/expenses-claims', [ExpensesClaimController::class, 'index'])->name('expensesClaim.index');
-// Route::post('/expenses-claims', [ExpensesClaimController::class, 'store'])->name('expensesClaim.store');
-// Route::get('/expenses-claims/{expensesClaim}/edit', [ExpensesClaimController::class, 'edit'])->name('expensesClaim.edit');
-// Route::put('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'update'])->name('expensesClaim.update');
-// Route::delete('/expenses-claims/{expensesClaim}', [ExpensesClaimController::class, 'destroy'])->name('expensesClaim.destroy');
-
-// création du pdf avant envoi
-Route::get('/pdf-preview', function () {
-    $service = new ExpenseClaimPdfService(
-        new PdfGenerator
-    );
-
-    return $service->previewFake();
-})->name('pdf.preview');
 
 // upload de documents justificatif
 Route::post(
@@ -82,5 +65,25 @@ Route::delete(
     '/expenses-claims/{expensesClaim}/proofs',
     [ProofController::class, 'destroy']
 )->name('expenses-claims.proofs.destroy');
+
+// Dev only - preview du PDF dans le browser
+Route::get('/pdf-preview', function () {
+    $service = new ExpenseClaimPdfService(
+        new PdfGenerator
+    );
+
+    return $service->previewFake();
+})->name('pdf.preview');
+
+// Dev only - test envoi email PDF fictif
+Route::get('/pdf-send-email', function () {
+    $service = new ExpenseClaimPdfService(
+        new PdfGenerator
+    );
+
+    $service->sendFakeByEmail('john.doe@email.com');
+
+    return 'Email envoyé - voir http://localhost:8025';
+})->name('pdf.send-email');
 
 require __DIR__.'/settings.php';

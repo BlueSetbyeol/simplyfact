@@ -10,7 +10,7 @@ interface ChoicesProps {
 export default function Choices({ expensesClaim }: ChoicesProps) {
     // Déclaration des états pour chaque choix
     const [hasTravel, setHasTravel] = useState(false);
-    const [hasAccomodation, setHasAccomodation] = useState(false);
+    const [hasAccommodation, setHasAccommodation] = useState(false);
     const [hasMeal, setHasMeal] = useState(false);
     const [hasOther, setHasOther] = useState(false);
     const [chosenSteps, setChosenSteps] = useState<string[]>([]);
@@ -122,17 +122,17 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                             <div className="flex flex-row gap-2">
                                 <Button
                                     variant={
-                                        hasAccomodation
+                                        hasAccommodation
                                             ? 'contained'
                                             : 'outlined'
                                     }
                                     onClick={() => {
-                                        setHasAccomodation(true);
+                                        setHasAccommodation(true);
                                         chosenSteps.push('accommodation');
                                         setChosenSteps(chosenSteps);
                                     }}
                                     sx={
-                                        hasAccomodation
+                                        hasAccommodation
                                             ? {
                                                   backgroundColor: '#2D6A2D',
                                                   '&:hover': {
@@ -155,12 +155,12 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                 </Button>
                                 <Button
                                     variant={
-                                        !hasAccomodation
+                                        !hasAccommodation
                                             ? 'contained'
                                             : 'outlined'
                                     }
                                     onClick={() => {
-                                        setHasAccomodation(false);
+                                        setHasAccommodation(false);
                                         setChosenSteps(
                                             chosenSteps.filter(
                                                 (e) => e !== 'accommodation',
@@ -168,7 +168,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                         );
                                     }}
                                     sx={
-                                        !hasAccomodation
+                                        !hasAccommodation
                                             ? {
                                                   backgroundColor: '#2D6A2D',
                                                   '&:hover': {
@@ -263,9 +263,9 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                             </div>
                         </div>
 
-                        {/* Autres frais */}
+                        {/* Stage
                         <div className="flex flex-col gap-3">
-                            <p className="text-gray-700">D'autres frais ?</p>
+                            <p className="text-gray-700">Un stage ?</p>
 
                             <div className="flex flex-row gap-2">
                                 <Button
@@ -274,7 +274,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                     }
                                     onClick={() => {
                                         setHasOther(true);
-                                        chosenSteps.push('other_expense');
+                                        chosenSteps.push('training');
                                         setChosenSteps(chosenSteps);
                                     }}
                                     sx={
@@ -307,7 +307,82 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                         setHasOther(false);
                                         setChosenSteps(
                                             chosenSteps.filter(
-                                                (e) => e !== 'other_expense',
+                                                (e) => e !== 'training',
+                                            ),
+                                        );
+                                    }}
+                                    sx={
+                                        !hasOther
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Non
+                                </Button>
+                            </div>
+                        </div> */}
+
+                        {/* Autres frais */}
+                        <div className="flex flex-col gap-3">
+                            <p className="text-gray-700">
+                                Un ou des autres frais ?
+                            </p>
+
+                            <div className="flex flex-row gap-2">
+                                <Button
+                                    variant={
+                                        hasOther ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasOther(true);
+                                        chosenSteps.push('other_expenses');
+                                        setChosenSteps(chosenSteps);
+                                    }}
+                                    sx={
+                                        hasOther
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Oui
+                                </Button>
+                                <Button
+                                    variant={
+                                        !hasOther ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasOther(false);
+                                        setChosenSteps(
+                                            chosenSteps.filter(
+                                                (e) => e !== 'other_expenses',
                                             ),
                                         );
                                     }}

@@ -18,17 +18,19 @@ createInertiaApp({
                 return AuthLayout;
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
-            case name.startsWith('meal/'):
-                return null;
             case name === 'home':
                 return null;
             case name.startsWith('user/'):
                 return null;
+            case name.startsWith('claim/'):
+                return null;
             case name.startsWith('choices/'):
                 return null;
             case name.startsWith('accommodation/'):
-                return null
-            case name.startsWith('claim/'):
+                return null;
+            case name.startsWith('meal/'):
+                return null;
+            case name.startsWith('otherExpenses/'):
                 return null;
             case name.startsWith('end/'):
                 return null;
