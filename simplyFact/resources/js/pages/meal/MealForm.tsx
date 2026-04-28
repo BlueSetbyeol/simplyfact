@@ -10,7 +10,6 @@ interface MealFormProps {
         id: number;
         number_of_meal: number;
         total_price: number;
-        reimbursed_price: number;
     } | null;
 }
 

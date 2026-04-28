@@ -6,6 +6,7 @@ use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\OtherExpenseController;
 use App\Http\Controllers\ProofController;
+use App\Http\Controllers\TrainingExpenseController;
 use App\Http\Controllers\UserController;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
@@ -27,6 +28,7 @@ Route::resource('expenses-claims', ExpensesClaimController::class);
 
 Route::resource('expenses-claims.accommodations', AccommodationController::class);
 Route::resource('expenses-claims.meals', MealController::class);
+Route::resource('expenses-claims.training-expenses', TrainingExpenseController::class);
 Route::resource('expenses-claims.other-expenses', OtherExpenseController::class);
 
 // Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);

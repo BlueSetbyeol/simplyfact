@@ -34,10 +34,20 @@ class AccommodationController extends Controller
             'accommodation_type' => 'required|string|min:5',
             'nb_of_night' => 'required|integer|min:1',
             'total_price' => 'required|decimal:0,2|min:0',
-            'reimbursed_price' => 'decimal:0,2',
-            // TODO reimbursed_price a recalculer dans le back
         ]
         );
+
+        $ceilings = [
+            'Hôtel province hors coeur de ville' => 70,
+            'Hôtel province coeur de ville' => 90,
+            'Hôtel Lyon' => 100,
+            'Hôtel Paris' => 150,
+        ];
+
+        $ceiling = $ceilings[$validated['accommodation_type']] ?? 0;
+
+        // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
+        $validated['reimbursed_price'] = min($validated['total_price'], $ceiling * $validated['nb_of_night']);
 
         Accommodation::create([
             'expenses_claim_id' => $expensesClaim->id,
@@ -64,10 +74,20 @@ class AccommodationController extends Controller
             'accommodation_type' => 'required|string|min:5',
             'nb_of_night' => 'required|integer|min:1',
             'total_price' => 'required|decimal:0,2|min:0',
-            'reimbursed_price' => 'decimal:0,2',
-            // TODO reimbursed_price a recalculer dans le back
             'expenses_claim_id' => ['exists:expensesClaim,id'],
         ]);
+
+        $ceilings = [
+            'Hôtel province hors coeur de ville' => 70,
+            'Hôtel province coeur de ville' => 90,
+            'Hôtel Lyon' => 100,
+            'Hôtel Paris' => 150,
+        ];
+
+        $ceiling = $ceilings[$validated['accommodation_type']] ?? 0;
+
+        // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
+        $validated['reimbursed_price'] = min($validated['total_price'], $ceiling * $validated['nb_of_night']);
 
         $accommodation->update($validated);
 

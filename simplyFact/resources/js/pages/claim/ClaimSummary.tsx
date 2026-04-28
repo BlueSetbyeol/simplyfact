@@ -58,11 +58,6 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
         other_expenses: expensesClaim?.other_expenses,
     });
 
-    transform((data) => ({
-        total_given: data.total_given,
-        total_reimbursed: totalReimbursed,
-    }));
-
     const totalSpend = useMemo(() => {
         let total = 0;
         expensesClaim?.travels?.forEach((t) => (total += t.reimbursed_price));
@@ -87,6 +82,10 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
 
     const totalReimbursed =
         data.total_given !== 0 ? totalSpend - data.total_given : totalSpend;
+
+    transform(() => ({
+        total_reimbursed: totalReimbursed,
+    }));
 
     function endFlow(e: { preventDefault: () => void }) {
         e.preventDefault();

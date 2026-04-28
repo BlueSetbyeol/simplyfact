@@ -33,10 +33,11 @@ class OtherExpenseController extends Controller
         $validated = $request->validate([
             'expense_name' => 'required|string|min:5',
             'total_price' => 'required|decimal:0,2|min:0',
-            'reimbursed_price' => 'decimal:0,2',
-            // TODO reimbursed_price a recalculer dans le back
         ]
         );
+
+        // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
+        $validated['reimbursed_price'] = $validated['total_price'];
 
         OtherExpense::create([
             'expenses_claim_id' => $expensesClaim->id,
@@ -62,10 +63,11 @@ class OtherExpenseController extends Controller
         $validated = $request->validate([
             'expense_name' => 'required|string|min:5',
             'total_price' => 'required|decimal:0,2|min:0',
-            'reimbursed_price' => 'decimal:0,2',
-            // TODO reimbursed_price a recalculer dans le back
             'expenses_claim_id' => ['exists:expensesClaim,id'],
         ]);
+
+        // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
+        $validated['reimbursed_price'] = $validated['total_price'];
 
         $otherExpense->update($validated);
 

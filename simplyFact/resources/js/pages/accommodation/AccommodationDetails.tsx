@@ -17,7 +17,6 @@ interface AccommodationDetailsProps {
         accommodation_type: string;
         nb_of_night: number;
         total_price: number;
-        reimbursed_price: number;
     };
 }
 
@@ -29,7 +28,6 @@ export default function AccommodationDetails({
         accommodation_type: 'Hôtel province hors coeur de ville',
         nb_of_night: accommodation?.nb_of_night || 0,
         total_price: accommodation?.total_price || 0,
-        reimbursed_price: 0,
     });
 
     const ceilings: Record<string, number> = {
@@ -42,10 +40,6 @@ export default function AccommodationDetails({
     const ceiling = ceilings[data.accommodation_type] ?? 0;
 
     const totalRefund = Math.min(data.total_price, ceiling * data.nb_of_night);
-
-    if (data.reimbursed_price !== totalRefund) {
-        setData('reimbursed_price', totalRefund);
-    }
 
     function handleSubmit(e: { preventDefault: () => void }) {
         e.preventDefault();
