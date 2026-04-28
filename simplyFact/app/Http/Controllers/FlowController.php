@@ -22,7 +22,7 @@ class FlowController extends Controller
     {
         $selected = $request->input('steps', []);
 
-        $valid = ['travel', 'accommodation', 'meal', 'other_expense'];
+        $valid = ['travel', 'accommodation', 'meal', 'training', 'other_expenses'];
         $selected = array_values(array_intersect($selected, $valid));
 
         session(['pending_steps' => $selected]);
@@ -58,7 +58,10 @@ class FlowController extends Controller
                 ['name' => 'accommodation_detail', 'done' => false],
             ],
             'meal' => [],
-            'other_expense' => [],
+            'training' => [],
+            'other_expenses' => [
+                ['name' => 'other_expenses_detail', 'done' => false],
+            ],
         ];
 
         $steps = [];
@@ -87,7 +90,7 @@ class FlowController extends Controller
         $index = session('step_index_'.$expensesClaim->id, 0);
 
         if (! isset($steps[$index])) {
-            return redirect()->route('expenses-claims.flow.checkingClaims', $expensesClaim);
+            return redirect()->route('expenses-claims.flow.checking-claims', $expensesClaim);
         }
 
         return $this->routeToStep($steps[$index]['name'], $expensesClaim);
@@ -155,8 +158,8 @@ class FlowController extends Controller
     public function checkingClaims(ExpensesClaim $expensesClaim)
     {
 
-        // $claim = ExpensesClaim::with(['travels', 'accommodations', 'meal', 'otherExpenses'])->findOrFail($expensesClaim->id);
-        $claim = ExpensesClaim::with(['accommodations', 'meals'])->findOrFail($expensesClaim->id);
+        // $claim = ExpensesClaim::with(['travels', 'accommodations', 'meal', 'training', 'otherExpenses'])->findOrFail($expensesClaim->id);
+        $claim = ExpensesClaim::with(['accommodations', 'meals', 'otherExpenses'])->findOrFail($expensesClaim->id);
 
         return Inertia::render('claim/ClaimSummary', [
             'expensesClaim' => $claim,
@@ -174,7 +177,6 @@ class FlowController extends Controller
 
         return Inertia::render('end/End');
         // TODO préparer la prochaine fonction de destination pour la page de confirmation
-        // return Inertia::render('expenses-claims.flow.done', $expensesClaim);
         // return (new FlowController)->completeClaim ??($expensesClaim); expensesClaim.edit ?
     }
 
@@ -183,12 +185,14 @@ class FlowController extends Controller
         return match ($step) {
             'travel' => redirect()->route('expenses-claims.travels.index', $expensesClaim),
             'vehicle' => redirect()->route('expenses-claims.travels.vehicles.create', $expensesClaim),
-            'driven_trip' => redirect()->route('expenses-claims.travels.driven_trips.create', $expensesClaim),
-            'other_trip' => redirect()->route('expenses-claims.travels.other_trips.create', $expensesClaim),
+            'driven_trip' => redirect()->route('expenses-claims.travels.driven-trips.create', $expensesClaim),
+            'other_trip' => redirect()->route('expenses-claims.travels.other-trips.create', $expensesClaim),
             'accommodation' => redirect()->route('expenses-claims.accommodations.index', $expensesClaim),
             'accommodation_detail' => redirect()->route('expenses-claims.accommodations.detail.create', $expensesClaim),
             'meal' => redirect()->route('expenses-claims.meals.index', $expensesClaim),
-            'other_expense' => redirect()->route('expenses-claims.other_expenses.index', $expensesClaim),
+            'training' => redirect()->route('expenses-claims.trainings.index', $expensesClaim),
+            'other_expenses' => redirect()->route('expenses-claims.other-expenses.index', $expensesClaim),
+            'other_expenses_detail' => redirect()->route('expenses-claims.other-expenses.detail.create', $expensesClaim),
             default => redirect()->route('expenses-claims.flow.done', $expensesClaim),
         };
     }

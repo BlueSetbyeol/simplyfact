@@ -11,9 +11,9 @@ class OtherExpenseController extends Controller
 {
     public function index(ExpensesClaim $expensesClaim)
     {
-        return Inertia::render('otherExpense/OtherExpense', [
-            'otherExpense' => OtherExpense::where('expenses_claim_id', $expensesClaim->id)->get(),
-            'expensesClaim' => $expensesClaim->id,
+        return Inertia::render('otherExpenses/OtherExpenses', [
+            'otherExpenses' => OtherExpense::where('expenses_claim_id', $expensesClaim->id)->get(),
+            'expensesClaimId' => $expensesClaim->id,
         ]);
     }
 
@@ -21,9 +21,9 @@ class OtherExpenseController extends Controller
     {
         $otherExpense = OtherExpense::with('expenses_claim')->get();
 
-        return Inertia::render('otherExpense/OtherExpense', [
+        return Inertia::render('otherExpenses/OtherExpensesDetails', [
             'otherExpense' => $otherExpense,
-            'expensesClaim' => $expensesClaim]);
+            'expensesClaimId' => $expensesClaim->id]);
     }
 
     public function store(Request $request, ExpensesClaim $expensesClaim)
@@ -32,8 +32,8 @@ class OtherExpenseController extends Controller
         // validation de la data
         $validated = $request->validate([
             'expense_name' => 'required|string|min:5',
-            'expense_price' => 'required|decimal:0,2|min:0',
-            'nb_days_of_training' => 'required|integer|min:1',
+            'total_price' => 'required|decimal:0,2|min:0',
+            'reimbursed_price' => 'decimal:0,2',
             // TODO reimbursed_price a recalculer dans le back
         ]
         );
@@ -43,7 +43,7 @@ class OtherExpenseController extends Controller
             ...$validated,
         ]);
 
-        return (new FlowController)->completeStep($expensesClaim);
+        return (new FlowController)->enterChild('other_expenses', $expensesClaim);
     }
 
     public function show(OtherExpense $otherExpense)
@@ -61,8 +61,8 @@ class OtherExpenseController extends Controller
     {
         $validated = $request->validate([
             'expense_name' => 'required|string|min:5',
-            'expense_price' => 'required|decimal:0,2|min:0',
-            'nb_days_of_training' => 'required|integer|min:1',
+            'total_price' => 'required|decimal:0,2|min:0',
+            'reimbursed_price' => 'decimal:0,2',
             // TODO reimbursed_price a recalculer dans le back
             'expenses_claim_id' => ['exists:expensesClaim,id'],
         ]);

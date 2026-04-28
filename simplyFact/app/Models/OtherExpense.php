@@ -11,8 +11,8 @@ class OtherExpense extends Model
     protected $fillable = [
         'expenses_claim_id',
         'expense_name',
-        'expense_price',
-        'nb_days_of_training',
+        'total_price',
+        'reimbursed_price',
     ];
 
     // Generation d'un UUID à la place d'un id en integer
