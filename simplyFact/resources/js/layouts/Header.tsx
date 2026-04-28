@@ -13,7 +13,7 @@ export default function AppLayout({ children, showback =true }: { children: Reac
                     <img src="/img/ffs-xs-logo.svg" alt="Logo Fédération Française de Spéléologie"></img>
                 </Link>  
             </div>
-            <main className="flex items-center justify-center p-8"> 
+            <main className="flex items-center justify-center p-4 lg:p-8"> 
                 {children}
             </main>
         </div>

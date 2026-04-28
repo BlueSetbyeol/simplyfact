@@ -34,7 +34,7 @@ export default function OtherExpenses({
     return (
         <Header>
             <Head title="Déplacements"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <div className="flex flex-row items-center justify-between">
                     <h1 className="text-xl font-medium text-gray-900">
                         Autres Frais

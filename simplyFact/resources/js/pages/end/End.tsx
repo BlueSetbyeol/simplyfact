@@ -7,7 +7,7 @@ export default function End () {
     return(
         <Header>
             <Head title="Confirmation"></Head>
-            <div className="w-full max-w-xl rounded-2xl items-center border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl items-center border border-gray-200 bg-white p-4">
                 <CheckCircle className="text-green-600 w-8 h-8 flex-shrink-0 mb-1" />
                 <h1 className="text-xl font-medium text-gray-900">
                     Merci d'avoir envoyé votre note de frais

@@ -40,14 +40,13 @@ export default function User({ user }: UserProps) {
         <Header>
             <Head title="Informations personnelles"></Head>
 
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <div className="mb-2 flex items-center justify-between rounded-xl bg-gray-50 px-4 py-2">
                     <p className="mt-1 text-xs text-gray-400">
-                        Vous avez déjà un compte ?
+                        Déjà un compte ?
                     </p>
                     <Link href="/login">
                         <Button
-                            component="label"
                             variant="outlined"
                             sx={{
                                 color: '#2D6A2D',
@@ -58,14 +57,14 @@ export default function User({ user }: UserProps) {
                                 },
                             }}
                         >
-                            Se connecter
+                            Connexion
                         </Button>
                     </Link>
                 </div>
 
                 <div className="mb-6 flex flex-row items-center justify-center gap-2">
                     <hr className="w-full border-gray-100"></hr>
-                    <p className="mt-1 text-xs text-nowrap text-gray-400">
+                    <p className="text-xs text-nowrap text-gray-400">
                         Ou continuer sans compte
                     </p>
                     <hr className="w-full border-gray-100"></hr>
@@ -82,8 +81,9 @@ export default function User({ user }: UserProps) {
                 <hr className="w-full border-gray-100"></hr>
 
                 <form onSubmit={submitUser} className="mt-6">
-                    <div className="mb-3 flex flex-row gap-2">
+                    <div className="mb-3 flex flex-col lg:flex-row gap-3">
                         <TextField
+                            size='small'
                             label="Nom"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
@@ -97,6 +97,7 @@ export default function User({ user }: UserProps) {
                             helperText={errors['lastname']}
                         />
                         <TextField
+                            size='small'
                             label="Prénom"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
@@ -111,9 +112,10 @@ export default function User({ user }: UserProps) {
                         />
                     </div>
 
-                    <div className="mb-3 flex flex-row gap-2">
+                    <div className="mb-3 flex flex-col lg:flex-row gap-3">
                         <TextField
-                            label="address_streete"
+                            size='small'
+                            label="Adresse"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
                                 data.address_street !== ''
@@ -129,8 +131,9 @@ export default function User({ user }: UserProps) {
                         />
                     </div>
 
-                    <div className="mb-3 flex flex-row gap-2">
+                    <div className="mb-3 flex flex-col lg:flex-row gap-3">
                         <TextField
+                            size='small'
                             label="Code postal"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
@@ -146,6 +149,7 @@ export default function User({ user }: UserProps) {
                             helperText={errors['address_zipcode']}
                         />
                         <TextField
+                            size='small'
                             label="Ville"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
@@ -162,9 +166,10 @@ export default function User({ user }: UserProps) {
                         />
                     </div>
 
-                    <div className="mb-3 flex flex-row gap-2">
+                    <div className="mb-3 flex flex-col lg:flex-row gap-3">
                         <TextField
-                            label="email_address"
+                            size='small'
+                            label="Email"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
                                 data.email_address !== ''
@@ -180,9 +185,10 @@ export default function User({ user }: UserProps) {
                         />
                     </div>
 
-                    <div className="mb-3 flex flex-row gap-2">
+                    <div className="mb-3 flex flex-col lg:flex-row gap-3">
                         <TextField
-                            label="Téléphone_number"
+                            size='small'
+                            label="Téléphone"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
                                 data.phone_number !== ''

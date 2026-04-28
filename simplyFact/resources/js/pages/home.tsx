@@ -18,7 +18,7 @@ export default function Home() {
     return (
         <Header showback={false}>
             <Head title="Accueil"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <h1 className="text-xl font-medium text-gray-900">
                     Déclaration de notes de frais
                 </h1>

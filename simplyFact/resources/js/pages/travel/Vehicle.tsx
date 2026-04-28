@@ -1,5 +1,6 @@
 import { Head, router, useForm } from "@inertiajs/react";
 import { Button, TextField } from "@mui/material";
+import { useState } from "react";
 import FileUpload from "@/components/FileUpload";
 import Header from '@/layouts/Header';
 
@@ -36,11 +37,13 @@ export default function Vehicle({expensesClaim = {id: ''}, vehicle, modes = []} 
             }
         })
     }
+
+    const [hasDocument, setHasDocument] = useState(false)
     
     return(
         <Header>
             <Head title="Votre véhicule"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <h1 className="text-xl font-medium text-gray-900 mb-2">Identification du véhicule</h1>
                 <hr className="border-gray-100 mb-4" />
 
@@ -59,7 +62,10 @@ export default function Vehicle({expensesClaim = {id: ''}, vehicle, modes = []} 
 
                     <div>
                         <p className="text-sm text-gray-500 mb-2">Carte grise</p>
-                        <FileUpload expensesClaimId={expensesClaim?.id} />
+                        <FileUpload 
+                            expensesClaimId={expensesClaim?.id}
+                            onUpload={(hasFiles) => setHasDocument(hasFiles)}
+                             />
                     </div>
 
                     <div>
@@ -109,6 +115,7 @@ export default function Vehicle({expensesClaim = {id: ''}, vehicle, modes = []} 
 
                     <Button
                         type="submit"
+                        disabled={!hasDocument}
                         variant="contained"
                         fullWidth
                         className="!mt-2"

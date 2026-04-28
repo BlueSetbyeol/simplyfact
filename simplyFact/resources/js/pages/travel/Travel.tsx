@@ -43,7 +43,7 @@ export default function Travel({expensesClaim = {id: ''}, drivenTrips = [], othe
 
     return (<Header>
         <Head title="Vos déplacements"></Head>
-        <div className='w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6'>
+        <div className='w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4'>
             <div className='flex flex-row justify-between items-center'>
                 <h1 className="text-xl font-medium text-gray-900">Vos trajets</h1>
                 <Button 

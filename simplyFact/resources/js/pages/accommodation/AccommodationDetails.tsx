@@ -7,6 +7,7 @@ import {
     Select,
     TextField,
 } from '@mui/material';
+import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
@@ -49,6 +50,8 @@ export default function AccommodationDetails({
             },
         });
     }
+
+    const [hasDocument, setHasDocument] = useState(false)
 
     return (
         <Header>
@@ -137,10 +140,14 @@ export default function AccommodationDetails({
                             </p>
                         </div>
 
-                        <FileUpload expensesClaimId={expensesClaimId} />
+                        <FileUpload 
+                            expensesClaimId={expensesClaimId}
+                            onUpload={(hasFiles) => setHasDocument(hasFiles)}
+                        />
 
                         <Button
                             type="submit"
+                            disabled={!hasDocument}
                             variant="contained"
                             fullWidth
                             className="mt-5!"

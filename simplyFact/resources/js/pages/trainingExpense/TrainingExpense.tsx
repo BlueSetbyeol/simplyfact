@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
 import { Button, TextField } from '@mui/material';
+import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
@@ -37,10 +38,12 @@ export default function TrainingExpense({
         });
     }
 
+    const [hasDocument, setHasDocument] = useState(false)
+
     return (
         <Header>
             <Head title="Repas" />
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <h1 className="text-xl font-medium text-gray-900">
                     Votre stage
                 </h1>
@@ -93,10 +96,14 @@ export default function TrainingExpense({
                         </div>
                     </div>
 
-                    <FileUpload expensesClaimId={expensesClaimId} />
+                    <FileUpload 
+                        expensesClaimId={expensesClaimId}
+                        onUpload={(hasFile) => setHasDocument(hasFile)}
+                         />
 
                     <Button
                         type="submit"
+                        disabled={!hasDocument}
                         variant="contained"
                         fullWidth
                         className="mt-5!"

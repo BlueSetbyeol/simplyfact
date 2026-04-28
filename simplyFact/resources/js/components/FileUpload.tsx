@@ -13,6 +13,7 @@ type FileUploadProps = {
     accept?: string;
     label?: string;
     maxSizeMb?: number;
+    onUpload?: (hasFile: boolean) => void;
 };
 
 const VisuallyHiddenInput = styled('input')({
@@ -37,6 +38,7 @@ export default function FileUpload({
     accept = '.jpg,.jpeg,.png,.pdf',
     label = 'Ajouter des justificatifs',
     maxSizeMb = 20,
+    onUpload,
 }: FileUploadProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -104,13 +106,12 @@ export default function FileUpload({
                     continue;
                 }
 
-                setUploadedFiles((prev) => [
-                    ...prev,
-                    {
-                        path: data.path,
-                        originalName: data.originalName,
-                    },
-                ]);
+                setUploadedFiles((prev) => {
+                    const newFiles: UploadedFile[] = [...prev, { path: data.path, originalName: data.originalName }]
+                    onUpload?.(newFiles.length > 0)
+
+                    return newFiles
+                })
             } catch (err) {
                 console.log('catch error:', err);
                 newErrors.push(

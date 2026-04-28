@@ -102,7 +102,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
     return (
         <Header>
             <Head title="Résumé des choix"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <h1 className="mb-6 text-xl font-medium text-gray-900">
                     Votre votre note de frais:
                 </h1>

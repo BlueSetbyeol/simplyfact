@@ -87,7 +87,7 @@ export default function DrivenTrips({expensesClaim = {id: ''}, drivenTrip, modes
     return(
         <Header>
             <Head title="Trajet conduit"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
 
                 <h1 className="text-xl font-medium text-gray-900 mb-2">Trajet conduit</h1>
 

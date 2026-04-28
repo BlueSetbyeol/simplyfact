@@ -1,5 +1,6 @@
 import { Head, router, useForm } from "@inertiajs/react";
 import { Button, TextField } from "@mui/material";
+import { useState } from "react";
 import FileUpload from "@/components/FileUpload";
 import Header from '@/layouts/Header';
 
@@ -47,10 +48,12 @@ export default function OtherTrip({expensesClaim = {id: ''}, modes = ['Train (2n
         router.get(`/expenses-claims/${expensesClaim?.id}/travel`)
     }
 
+    const [hasDocument, setHasDocument] = useState(false)
+
     return(
         <Header>
             <Head title="Autre trajet"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <h1 className="text-xl font-medium text-gray-900 mb-2">Autre trajet</h1>
 
                 <hr className="border-gray-100 mb-8" />
@@ -149,7 +152,10 @@ export default function OtherTrip({expensesClaim = {id: ''}, modes = ['Train (2n
                                 error={!!taxiForm.errors['expense_price']}
                                 helperText={taxiForm.errors['expense_price']}
                             />
-                            <FileUpload expensesClaimId={expensesClaim?.id} />
+                            <FileUpload 
+                                expensesClaimId={expensesClaim?.id}
+                                onUpload={(hasFile) => setHasDocument(hasFile)}
+                            />
                             <hr className="border-gray-100 mb-8" />
                         </div>
                         </>
@@ -166,6 +172,7 @@ export default function OtherTrip({expensesClaim = {id: ''}, modes = ['Train (2n
 
                 <Button
                     onClick={handleSubmit}
+                    disabled={!hasDocument}
                     variant="contained"
                     fullWidth
                     className="!mt-2"

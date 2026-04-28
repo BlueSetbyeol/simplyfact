@@ -41,7 +41,7 @@ export default function TravelMode({expensesClaim = {id: ''}}: TravelModeProps) 
     return(
         <Header>
             <Head title="Vos moyens de transport"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <h1 className="text-xl font-medium text-gray-900 mb-5">Ajout d'un trajet</h1>
                 <hr className="border-gray-100 mb-8" />
                 <div className="flex flex-col gap-1">
