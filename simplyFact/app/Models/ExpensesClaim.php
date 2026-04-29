@@ -65,4 +65,26 @@ class ExpensesClaim extends Model
     {
         return $this->hasMany(OtherExpense::class);
     }
+
+    // Accessors & Mutators (euros to cents and vice versa)
+    public function getTotalGivenAttribute($value)
+    {
+        return $value / 100;
+    }
+
+
+    public function setTotalGivenAttribute($value)
+    {
+        $this->attributes['total_given'] = (int) round($value * 100);
+    }
+
+    public function getTotalReimbursedAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    public function setTotalReimbursedAttribute($value)
+    {
+        $this->attributes['total_reimbursed'] = (int) round($value * 100);
+    }
 }
