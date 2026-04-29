@@ -18,8 +18,8 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('accommodation_type', 150);
             $table->integer('nb_of_night');
-            $table->float('total_price');
-            $table->float('reimbursed_price');
+            $table->unsignedInteger('total_price');
+            $table->unsignedInteger('reimbursed_price');
             $table->timestamps();
         });
     }

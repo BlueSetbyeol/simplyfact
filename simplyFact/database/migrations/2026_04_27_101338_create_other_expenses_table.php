@@ -17,8 +17,8 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
             $table->string('expense_name', 150);
-            $table->float('total_price');
-            $table->float('reimbursed_price');
+            $table->unsignedInteger('total_price');
+            $table->unsignedInteger('reimbursed_price');
             $table->timestamps();
         });
     }

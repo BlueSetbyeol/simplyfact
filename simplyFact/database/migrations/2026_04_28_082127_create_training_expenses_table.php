@@ -17,7 +17,7 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
             $table->integer('nb_days_of_training');
-            $table->float('reimbursed_price');
+            $table->unsignedInteger('reimbursed_price');
             $table->timestamps();
         });
     }
