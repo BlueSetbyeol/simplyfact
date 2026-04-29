@@ -6,6 +6,7 @@ use App\Http\Controllers\ExpensesClaimController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\OtherExpenseController;
+use App\Http\Controllers\OtherTripsController;
 use App\Http\Controllers\ProofController;
 use App\Http\Controllers\TrainingExpenseController;
 use App\Http\Controllers\UserController;
@@ -30,7 +31,7 @@ Route::resource('expenses-claims', ExpensesClaimController::class);
 
 Route::resource('expenses-claims.driven-travels', DrivenTripController::class);
 Route::resource('expenses-claims.vehicles', VehicleController::class);
-
+Route::resource('expenses-claims.other-travels', OtherTripsController::class);
 Route::resource('expenses-claims.accommodations', AccommodationController::class);
 Route::resource('expenses-claims.meals', MealController::class);
 Route::resource('expenses-claims.training-expenses', TrainingExpenseController::class);

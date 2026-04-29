@@ -41,7 +41,7 @@ export default function Travel({ expensesClaimId, drivenTrips }: TravelProps) {
             <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
                 <div className="flex flex-row items-center justify-between">
                     <h1 className="text-xl font-medium text-gray-900">
-                        Vos trajets
+                        Vos trajets conduits
                     </h1>
                     <Button
                         variant="contained"

@@ -207,17 +207,19 @@ possiblement `vehicule`
 | total_distance_given | number nullable          |
 | total_price_given    | number nullable          |
 | description          | string nullable          |
+| reimbursed_price     | number                   |
 
 > question de savoir si on fait une table driven_trip_destination et destination ?
 
 `other_trip`
 
-| champ          | caractéristiques         |
-| -------------- | ------------------------ |
-| id             | uuid PK                  |
-| expenses_claim | uuid FK (expenses_claim) |
-| expense_name   | string                   |
-| expense_price  | number                   |
+| champ            | caractéristiques         |
+| ---------------- | ------------------------ |
+| id               | uuid PK                  |
+| expenses_claim   | uuid FK (expenses_claim) |
+| expense_name     | string                   |
+| total_price      | number                   |
+| reimbursed_price | number                   |
 
 #### Choix final
 

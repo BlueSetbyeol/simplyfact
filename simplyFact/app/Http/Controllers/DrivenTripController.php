@@ -36,9 +36,9 @@ class DrivenTripController extends Controller
 
         // validation de la data
         $validated = $request->validate([
-            'starting_city' => 'required|string|max:150|min:5',
+            'starting_city' => 'required|string|max:150|min:4',
             'starting_zip_code' => 'required|integer',
-            'ending_city' => 'required|string|max:150|min:5',
+            'ending_city' => 'required|string|max:150|min:4',
             'ending_zip_code' => 'required|integer',
             'trip_type' => 'string|max:255|min:4',
             'total_distance' => 'required|integer|min:1',
@@ -60,7 +60,7 @@ class DrivenTripController extends Controller
 
         $validated['total_price_given'] = round($vehicle['price_given'] * ($validated['total_distance_given'] ?? 0), 2);
 
-        $validated['reimbursed_price'] = round($validated['total_price'] - $validated['total_price_given'], 2);
+        $validated['reimbursed_price'] = max(0, round($validated['total_price'] - $validated['total_price_given'], 2));
 
         DrivenTrip::create([
             'expenses_claim_id' => $expensesClaim->id,
