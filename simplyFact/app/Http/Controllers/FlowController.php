@@ -22,7 +22,7 @@ class FlowController extends Controller
     {
         $selected = $request->input('steps', []);
 
-        $valid = ['travel', 'accommodation', 'meal', 'training', 'other_expenses'];
+        $valid = ['driven_travel', 'other_travel', 'accommodation', 'meal', 'training', 'other_expenses'];
         $selected = array_values(array_intersect($selected, $valid));
 
         session(['pending_steps' => $selected]);
@@ -49,9 +49,11 @@ class FlowController extends Controller
         $requested = session('pending_steps', []);
 
         $definitions = [
-            'travel' => [
+            'driven_travel' => [
                 ['name' => 'vehicle',      'done' => false],
                 ['name' => 'driven_trip',  'done' => false],
+            ],
+            'other_travel' => [
                 ['name' => 'other_trip',   'done' => false],
             ],
             'accommodation' => [
@@ -183,10 +185,11 @@ class FlowController extends Controller
     private function routeToStep(string $step, ExpensesClaim $expensesClaim): RedirectResponse
     {
         return match ($step) {
-            'travel' => redirect()->route('expenses-claims.travels.index', $expensesClaim),
-            'vehicle' => redirect()->route('expenses-claims.travels.vehicles.create', $expensesClaim),
-            'driven_trip' => redirect()->route('expenses-claims.travels.driven-trips.create', $expensesClaim),
-            'other_trip' => redirect()->route('expenses-claims.travels.other-trips.create', $expensesClaim),
+            'driven_travel' => redirect()->route('expenses-claims.driven-travels.index', $expensesClaim),
+            'vehicle' => redirect()->route('expenses-claims.vehicles.create', $expensesClaim),
+            'driven_trip' => redirect()->route('expenses-claims.driven-travels.create', $expensesClaim),
+            'other_travel' => redirect()->route('expenses-claims.other-travels.index', $expensesClaim),
+            'other_trip' => redirect()->route('expenses-claims.other-travels.other-trips.create', $expensesClaim),
             'accommodation' => redirect()->route('expenses-claims.accommodations.index', $expensesClaim),
             'accommodation_detail' => redirect()->route('expenses-claims.accommodations.detail.create', $expensesClaim),
             'meal' => redirect()->route('expenses-claims.meals.index', $expensesClaim),

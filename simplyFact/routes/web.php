@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccommodationController;
+use App\Http\Controllers\DrivenTripController;
 use App\Http\Controllers\ExpensesClaimController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\MealController;
@@ -8,17 +9,11 @@ use App\Http\Controllers\OtherExpenseController;
 use App\Http\Controllers\ProofController;
 use App\Http\Controllers\TrainingExpenseController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VehicleController;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
-// Chemins temporaires pour dev
-Route::inertia('travel', 'travel/Travel')->name('travel');
-Route::inertia('travel-mode', 'travel/TravelMode')->name('travel-mode');
-Route::inertia('travel-vehicle', 'travel/Vehicle')->name('travel-vehicle');
-Route::inertia('travel-driven-trip', 'travel/DrivenTrip')->name('travel-driven-trip');
-Route::inertia('travel-other-trip', 'travel/OtherTrip')->name('travel-other-trip');
 
 // Front : chemin pour afficher React en utilisant Inertia ??
 Route::inertia('/', 'home')->name('home');
@@ -33,12 +28,13 @@ Route::resource('users', UserController::class);
 
 Route::resource('expenses-claims', ExpensesClaimController::class);
 
+Route::resource('expenses-claims.driven-travels', DrivenTripController::class);
+Route::resource('expenses-claims.vehicles', VehicleController::class);
+
 Route::resource('expenses-claims.accommodations', AccommodationController::class);
 Route::resource('expenses-claims.meals', MealController::class);
 Route::resource('expenses-claims.training-expenses', TrainingExpenseController::class);
 Route::resource('expenses-claims.other-expenses', OtherExpenseController::class);
-
-// Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
 
 // Flow (parcours de l'utilisateur)
 Route::prefix('expenses-claims/{expensesClaim}/flow')

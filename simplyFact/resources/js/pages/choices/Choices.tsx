@@ -9,6 +9,7 @@ interface ChoicesProps {
 
 export default function Choices({ expensesClaim }: ChoicesProps) {
     // Déclaration des états pour chaque choix
+    const [hasADrive, setHasADrive] = useState(false);
     const [hasTravel, setHasTravel] = useState(false);
     const [hasAccommodation, setHasAccommodation] = useState(false);
     const [hasMeal, setHasMeal] = useState(false);
@@ -42,7 +43,82 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                         {/* Frais de déplacement */}
                         <div className="flex flex-col gap-3">
                             <p className="text-gray-700">
-                                Un ou des déplacements ?
+                                Un ou des déplacements véhiculé ?
+                            </p>
+
+                            <div className="flex flex-row gap-2">
+                                <Button
+                                    variant={
+                                        hasADrive ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasADrive(true);
+                                        chosenSteps.push('driven_travel');
+                                        setChosenSteps(chosenSteps);
+                                    }}
+                                    sx={
+                                        hasADrive
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Oui
+                                </Button>
+                                <Button
+                                    variant={
+                                        !hasADrive ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasADrive(false);
+                                        setChosenSteps(
+                                            chosenSteps.filter(
+                                                (e) => e !== 'driven_travel',
+                                            ),
+                                        );
+                                    }}
+                                    sx={
+                                        !hasADrive
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Non
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Frais de déplacement */}
+                        <div className="flex flex-col gap-3">
+                            <p className="text-gray-700">
+                                Un ou des frais de déplacements hors véhicule ?
                             </p>
 
                             <div className="flex flex-row gap-2">
@@ -52,7 +128,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                     }
                                     onClick={() => {
                                         setHasTravel(true);
-                                        chosenSteps.push('travel');
+                                        chosenSteps.push('other_travel');
                                         setChosenSteps(chosenSteps);
                                     }}
                                     sx={
@@ -85,7 +161,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                         setHasTravel(false);
                                         setChosenSteps(
                                             chosenSteps.filter(
-                                                (e) => e !== 'travel',
+                                                (e) => e !== 'other_travel',
                                             ),
                                         );
                                     }}
@@ -266,7 +342,9 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
 
                         {/* Stage */}
                         <div className="flex flex-col gap-3">
-                            <p className="text-gray-700">Un stage ?</p>
+                            <p className="text-gray-700">
+                                Indémnisation de stage ?
+                            </p>
 
                             <div className="flex flex-row gap-2">
                                 <Button

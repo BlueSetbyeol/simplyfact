@@ -1,0 +1,280 @@
+import { Head, useForm } from '@inertiajs/react';
+import {
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    TextField,
+    Tooltip,
+} from '@mui/material';
+import { Select } from '@mui/material';
+import { Info } from 'lucide-react';
+import Header from '@/layouts/Header';
+
+interface DrivenTripsProps {
+    expensesClaimId: string;
+    drivenTrip?: {
+        id: number;
+        starting_city: string;
+        starting_zip_code: number;
+        ending_city: string;
+        ending_zip_code: string;
+        trip_type?: string;
+        total_distance: number;
+        total_price: number;
+        total_distance_given?: number;
+        total_price_given?: number;
+        description: string;
+    };
+    vehicle: {
+        id: string;
+        vehicle_type: string;
+        electrical: boolean;
+        power: string;
+        price_given: number;
+    };
+}
+
+export default function DrivenTrips({
+    expensesClaimId,
+    drivenTrip,
+    vehicle,
+}: DrivenTripsProps) {
+    const { data, setData, post, errors, reset, transform } = useForm({
+        starting_city: drivenTrip ? drivenTrip.starting_city : '',
+        starting_zip_code: drivenTrip
+            ? Number(drivenTrip.starting_zip_code)
+            : 0,
+        ending_city: drivenTrip ? drivenTrip.ending_city : '',
+        ending_zip_code: drivenTrip ? Number(drivenTrip.ending_zip_code) : 0,
+        trip_type: drivenTrip ? drivenTrip.trip_type : '',
+        total_distance: drivenTrip ? drivenTrip.total_distance : 0,
+        total_price: 0,
+        total_distance_given: 0,
+        total_price_given: 0,
+        description: drivenTrip ? drivenTrip.description : '',
+    });
+
+    const TransportMode = [
+        `${vehicle.vehicle_type}`,
+        'Covoiturage, remorque, salarié...',
+        'Déplacements pendant stage fédéral',
+    ];
+
+    const rate =
+        data.trip_type === 'Covoiturage' || data.trip_type === 'Stage'
+            ? 0.4
+            : data.trip_type === 'voiture'
+              ? 0.36
+              : 0.14;
+
+    const totalPrice = rate * data.total_distance;
+
+    const totalAbandonned = rate * data.total_distance_given;
+
+    const totalFinal = totalPrice - totalAbandonned;
+
+    transform(() => ({
+        total_price: totalFinal,
+        total_price_given: totalAbandonned,
+    }));
+
+    function handleSubmit(e: { preventDefault: () => void }) {
+        e.preventDefault();
+        post(`/expenses-claims/${expensesClaimId}/driven-trips`, {
+            onSuccess: () => {
+                reset();
+            },
+        });
+    }
+
+    return (
+        <Header>
+            <Head title="Trajet conduit"></Head>
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+                <h1 className="mb-2 text-xl font-medium text-gray-900">
+                    Trajet conduit
+                </h1>
+
+                <hr className="mb-8 border-gray-100" />
+
+                <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+                    <div className="flex flex-row gap-2">
+                        <TextField
+                            label="Ville de départ"
+                            required
+                            slotProps={{ inputLabel: { shrink: true } }}
+                            defaultValue={data.starting_city}
+                            onChange={(e) =>
+                                setData('starting_city', e.target.value)
+                            }
+                            fullWidth
+                            error={!!errors['starting_city']}
+                            helperText={errors['starting_city']}
+                        />
+
+                        <TextField
+                            label="Code postal"
+                            required
+                            type="text"
+                            slotProps={{
+                                inputLabel: { shrink: true },
+                                htmlInput: { maxLength: 5, minLength: 5 },
+                            }}
+                            defaultValue={data.starting_zip_code}
+                            onChange={(e) =>
+                                setData(
+                                    'starting_zip_code',
+                                    Number(e.target.value),
+                                )
+                            }
+                            error={!!errors['starting_zip_code']}
+                            helperText={errors['starting_zip_code']}
+                        />
+                    </div>
+
+                    <div className="flex flex-row gap-2">
+                        <TextField
+                            label="Ville d'arrivée"
+                            required
+                            slotProps={{ inputLabel: { shrink: true } }}
+                            defaultValue={data.ending_city}
+                            onChange={(e) =>
+                                setData('ending_city', e.target.value)
+                            }
+                            fullWidth
+                            error={!!errors['ending_city']}
+                            helperText={errors['ending_city']}
+                        />
+
+                        <TextField
+                            label="Code postal"
+                            required
+                            type="text"
+                            slotProps={{
+                                inputLabel: { shrink: true },
+                                htmlInput: { maxLength: 5, minLength: 5 },
+                            }}
+                            defaultValue={data.ending_zip_code}
+                            onChange={(e) =>
+                                setData(
+                                    'ending_zip_code',
+                                    Number(e.target.value),
+                                )
+                            }
+                            error={!!errors['ending_zip_code']}
+                            helperText={errors['ending_zip_code']}
+                        />
+                    </div>
+
+                    <TextField
+                        label="Description"
+                        multiline
+                        rows={3}
+                        type="text"
+                        slotProps={{ inputLabel: { shrink: true } }}
+                        defaultValue={data.description}
+                        onChange={(e) => setData('description', e.target.value)}
+                    />
+
+                    <FormControl fullWidth className="flex flex-col gap-5">
+                        <InputLabel shrink>Type de véhicule</InputLabel>
+                        <Select
+                            label="Type de véhicule"
+                            value={data.trip_type}
+                            onChange={(e) =>
+                                setData('trip_type', e.target.value)
+                            }
+                        >
+                            {TransportMode.map((transport, index) => (
+                                <MenuItem key={index} value={transport}>
+                                    {transport}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <TextField
+                        label="Total des km parcourus"
+                        required
+                        type="text"
+                        slotProps={{
+                            inputLabel: { shrink: true },
+                            htmlInput: { maxLength: 5, minLength: 5 },
+                        }}
+                        defaultValue={data.total_distance}
+                        onChange={(e) =>
+                            setData('total_distance', Number(e.target.value))
+                        }
+                        error={!!errors['total_distance']}
+                        helperText={errors['total_distance']}
+                    />
+
+                    <div className="flex flex-col gap-4 rounded-xl bg-gray-50 p-4">
+                        <div className="flex items-baseline gap-2">
+                            <p className="mb-4 text-sm font-medium text-gray-500">
+                                OPTIONNEL: Déclaration de km en abandon
+                            </p>
+                            <Tooltip
+                                title="Les km en abandon seront pris en compte en tant que dons à l'association pour les impôts."
+                                arrow
+                            >
+                                <Info className="h-4 w-4 cursor-pointer text-gray-400" />
+                            </Tooltip>
+                        </div>
+                        <TextField
+                            label="Total des km abandonnés"
+                            type="text"
+                            slotProps={{
+                                inputLabel: { shrink: true },
+                                htmlInput: { maxLength: 5, minLength: 5 },
+                            }}
+                            defaultValue={data.total_distance_given}
+                            onChange={(e) =>
+                                setData(
+                                    'total_distance_given',
+                                    Number(e.target.value),
+                                )
+                            }
+                            error={!!errors['total_distance_given']}
+                            helperText={errors['total_distance_given']}
+                        />
+                    </div>
+
+                    <hr className="mb-4 border-gray-100" />
+
+                    <div className="flex items-center justify-between rounded-xl bg-gray-50 p-4">
+                        <div>
+                            <p className="text-sm text-gray-500">
+                                Total à rembourser
+                            </p>
+                            {data.total_distance_given > 0 && (
+                                <p className="mt-1 text-xs text-gray-400">
+                                    Dont {totalAbandonned.toFixed(2)}€ en
+                                    abandon
+                                </p>
+                            )}
+                        </div>
+
+                        <p className="text-2xl font-medium text-gray-900">
+                            {totalFinal.toFixed(2)}€
+                        </p>
+                    </div>
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        className="!mt-2"
+                        sx={{
+                            backgroundColor: '#2D6A2D',
+                            '&:hover': { backgroundColor: '#1F4F1F' },
+                        }}
+                    >
+                        Suivant
+                    </Button>
+                </form>
+            </div>
+        </Header>
+    );
+}
