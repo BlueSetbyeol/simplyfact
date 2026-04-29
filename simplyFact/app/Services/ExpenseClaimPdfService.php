@@ -38,6 +38,9 @@ class ExpenseClaimPdfService
         $proofService = new ProofUploadService;
         $proofs = $proofService->getSignedUrls($expenseClaimId);
         \Log::info('Proofs URLs:', $proofs);
+        \Log::info('ExpensesClaim data:', [
+            'meals' => $expensesClaim->meals,
+        ]);
 
         if (empty($proofs)) {
             throw new \RuntimeException('Impossible de générer le PDF : aucun justificatif fourni.');
@@ -57,7 +60,7 @@ class ExpenseClaimPdfService
                 'otherExpenses' => $expensesClaim->otherExpenses,
                 'computed' => $computed,
             ])
-            ->merge($proofs)
+            ->urls($proofs)
             ->getDocument();
 
         Mail::to(config('mail.to_accountant'))
@@ -274,7 +277,7 @@ class ExpenseClaimPdfService
                 'otherExpenses' => $fakeExpensesClaim->otherExpenses,
                 'computed' => $computed,
             ])
-            ->merge($this->fakeJustificatifs());
+            ->urls($this->fakeJustificatifs());
     }
 
     /**
