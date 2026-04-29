@@ -19,6 +19,12 @@ interface ClaimSummaryProps {
             total_price_given: number;
             reimbursed_price: number;
         }[];
+        other_trips: {
+            id: number;
+            expense_name: string;
+            total_price: number;
+            reimbursed_price: number;
+        }[];
         accommodations: {
             id: number;
             accommodation_type: string;
@@ -56,6 +62,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
         total_reimbursed: expensesClaim?.total_reimbursed || 0,
         total_given: expensesClaim?.total_given || 0,
         driven_trips: expensesClaim?.driven_trips,
+        other_trips: expensesClaim?.other_trips,
         accommodations: expensesClaim?.accommodations,
         meals: expensesClaim?.meals,
         training_expenses: expensesClaim?.training_expenses,
@@ -66,6 +73,9 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
         let total = 0;
 
         expensesClaim?.driven_trips?.forEach(
+            (t) => (total += t.reimbursed_price),
+        );
+        expensesClaim?.other_trips?.forEach(
             (t) => (total += t.reimbursed_price),
         );
         expensesClaim?.accommodations?.forEach(
@@ -153,6 +163,26 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                             <p className="mb-1 text-gray-500">
                                                 Total des frais abandonnés :{' '}
                                                 {travel.total_price_given}
+                                            </p>
+                                            <p className="mb-1 text-gray-500">
+                                                Total remboursé :{' '}
+                                                {travel.reimbursed_price}
+                                            </p>
+                                        </Card>
+                                    ),
+                                )}
+                            </div>
+                        )}
+                    {expensesClaim?.other_trips &&
+                        expensesClaim?.other_trips.length > 0 && (
+                            <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
+                                <h3>Les Trajets non conduit</h3>
+                                {expensesClaim?.other_trips.map(
+                                    (travel, index) => (
+                                        <Card key={index} className="mb-1 p-2">
+                                            <p className="mb-1 text-gray-500">
+                                                Nom du trajet :{' '}
+                                                {travel.expense_name}
                                             </p>
                                             <p className="mb-1 text-gray-500">
                                                 Total remboursé :{' '}

@@ -1,168 +1,98 @@
-import { Head, router, useForm } from "@inertiajs/react";
-import { Button, TextField } from "@mui/material";
-import FileUpload from "@/components/FileUpload";
+import { Head, useForm } from '@inertiajs/react';
+import {
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+} from '@mui/material';
+import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
 interface OtherTripProps {
-    expensesClaim: {id: string},
-    modes: string[],
+    expensesClaimId: string;
+    otherTrip: {
+        id: number;
+        expense_name: string;
+        total_price: number;
+    };
 }
 
-export default function OtherTrip({expensesClaim = {id: ''}, modes = ['Train (2nd classe)', 'Transport en commun', 'Avion (2nd classe)', 'Péage, parking, taxis']}: OtherTripProps) {
+export default function OtherTrip({
+    expensesClaimId,
+    otherTrip,
+}: OtherTripProps) {
+    const { data, setData, post, errors } = useForm({
+        expense_name: otherTrip?.expense_name || '',
+        total_price: otherTrip?.total_price || 0,
+    });
 
-    const trainForm = useForm({expense_name: 'Train', expense_price: 0})
-    const transportForm = useForm({expense_name: 'Transport en commun', expense_price: 0})
-    const plainForm = useForm({expense_name: 'Avion', expense_price: 0})
-    const tollForm = useForm({expense_name: 'Péage', expense_price: 0})
-    const parkingForm = useForm({expense_name: 'Parking', expense_price: 0})
-    const taxiForm = useForm({expense_name: 'Taxis', expense_price: 0})
-
-    const totalFinal = 
-    (modes.includes('Train (2nd classe)') ? trainForm.data.expense_price : 0) +
-    (modes.includes('Transport en commun') ? transportForm.data.expense_price : 0) +
-    (modes.includes('Avion (2nd classe)') ? plainForm.data.expense_price : 0) +
-    (modes.includes('Péage, parking, taxis') ? tollForm.data.expense_price + parkingForm.data.expense_price + taxiForm.data.expense_price : 0)
+    const modes = [
+        'Train (2nd classe)',
+        'Transport en commun',
+        'Avion (2nd classe)',
+        'Péage, parking, taxis',
+    ];
 
     async function handleSubmit(e: { preventDefault: () => void }) {
         e.preventDefault();
-       
-        if (modes.includes('Train (2nd classe)')) {
-            await trainForm.post(`/expenses-claims/${expensesClaim?.id}/other-trips`)
-        }
-
-        if (modes.includes('Transport en commun')) { 
-            await transportForm.post(`/expenses-claims/${expensesClaim?.id}/other-trips`)
-        }
-
-        if (modes.includes('Avion (2nd classe)')) {
-            await plainForm.post(`/expenses-claims/${expensesClaim?.id}/other-trips`)
-        }
-
-        if (modes.includes('Péage, parking, taxis')) {
-            await tollForm.post(`/expenses-claims/${expensesClaim?.id}/other-trips`)
-            await parkingForm.post(`/expenses-claims/${expensesClaim?.id}/other-trips`)
-            await taxiForm.post(`/expenses-claims/${expensesClaim?.id}/other-trips`)
-        }
-
-        router.get(`/expenses-claims/${expensesClaim?.id}/travel`)
+        post(`/expenses-claims/${expensesClaimId}/other-travels`);
     }
 
-    return(
+    return (
         <Header>
             <Head title="Autre trajet"></Head>
             <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
-                <h1 className="text-xl font-medium text-gray-900 mb-2">Autre trajet</h1>
+                <h1 className="mb-2 text-xl font-medium text-gray-900">
+                    Autre trajet
+                </h1>
 
-                <hr className="border-gray-100 mb-8" />
+                <hr className="my-4 border-gray-100" />
+                <FormControl fullWidth className="flex flex-col gap-5">
+                    <InputLabel shrink>Type de véhicule</InputLabel>
+                    <Select
+                        label="Type de véhicule"
+                        value={data.expense_name || ''}
+                        onChange={(e) =>
+                            setData('expense_name', e.target.value)
+                        }
+                    >
+                        {modes.map((transport, index) => (
+                            <MenuItem key={index} value={transport}>
+                                {transport}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <hr className="mt-4 mb-8 border-gray-100" />
 
                 <div className="flex flex-col gap-4">
-
-                    {modes.includes('Train (2nd classe)') && (
-                        <div className="flex flex-col gap-2">
-                            <p className="text-md text-gray-500 mb-2">Déplacement en train</p>
-                            <TextField
-                                label="Montant dépensé"
-                                slotProps={{ inputLabel: { shrink: true } }}
-                                defaultValue={trainForm.data.expense_price}
-                                onChange={(e) => trainForm.setData('expense_price', Number(e.target.value))}
-                                fullWidth
-                                error={!!trainForm.errors['expense_price']}
-                                helperText={trainForm.errors['expense_price']}
-                            />
-                            <FileUpload expensesClaimId={expensesClaim?.id} />
-                            <hr className="border-gray-100 mb-8" />
-                        </div>
-                    )}
-
-                    {modes.includes('Transport en commun') && (
-                        <div className="flex flex-col gap-2">
-                            <p className="text-md text-gray-500 mb-2">Déplacement en transport en commun</p>
-                            <TextField
-                                label="Montant dépensé"
-                                slotProps={{ inputLabel: { shrink: true } }}
-                                defaultValue={transportForm.data.expense_price}
-                                onChange={(e) => transportForm.setData('expense_price', Number(e.target.value))}
-                                fullWidth
-                                error={!!transportForm.errors['expense_price']}
-                                helperText={transportForm.errors['expense_price']}
-                            />
-                            <FileUpload expensesClaimId={expensesClaim?.id} />
-                            <hr className="border-gray-100 mb-8" />
-                        </div>
-                    )}
-
-                    {modes.includes('Avion (2nd classe)') && (
-                        <div className="flex flex-col gap-2">
-                            <p className="text-md text-gray-500 mb-2">Déplacement en avion</p>
-                            <TextField
-                                label="Montant dépensé"
-                                slotProps={{ inputLabel: { shrink: true } }}
-                                defaultValue={plainForm.data.expense_price}
-                                onChange={(e) => plainForm.setData('expense_price', Number(e.target.value))}
-                                fullWidth
-                                error={!!plainForm.errors['expense_price']}
-                                helperText={plainForm.errors['expense_price']}
-                            />
-                            <FileUpload expensesClaimId={expensesClaim?.id} />
-                            <hr className="border-gray-100 mb-8" />
-                        </div>
-                    )}
-
-                    {modes.includes('Péage, parking, taxis') && (
-                        <>
-                        <div className="flex flex-col gap-2">
-                            <p className="text-md text-gray-500 mb-2">Péage</p>
-                            <TextField
-                                label="Montant dépensé"
-                                slotProps={{ inputLabel: { shrink: true } }}
-                                defaultValue={tollForm.data.expense_price}
-                                onChange={(e) => tollForm.setData('expense_price', Number(e.target.value))}
-                                fullWidth
-                                error={!!tollForm.errors['expense_price']}
-                                helperText={tollForm.errors['expense_price']}
-                            />
-                            <FileUpload expensesClaimId={expensesClaim?.id} />
-                            <hr className="border-gray-100 mb-8" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <p className="text-md text-gray-500 mb-2">Parking</p>
-                            <TextField
-                                label="Montant dépensé"
-                                slotProps={{ inputLabel: { shrink: true } }}
-                                defaultValue={parkingForm.data.expense_price}
-                                onChange={(e) => parkingForm.setData('expense_price', Number(e.target.value))}
-                                fullWidth
-                                error={!!parkingForm.errors['expense_price']}
-                                helperText={parkingForm.errors['expense_price']}
-                            />
-                            <FileUpload expensesClaimId={expensesClaim?.id} />
-                            <hr className="border-gray-100 mb-8" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <p className="text-md text-gray-500 mb-2">Taxis</p>
-                            <TextField
-                                label="Montant dépensé"
-                                slotProps={{ inputLabel: { shrink: true } }}
-                                defaultValue={taxiForm.data.expense_price}
-                                onChange={(e) => taxiForm.setData('expense_price', Number(e.target.value))}
-                                fullWidth
-                                error={!!taxiForm.errors['expense_price']}
-                                helperText={taxiForm.errors['expense_price']}
-                            />
-                            <FileUpload expensesClaimId={expensesClaim?.id} />
-                            <hr className="border-gray-100 mb-8" />
-                        </div>
-                        </>
-                    )}
-
+                    <div className="flex flex-col gap-2">
+                        <p className="text-md mb-2 text-gray-500">
+                            Déplacement en train
+                        </p>
+                        <TextField
+                            label="Montant dépensé"
+                            slotProps={{ inputLabel: { shrink: true } }}
+                            defaultValue={data.total_price || ''}
+                            onChange={(e) =>
+                                setData('total_price', Number(e.target.value))
+                            }
+                            fullWidth
+                            error={!!errors['total_price']}
+                            helperText={errors['total_price']}
+                        />
+                        <FileUpload expensesClaimId={expensesClaimId} />
+                    </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center mb-2">
-
-                    <p className="text-sm text-gray-500">Total à rembourser</p>    
-                    <p className="text-2xl font-medium text-gray-900">{totalFinal.toFixed(2)}€</p>
-
-                    </div>
+                <div className="mb-2 flex items-center justify-between rounded-xl bg-gray-50 p-4">
+                    <p className="text-sm text-gray-500">Total à rembourser</p>
+                    <p className="text-2xl font-medium text-gray-900">
+                        {data.total_price.toFixed(2)}€
+                    </p>
+                </div>
 
                 <Button
                     onClick={handleSubmit}
@@ -178,6 +108,5 @@ export default function OtherTrip({expensesClaim = {id: ''}, modes = ['Train (2n
                 </Button>
             </div>
         </Header>
-    )
-
+    );
 }

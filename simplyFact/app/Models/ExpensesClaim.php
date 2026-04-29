@@ -41,10 +41,10 @@ class ExpensesClaim extends Model
         return $this->hasMany(DrivenTrip::class);
     }
 
-    // public function otherTravels(): HasMany
-    // {
-    //     return $this->hasMany(OtherTrip::class);
-    // }
+    public function otherTrips(): HasMany
+    {
+        return $this->hasMany(OtherTrip::class);
+    }
 
     public function accommodations(): HasMany
     {

@@ -188,7 +188,7 @@ export default function DrivenTrips({
                         <InputLabel shrink>Type de véhicule</InputLabel>
                         <Select
                             label="Type de véhicule"
-                            value={data.trip_type}
+                            value={data.trip_type || ''}
                             onChange={(e) =>
                                 setData('trip_type', e.target.value)
                             }
