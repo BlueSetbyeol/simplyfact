@@ -20,6 +20,8 @@ readonly class PdfGenerator implements Responsable
 
     private Collection $merge;
 
+    private Collection $urls;
+
     private string $document;
 
     public function __construct()
@@ -41,9 +43,9 @@ readonly class PdfGenerator implements Responsable
         return $this;
     }
 
-    public function merge(iterable $pdfsUrl): self
+    public function urls(iterable $urls): self
     {
-        $this->merge = collect($pdfsUrl);
+        $this->urls = collect($urls);
 
         return $this;
     }
@@ -53,7 +55,7 @@ readonly class PdfGenerator implements Responsable
         if (! isset($this->document)) {
             $response = Http::post($this->apiUrl, [
                 'html' => $this->html,
-                'merge' => $this->merge ?? null,
+                'merge' => $this->urls ?? [],
             ]);
 
             if ($response->failed()) {
