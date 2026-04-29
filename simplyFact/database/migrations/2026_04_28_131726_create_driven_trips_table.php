@@ -19,16 +19,16 @@ return new class extends Migration
             $table->foreignUuid('vehicle_id')
                 ->constrained();
             $table->string('starting_city', 150);
-            $table->integer('strating_zip_code');
+            $table->integer('starting_zip_code');
             $table->string('ending_city', 150);
             $table->integer('ending_zip_code');
-            $table->string('trip_type', 255)->nullable;
+            $table->string('trip_type', 255)->nullable();
             $table->integer('total_distance');
             $table->float('total_price');
-            $table->integer('total_distance_given')->nullable;
-            $table->float('total_price_given')->nullable;
+            $table->integer('total_distance_given')->nullable();
+            $table->float('total_price_given')->nullable();
             $table->float('reimbursed_price');
-            $table->string('description', 255);
+            $table->string('description', 255)->nullable();
             $table->timestamps();
         });
     }

@@ -25,11 +25,11 @@ interface VehicleProps {
 
 export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
     const { data, setData, post, errors, reset, transform } = useForm({
-        vehicle_type: vehicle?.electrical ? vehicle.electrical : 'voiture',
-        electrical: vehicle?.electrical ? vehicle.electrical : false,
-        power: vehicle?.power ? vehicle.power : '',
-        number_plate: vehicle?.number_plate ? vehicle.number_plate : '',
-        price_given: vehicle?.price_given ? vehicle.price_given : '',
+        vehicle_type: vehicle?.electrical || 'voiture',
+        electrical: vehicle?.electrical || false,
+        power: vehicle?.power || '',
+        number_plate: vehicle?.number_plate || '',
+        price_given: vehicle?.price_given || '',
     });
 
     const carRates: Record<string, number> = {
@@ -72,8 +72,8 @@ export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
         }
     };
 
-    transform((d) => ({
-        ...d,
+    transform((data) => ({
+        ...data,
         price_given: getPriceGiven(),
     }));
 

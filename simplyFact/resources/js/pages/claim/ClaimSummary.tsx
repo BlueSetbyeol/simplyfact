@@ -86,7 +86,8 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
     const totalReimbursed =
         data.total_given !== 0 ? totalSpend - data.total_given : totalSpend;
 
-    transform(() => ({
+    transform((data) => ({
+        ...data,
         total_reimbursed: totalReimbursed,
     }));
 

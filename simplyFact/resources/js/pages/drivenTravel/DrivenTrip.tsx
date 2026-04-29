@@ -15,22 +15,19 @@ interface DrivenTripsProps {
     expensesClaimId: string;
     drivenTrip?: {
         id: number;
+        vehicle_id: string;
         starting_city: string;
         starting_zip_code: number;
         ending_city: string;
         ending_zip_code: string;
         trip_type?: string;
         total_distance: number;
-        total_price: number;
         total_distance_given?: number;
-        total_price_given?: number;
         description: string;
     };
     vehicle: {
         id: string;
         vehicle_type: string;
-        electrical: boolean;
-        power: string;
         price_given: number;
     };
 }
@@ -40,19 +37,16 @@ export default function DrivenTrips({
     drivenTrip,
     vehicle,
 }: DrivenTripsProps) {
-    const { data, setData, post, errors, reset, transform } = useForm({
-        starting_city: drivenTrip ? drivenTrip.starting_city : '',
-        starting_zip_code: drivenTrip
-            ? Number(drivenTrip.starting_zip_code)
-            : 0,
-        ending_city: drivenTrip ? drivenTrip.ending_city : '',
-        ending_zip_code: drivenTrip ? Number(drivenTrip.ending_zip_code) : 0,
-        trip_type: drivenTrip ? drivenTrip.trip_type : '',
-        total_distance: drivenTrip ? drivenTrip.total_distance : 0,
-        total_price: 0,
-        total_distance_given: 0,
-        total_price_given: 0,
-        description: drivenTrip ? drivenTrip.description : '',
+    const { data, setData, post, errors, reset } = useForm({
+        vehicle_id: drivenTrip?.vehicle_id || vehicle.id,
+        starting_city: drivenTrip?.starting_city || '',
+        starting_zip_code: drivenTrip?.starting_zip_code || 0,
+        ending_city: drivenTrip?.ending_city || '',
+        ending_zip_code: drivenTrip?.ending_zip_code || 0,
+        trip_type: drivenTrip?.trip_type || '',
+        total_distance: drivenTrip?.total_distance || 0,
+        total_distance_given: drivenTrip?.total_distance_given || 0,
+        description: drivenTrip?.description || '',
     });
 
     const TransportMode = [
@@ -62,26 +56,24 @@ export default function DrivenTrips({
     ];
 
     const rate =
-        data.trip_type === 'Covoiturage' || data.trip_type === 'Stage'
+        data.trip_type === 'Covoiturage, remorque, salarié...' ||
+        data.trip_type === 'Déplacements pendant stage fédéral'
             ? 0.4
             : data.trip_type === 'voiture'
               ? 0.36
               : 0.14;
 
-    const totalPrice = rate * data.total_distance;
+    const totalPrice = Number(
+        (rate * (data.total_distance - data.total_distance_given)).toFixed(2),
+    );
 
-    const totalAbandonned = rate * data.total_distance_given;
-
-    const totalFinal = totalPrice - totalAbandonned;
-
-    transform(() => ({
-        total_price: totalFinal,
-        total_price_given: totalAbandonned,
-    }));
+    const totalAbandonned = Number(
+        (vehicle.price_given * data.total_distance_given).toFixed(2),
+    );
 
     function handleSubmit(e: { preventDefault: () => void }) {
         e.preventDefault();
-        post(`/expenses-claims/${expensesClaimId}/driven-trips`, {
+        post(`/expenses-claims/${expensesClaimId}/driven-travels`, {
             onSuccess: () => {
                 reset();
             },
@@ -104,7 +96,11 @@ export default function DrivenTrips({
                             label="Ville de départ"
                             required
                             slotProps={{ inputLabel: { shrink: true } }}
-                            defaultValue={data.starting_city}
+                            defaultValue={
+                                data.starting_city !== ''
+                                    ? data.starting_city
+                                    : ''
+                            }
                             onChange={(e) =>
                                 setData('starting_city', e.target.value)
                             }
@@ -119,9 +115,13 @@ export default function DrivenTrips({
                             type="text"
                             slotProps={{
                                 inputLabel: { shrink: true },
-                                htmlInput: { maxLength: 5, minLength: 5 },
+                                htmlInput: { maxLength: 6, minLength: 5 },
                             }}
-                            defaultValue={data.starting_zip_code}
+                            defaultValue={
+                                data.starting_zip_code !== 0
+                                    ? data.starting_zip_code
+                                    : ''
+                            }
                             onChange={(e) =>
                                 setData(
                                     'starting_zip_code',
@@ -138,7 +138,9 @@ export default function DrivenTrips({
                             label="Ville d'arrivée"
                             required
                             slotProps={{ inputLabel: { shrink: true } }}
-                            defaultValue={data.ending_city}
+                            defaultValue={
+                                data.ending_city !== '' ? data.ending_city : ''
+                            }
                             onChange={(e) =>
                                 setData('ending_city', e.target.value)
                             }
@@ -153,9 +155,13 @@ export default function DrivenTrips({
                             type="text"
                             slotProps={{
                                 inputLabel: { shrink: true },
-                                htmlInput: { maxLength: 5, minLength: 5 },
+                                htmlInput: { maxLength: 6, minLength: 5 },
                             }}
-                            defaultValue={data.ending_zip_code}
+                            defaultValue={
+                                data.ending_zip_code !== 0
+                                    ? data.ending_zip_code
+                                    : ''
+                            }
                             onChange={(e) =>
                                 setData(
                                     'ending_zip_code',
@@ -173,7 +179,9 @@ export default function DrivenTrips({
                         rows={3}
                         type="text"
                         slotProps={{ inputLabel: { shrink: true } }}
-                        defaultValue={data.description}
+                        defaultValue={
+                            data.description !== '' ? data.description : ''
+                        }
                         onChange={(e) => setData('description', e.target.value)}
                     />
 
@@ -200,9 +208,11 @@ export default function DrivenTrips({
                         type="text"
                         slotProps={{
                             inputLabel: { shrink: true },
-                            htmlInput: { maxLength: 5, minLength: 5 },
+                            htmlInput: { maxLength: 15, minLength: 1 },
                         }}
-                        defaultValue={data.total_distance}
+                        defaultValue={
+                            data.total_distance !== 0 ? data.total_distance : ''
+                        }
                         onChange={(e) =>
                             setData('total_distance', Number(e.target.value))
                         }
@@ -227,9 +237,12 @@ export default function DrivenTrips({
                             type="text"
                             slotProps={{
                                 inputLabel: { shrink: true },
-                                htmlInput: { maxLength: 5, minLength: 5 },
                             }}
-                            defaultValue={data.total_distance_given}
+                            defaultValue={
+                                data.total_distance_given !== 0
+                                    ? data.total_distance_given
+                                    : ''
+                            }
                             onChange={(e) =>
                                 setData(
                                     'total_distance_given',
@@ -243,22 +256,30 @@ export default function DrivenTrips({
 
                     <hr className="mb-4 border-gray-100" />
 
-                    <div className="flex items-center justify-between rounded-xl bg-gray-50 p-4">
-                        <div>
+                    <div className="flex flex-col items-center justify-around gap-2 rounded-xl bg-gray-50 p-4">
+                        <div className="flex w-full items-center justify-between">
                             <p className="text-sm text-gray-500">
-                                Total à rembourser
+                                Total à rembourser ({rate} *{' '}
+                                {data.total_distance -
+                                    data.total_distance_given}
+                                )
                             </p>
-                            {data.total_distance_given > 0 && (
-                                <p className="mt-1 text-xs text-gray-400">
-                                    Dont {totalAbandonned.toFixed(2)}€ en
-                                    abandon
-                                </p>
-                            )}
+                            <p className="text-xl font-medium text-gray-900">
+                                {totalPrice.toFixed(2)}€
+                            </p>
                         </div>
 
-                        <p className="text-2xl font-medium text-gray-900">
-                            {totalFinal.toFixed(2)}€
-                        </p>
+                        {data.total_distance_given > 0 && (
+                            <div className="flex w-full items-center justify-between">
+                                <p className="text-sm text-gray-500">
+                                    Total abandon ({vehicle.price_given} *{' '}
+                                    {data.total_distance_given})
+                                </p>
+                                <p className="text-xl font-medium text-gray-900">
+                                    {totalAbandonned.toFixed(3)}€
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     <Button
