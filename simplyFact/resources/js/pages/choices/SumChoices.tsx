@@ -9,10 +9,11 @@ interface SumChoicesProps {
 
 export default function SumChoices({ steps, expensesClaim }: SumChoicesProps) {
     const labels: Record<string, string> = {
-        travel: 'Déplacements',
+        driven_travel: 'Déplacements véhiculé',
+        other_travel: 'Déplacements sans véhicule personel',
         accommodation: 'Hébergements',
         meal: 'Repas',
-        training: 'Stages',
+        training: 'Indémnisation de stages',
         other_expenses: 'Autre frais',
     };
 
