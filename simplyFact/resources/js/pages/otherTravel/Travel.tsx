@@ -19,7 +19,7 @@ export default function Travel({ expensesClaimId, otherTrips }: TravelProps) {
 
     function handleClickAddTravel(e: { preventDefault: () => void }) {
         e.preventDefault();
-        router.get(`/expenses-claim/${expensesClaimId}/other-travels/create`);
+        router.get(`/expenses-claims/${expensesClaimId}/other-travels/create`);
     }
 
     function completeStep(e: { preventDefault: () => void }) {

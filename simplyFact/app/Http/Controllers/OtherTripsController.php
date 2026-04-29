@@ -21,7 +21,7 @@ class OtherTripsController extends Controller
     {
         $otherTrip = OtherTrip::with('expenses_claim')->get();
 
-        return Inertia::render('otherExpenses/OtherTrip', [
+        return Inertia::render('otherTravel/OtherTrip', [
             'otherTrip' => $otherTrip,
             'expensesClaimId' => $expensesClaim->id]);
     }

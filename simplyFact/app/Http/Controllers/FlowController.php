@@ -188,7 +188,7 @@ class FlowController extends Controller
             'vehicle' => redirect()->route('expenses-claims.vehicles.create', $expensesClaim),
             'driven_trip' => redirect()->route('expenses-claims.driven-travels.create', $expensesClaim),
             'other_travel' => redirect()->route('expenses-claims.other-travels.index', $expensesClaim),
-            'other_trip' => redirect()->route('expenses-claims.other-travels.other-trips.create', $expensesClaim),
+            'other_trip' => redirect()->route('expenses-claims.other-travels.create', $expensesClaim),
             'accommodation' => redirect()->route('expenses-claims.accommodations.index', $expensesClaim),
             'accommodation_detail' => redirect()->route('expenses-claims.accommodations.detail.create', $expensesClaim),
             'meal' => redirect()->route('expenses-claims.meals.index', $expensesClaim),

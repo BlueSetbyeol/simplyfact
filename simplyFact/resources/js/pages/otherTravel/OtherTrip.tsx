@@ -50,7 +50,7 @@ export default function OtherTrip({
 
                 <hr className="my-4 border-gray-100" />
                 <FormControl fullWidth className="flex flex-col gap-5">
-                    <InputLabel shrink>Type de véhicule</InputLabel>
+                    <InputLabel shrink>Type de transport</InputLabel>
                     <Select
                         label="Type de véhicule"
                         value={data.expense_name || ''}
