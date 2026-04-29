@@ -12,7 +12,7 @@ class DrivenTrip extends Model
         'expenses_claim_id',
         'vehicle_id',
         'starting_city',
-        'strating_zip_code',
+        'starting_zip_code',
         'ending_city',
         'ending_zip_code',
         'trip_type',

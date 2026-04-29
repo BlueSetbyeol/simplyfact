@@ -15,7 +15,6 @@ interface DrivenTripsProps {
     expensesClaimId: string;
     drivenTrip?: {
         id: number;
-        vehicle_id: string;
         starting_city: string;
         starting_zip_code: number;
         ending_city: string;
@@ -38,7 +37,6 @@ export default function DrivenTrips({
     vehicle,
 }: DrivenTripsProps) {
     const { data, setData, post, errors, reset } = useForm({
-        vehicle_id: drivenTrip?.vehicle_id || vehicle.id,
         starting_city: drivenTrip?.starting_city || '',
         starting_zip_code: drivenTrip?.starting_zip_code || 0,
         ending_city: drivenTrip?.ending_city || '',
@@ -71,6 +69,7 @@ export default function DrivenTrips({
         (vehicle.price_given * data.total_distance_given).toFixed(2),
     );
 
+    console.log(data);
     function handleSubmit(e: { preventDefault: () => void }) {
         e.preventDefault();
         post(`/expenses-claims/${expensesClaimId}/driven-travels`, {
@@ -276,7 +275,7 @@ export default function DrivenTrips({
                                     {data.total_distance_given})
                                 </p>
                                 <p className="text-xl font-medium text-gray-900">
-                                    {totalAbandonned.toFixed(3)}€
+                                    {totalAbandonned.toFixed(2)}€
                                 </p>
                             </div>
                         )}

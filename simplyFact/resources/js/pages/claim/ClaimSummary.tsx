@@ -11,9 +11,12 @@ interface ClaimSummaryProps {
         action_dates: string;
         total_reimbursed: number;
         total_given?: number;
-        travels: {
+        driven_trips: {
             id: number;
+            starting_city: string;
+            ending_city: string;
             total_price: number;
+            total_price_given: number;
             reimbursed_price: number;
         }[];
         accommodations: {
@@ -52,7 +55,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
         action_dates: expensesClaim?.action_dates,
         total_reimbursed: expensesClaim?.total_reimbursed || 0,
         total_given: expensesClaim?.total_given || 0,
-        travels: expensesClaim?.travels,
+        driven_trips: expensesClaim?.driven_trips,
         accommodations: expensesClaim?.accommodations,
         meals: expensesClaim?.meals,
         training_expenses: expensesClaim?.training_expenses,
@@ -62,7 +65,9 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
     const totalSpend = useMemo(() => {
         let total = 0;
 
-        expensesClaim?.travels?.forEach((t) => (total += t.reimbursed_price));
+        expensesClaim?.driven_trips?.forEach(
+            (t) => (total += t.reimbursed_price),
+        );
         expensesClaim?.accommodations?.forEach(
             (a) => (total += a.reimbursed_price),
         );
@@ -70,6 +75,16 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
         total += expensesClaim?.training_expenses?.reimbursed_price || 0;
         expensesClaim?.other_expenses?.forEach(
             (e) => (total += e.reimbursed_price),
+        );
+
+        return total;
+    }, [expensesClaim]);
+
+    const totalGivenVehicle = useMemo(() => {
+        let total = 0;
+
+        expensesClaim?.driven_trips?.forEach(
+            (t) => (total += t.total_price_given),
         );
 
         return total;
@@ -100,12 +115,14 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
         });
     }
 
+    console.log(expensesClaim);
+
     return (
         <Header>
             <Head title="Résumé des choix"></Head>
             <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
                 <h1 className="mb-6 text-xl font-medium text-gray-900">
-                    Votre votre note de frais:
+                    Votre note de frais:
                 </h1>
 
                 <section className="my-4 flex w-full flex-col items-center gap-2 rounded-xl border border-gray-200 p-4">
@@ -122,16 +139,28 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
 
                 <section className="my-4 flex w-full flex-col items-center gap-2">
                     <h2>Toutes les dépenses effectuées</h2>
-                    {expensesClaim?.travels &&
-                        expensesClaim?.travels.length > 0 && (
+                    {expensesClaim?.driven_trips &&
+                        expensesClaim?.driven_trips.length > 0 && (
                             <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
                                 <h3>Les Trajets</h3>
-                                {expensesClaim?.travels.map((travel, index) => (
-                                    <Card key={index} className="mb-1 p-2">
-                                        <p>To be determined : {travel.id}</p>
-                                        {/* <p className="mb-1 text-gray-500">{labels[step]}</p> */}
-                                    </Card>
-                                ))}
+                                {expensesClaim?.driven_trips.map(
+                                    (travel, index) => (
+                                        <Card key={index} className="mb-1 p-2">
+                                            <p className="mb-1 text-gray-500">
+                                                {travel.starting_city} -{' '}
+                                                {travel.ending_city}
+                                            </p>
+                                            <p className="mb-1 text-gray-500">
+                                                Total des frais abandonnés :{' '}
+                                                {travel.total_price_given}
+                                            </p>
+                                            <p className="mb-1 text-gray-500">
+                                                Total remboursé :{' '}
+                                                {travel.reimbursed_price}
+                                            </p>
+                                        </Card>
+                                    ),
+                                )}
                             </div>
                         )}
                     {expensesClaim?.accommodations &&
@@ -216,7 +245,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                 </section>
 
                 <section className="my-4 flex w-full flex-col items-center gap-2 rounded-xl border border-gray-200 p-4">
-                    <h2>Voulez vous abandonner certain frais ?</h2>
+                    <h2>Voulez vous abandonner certains frais ?</h2>
                     <div className="flex w-full flex-row justify-center gap-2">
                         <Button
                             variant={willGive ? 'contained' : 'outlined'}
@@ -297,6 +326,14 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                     <span>{errors.total_given}</span>
                                 )}
                             </div>
+                            <div className="mb-2 flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                                <p className="text-sm text-gray-500">
+                                    Total du montant abandonné :
+                                </p>
+                                <p className="text-2xl font-medium text-gray-900">
+                                    {totalGivenVehicle + data.total_given} €
+                                </p>
+                            </div>
                             <div className="flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <div>
                                     <p className="text-sm text-gray-500">
@@ -318,8 +355,8 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                 />
                                 <p>
                                     Je confirme que toutes les informations
-                                    données sont exacte et que j'ai fournis tous
-                                    les documents de justificatif.
+                                    données sont exactes et que j'ai fourni tous
+                                    les documents justificatifs.
                                 </p>
                             </section>
 
@@ -338,6 +375,14 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                         </form>
                     ) : (
                         <div className="m-4 mb-6 flex w-full flex-col items-center justify-between rounded-xl p-4">
+                            <div className="mb-2 flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                                <p className="text-sm text-gray-500">
+                                    Total du montant abandonné :
+                                </p>
+                                <p className="text-2xl font-medium text-gray-900">
+                                    {totalGivenVehicle + data.total_given} €
+                                </p>
+                            </div>
                             <div className="flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <div>
                                     <p className="text-sm text-gray-500">
@@ -359,8 +404,8 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                 />
                                 <p>
                                     Je confirme que toutes les informations
-                                    données sont exacte et que j'ai fournis tous
-                                    les documents de justificatif.
+                                    données sont exactes et que j'ai fourni tous
+                                    les documents justificatifs.
                                 </p>
                             </section>
 

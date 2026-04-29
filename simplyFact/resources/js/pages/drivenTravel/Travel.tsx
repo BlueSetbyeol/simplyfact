@@ -59,18 +59,21 @@ export default function Travel({ expensesClaimId, drivenTrips }: TravelProps) {
                 {drivenTrips.length > 0 ? (
                     <div className="flex flex-row">
                         {drivenTrips.map((drivenTrip) => (
-                            <div key={drivenTrip.id} className="flex flex-row">
+                            <div
+                                key={drivenTrip.id}
+                                className="mt-3 w-full rounded-xl bg-gray-50 p-4"
+                            >
                                 <p className="text-sm font-medium">
                                     De {drivenTrip.starting_city} à{' '}
                                     {drivenTrip.ending_city}
                                 </p>
 
-                                <p className="text-sm font-medium">
+                                <p className="text-xs text-gray-500">
                                     {drivenTrip.total_price}€ payés -{' '}
                                     {drivenTrip.total_price_given}€ abandonnés
                                 </p>
 
-                                <p className="text-sm font-medium">
+                                <p className="text-xs text-gray-500">
                                     {drivenTrip.description}
                                 </p>
                             </div>

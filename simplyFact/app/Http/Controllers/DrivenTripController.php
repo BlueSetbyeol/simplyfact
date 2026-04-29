@@ -36,27 +36,19 @@ class DrivenTripController extends Controller
 
         // validation de la data
         $validated = $request->validate([
-            'vehicle_id' => 'string',
             'starting_city' => 'required|string|max:150|min:5',
-            'starting_zip_code' => 'required|numeric',
+            'starting_zip_code' => 'required|integer',
             'ending_city' => 'required|string|max:150|min:5',
-            'ending_zip_code' => 'required|numeric',
-            'trip_type' => 'string|max:255|min:5',
+            'ending_zip_code' => 'required|integer',
+            'trip_type' => 'string|max:255|min:4',
             'total_distance' => 'required|integer|min:1',
-            // 'total_price' => 'required|decimal:0,2|min:0',
-            'total_distance_given' => 'integer',
-            // 'total_price_given' => 'decimal:0,2',
-            'description' => 'string|max:255|min:5',
+            'total_distance_given' => 'nullable|integer',
+            'description' => 'nullable|string|max:255|min:5',
         ]
         );
 
-        $vehicle = Vehicle::find($validated['vehicle_id']);
-
-        $transportMode = [
-            $vehicle['vehicle_type'],
-            'Covoiturage, remorque, salarié...',
-            'Déplacements pendant stage fédéral',
-        ];
+        $vehicleID = session('vehicle_id');
+        $vehicle = Vehicle::find($vehicleID);
 
         $rate = match (true) {
             in_array($validated['trip_type'], ['Covoiturage, remorque, salarié...', 'Déplacements pendant stage fédéral']) => 0.4,
@@ -64,17 +56,15 @@ class DrivenTripController extends Controller
             default => 0.14,
         };
 
-        $validate['total_price'] = ($rate * ($validated['total_distance'] - $validated['total_distance_given']));
+        $validated['total_price'] = round($rate * ($validated['total_distance'] - ($validated['total_distance_given'] ?? 0)), 2);
 
-        $validate['total_price_given'] = ($vehicle['price_given'] * $validated['total_distance_given']);
+        $validated['total_price_given'] = round($vehicle['price_given'] * ($validated['total_distance_given'] ?? 0), 2);
 
-        $validated['reimbursed_price'] = ($validated['total_price'] - $validated['total_price_given']);
-
-        $vehicleId = session('vehicle_id');
+        $validated['reimbursed_price'] = round($validated['total_price'] - $validated['total_price_given'], 2);
 
         DrivenTrip::create([
             'expenses_claim_id' => $expensesClaim->id,
-            'vehicle_id' => $vehicleId,
+            'vehicle_id' => $vehicleID,
             ...$validated,
         ]);
 
