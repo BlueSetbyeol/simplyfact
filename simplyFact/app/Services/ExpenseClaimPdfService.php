@@ -21,11 +21,12 @@ class ExpenseClaimPdfService
      */
     public function generateAndSend(string $expenseClaimId): void
     {
+        ini_set('memory_limit', '512M');
+
         $expensesClaim = ExpensesClaim::with([
             'user',
-            // 'vehicle',
-            // 'drivenTrips',
-            // 'otherTrips',
+            'drivenTrips.vehicle',
+            'otherTrips',
             'accommodations',
             'meals',
             'otherExpenses',
@@ -37,10 +38,6 @@ class ExpenseClaimPdfService
         // Proofs s3 signed URLs for merging in PDF
         $proofService = new ProofUploadService;
         $proofs = $proofService->getSignedUrls($expenseClaimId);
-        \Log::info('Proofs URLs:', $proofs);
-        \Log::info('ExpensesClaim data:', [
-            'meals' => $expensesClaim->meals,
-        ]);
 
         if (empty($proofs)) {
             throw new \RuntimeException('Impossible de générer le PDF : aucun justificatif fourni.');
@@ -51,9 +48,8 @@ class ExpenseClaimPdfService
                 'logoBase64' => base64_encode(file_get_contents(public_path('images/logo-ffs.jpg'))),
                 'user' => $expensesClaim->user,
                 'expensesClaim' => $expensesClaim,
-                'vehicle' => null, // TODO: $expensesClaim->vehicle
-                'drivenTrips' => collect(), // TODO: $expensesClaim->drivenTrips,
-                'otherTrips' => collect(), // TODO: $expensesClaim->otherTrips
+                'drivenTrips' => $expensesClaim->drivenTrips,
+                'otherTrips' => $expensesClaim->otherTrips,
                 'accommodations' => $expensesClaim->accommodations,
                 'meal' => $expensesClaim->meals,
                 'trainingExpense' => $expensesClaim->trainingExpenses,
@@ -72,7 +68,6 @@ class ExpenseClaimPdfService
      */
     private function computeAmounts(object $expensesClaim): object
     {
-        $vehicle = $expensesClaim->vehicle ?? null;
         $drivenTrips = $expensesClaim->drivenTrips ?? collect();
         $otherTrips = $expensesClaim->otherTrips ?? collect();
         $accommodations = $expensesClaim->accommodations ?? collect();
@@ -80,85 +75,35 @@ class ExpenseClaimPdfService
         $trainingExpense = $expensesClaim->trainingExpenses ?? null;
         $otherExpenses = $expensesClaim->otherExpenses ?? collect();
 
-        $rate = 0;
-        $rateUrssaf = 0;
-
-        if ($vehicle) {
-            // Taux FFS (remboursement effectif)
-            $rate = $vehicle->vehicule_type === 'moto'
-                ? ($vehicle->electrical ? 0.168 : 0.14)
-                : ($vehicle->electrical ? 0.432 : 0.36);
-
-            // Barèmes URSSAF 2025
-            $urssafVoiture = [
-                '3' => ['standard' => 0.529, 'electrique' => 0.635],
-                '4' => ['standard' => 0.606, 'electrique' => 0.727],
-                '5' => ['standard' => 0.636, 'electrique' => 0.763],
-                '6' => ['standard' => 0.665, 'electrique' => 0.798],
-                '7' => ['standard' => 0.697, 'electrique' => 0.836],
-            ];
-
-            $urssafMoto = [
-                '1' => ['standard' => 0.395, 'electrique' => 0.474],
-                '2' => ['standard' => 0.395, 'electrique' => 0.474],
-                '3' => ['standard' => 0.468, 'electrique' => 0.562],
-                '4' => ['standard' => 0.468, 'electrique' => 0.562],
-                '5' => ['standard' => 0.468, 'electrique' => 0.562],
-                '6' => ['standard' => 0.606, 'electrique' => 0.727],
-            ];
-
-            $isMoto = $vehicle->vehicule_type === 'moto';
-            $power = min((int) $vehicle->power, $isMoto ? 6 : 7);
-            $typeKey = $vehicle->electrical ? 'electrique' : 'standard';
-            $baremeUrssaf = $isMoto ? $urssafMoto : $urssafVoiture;
-            $rateUrssaf = $baremeUrssaf[(string) $power][$typeKey];
-
-            if (! $rateUrssaf) {
-                throw new \RuntimeException("Taux URSSAF introuvable pour puissance {$vehicle->power} ({$typeKey})");
-            }
-        }
-
-        // Déplacements
-        $drivenTripsComputed = $drivenTrips->map(fn ($t) => (object) array_merge(
-            (array) $t,
-            ['reimbursed_amount' => ($t->total_distance - ($t->total_distance_given ?? 0)) * $rate]
-        ));
-
-        $totalReimbursedKm = $drivenTripsComputed->sum('reimbursed_amount');
+        $totalReimbursedKm = $drivenTrips->sum('reimbursed_price');
         $abandonKm = $drivenTrips->sum('total_price_given');
         $totalDistanceGiven = $drivenTrips->sum('total_distance_given');
 
-        // Totaux autres catégories
-        $totalOtherTrips = $otherTrips->sum('expense_price');
+        $totalOtherTrips = $otherTrips->sum('reimbursed_price');
         $totalAccommodation = $accommodations->sum('reimbursed_price');
-        $totalOtherExpenses = $otherExpenses->sum('expense_price');
         $totalMeals = $meal?->reimbursed_price ?? 0;
         $totalTraining = $trainingExpense?->reimbursed_price ?? 0;
+        $totalOtherExpenses = $otherExpenses->sum('reimbursed_price');
+
         $totalWithoutKm = $totalOtherTrips + $totalAccommodation + $totalMeals + $totalTraining + $totalOtherExpenses;
-        // Abandons
-        $totalGiven = (float) $expensesClaim->total_given ?? 0;
-        $abandonOthers = $totalGiven - $abandonKm;
 
-        // Total NDF
+        $abandonOthers = (float) ($expensesClaim->total_given ?? 0); // ($expensesClaim->total_given = total without kms given)
+        $totalGiven = $abandonKm + $abandonOthers;
+
         $totalNDF = $totalReimbursedKm + $abandonKm + $totalWithoutKm;
-
-        // Total à rembourser
         $netTotal = $totalNDF - $totalGiven;
 
-        // Section "Pour information"
-        $fullSettlementTotal = ($drivenTrips->sum('total_distance') * $rate) + $totalWithoutKm;
-        $totalKmUrssaf = $drivenTrips->sum('total_distance') * $rateUrssaf;
-        $fullAbandonTotal = ($totalKmUrssaf + $totalWithoutKm) * 0.66;
+        $taxReduction = round($totalGiven * 0.66, 2);
 
-        // Réduction d'impôt sur l'abandon actuel
-        $taxReduction = $totalGiven * 0.66;
+        $fullSettlementTotal = $drivenTrips->sum('total_price') + $totalWithoutKm;
+        $fullAbandonTotal = round(($abandonKm + $totalWithoutKm) * 0.66, 2);
 
         return (object) [
-            'rate' => $rate,
-            'drivenTrips' => $drivenTripsComputed,
+            'drivenTrips' => $drivenTrips,
             'totalReimbursedKm' => $totalReimbursedKm,
             'totalDistanceGiven' => $totalDistanceGiven,
             'abandonKm' => $abandonKm,
+            'abandonOthers' => $abandonOthers,
             'totalOtherTrips' => $totalOtherTrips,
             'totalAccommodation' => $totalAccommodation,
             'totalMeals' => $totalMeals,
@@ -166,7 +111,6 @@ class ExpenseClaimPdfService
             'totalOtherExpenses' => $totalOtherExpenses,
             'totalWithoutKm' => $totalWithoutKm,
             'totalGiven' => $totalGiven,
-            'abandonOthers' => $abandonOthers,
             'totalNDF' => $totalNDF,
             'netTotal' => $netTotal,
             'taxReduction' => $taxReduction,
@@ -204,28 +148,32 @@ class ExpenseClaimPdfService
             'action_name' => 'Stage fédéral spéléologie',
             'action_dates' => '15-17 mars 2026',
             'committee_name' => 'Commission Formation',
-            'total_given' => 133.25,
+            'total_given' => 100.00,
             'total_reimbursed' => null,
-            // Fake relations
-            'vehicle' => (object) [
-                'vehicule_type' => 'voiture',
-                'electrical' => false,
-                'number_plate' => 'AB-123-CD',
-                'power' => '6',
-            ],
-            'drivenTrips' => collect([
-                (object) [
-                    'starting_city' => 'Lyon',
-                    'ending_city' => 'Grenoble',
-                    'trip_type' => 'Aller-retour',
-                    'total_distance' => 220,
-                    'total_distance_given' => 50,
-                    'total_price_given' => 33.25,
-                ],
-            ]),
+            // TODO: remplacer quand driven trips blade sera fait :
+            'drivenTrips' => collect(),
+            // collect([
+            //     (object) [
+            //         'starting_city' => 'Lyon',
+            //         'ending_city' => 'Grenoble',
+            //         'trip_type' => 'voiture',
+            //         'total_distance' => 220,
+            //         'total_distance_given' => 50,
+            //         'total_price' => 61.20,
+            //         'total_price_given' => 33.25,
+            //         'reimbursed_price' => 27.95,
+            //         'vehicle' => (object) [
+            //             'vehicle_type' => 'voiture',
+            //             'electrical' => false,
+            //             'number_plate' => 'AB-123-CD',
+            //             'power' => '6CV',
+            //             'price_given' => 0.665,
+            //         ],
+            //     ],
+            // ]),
             'otherTrips' => collect([
-                (object) ['expense_name' => 'Péages autoroute', 'expense_price' => 12.40],
-                (object) ['expense_name' => 'Train Lyon - Paris', 'expense_price' => 67.00],
+                (object) ['expense_name' => 'Péages autoroute', 'reimbursed_price' => 12.40],
+                (object) ['expense_name' => 'Train Lyon - Paris', 'reimbursed_price' => 67.00],
             ]),
             'accommodations' => collect([
                 (object) [
@@ -245,8 +193,8 @@ class ExpenseClaimPdfService
                 'reimbursed_price' => 63.90,
             ],
             'otherExpenses' => collect([
-                (object) ['expense_name' => 'Fournitures de bureau', 'expense_price' => 14.50, 'nb_days_of_training' => null],
-                (object) ['expense_name' => 'Timbres', 'expense_price' => 3.20, 'nb_days_of_training' => null],
+                (object) ['expense_name' => 'Fournitures de bureau', 'reimbursed_price' => 14.50, 'nb_days_of_training' => null],
+                (object) ['expense_name' => 'Timbres', 'reimbursed_price' => 3.20, 'nb_days_of_training' => null],
             ]),
         ];
 
@@ -268,8 +216,9 @@ class ExpenseClaimPdfService
                 'logoBase64' => base64_encode(file_get_contents(public_path('images/logo-ffs.jpg'))),
                 'user' => $fakeUser,
                 'expensesClaim' => $fakeExpensesClaim,
-                'vehicle' => $fakeExpensesClaim->vehicle,
-                'drivenTrips' => $computed->drivenTrips,
+                // TODO: remplacer quand driven trips blade sera fait :
+                'drivenTrips' => collect(),
+                // 'drivenTrips' => $computed->drivenTrips,
                 'otherTrips' => $fakeExpensesClaim->otherTrips,
                 'accommodations' => $fakeExpensesClaim->accommodations,
                 'meal' => $fakeExpensesClaim->meals,

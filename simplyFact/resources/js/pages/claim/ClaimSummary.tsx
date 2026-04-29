@@ -1,4 +1,4 @@
-import { useForm, Head } from '@inertiajs/react';
+import { useForm, Head, usePage } from '@inertiajs/react';
 import { Button, TextField, Card, Checkbox } from '@mui/material';
 import { useMemo, useState } from 'react';
 import Header from '@/layouts/Header';
@@ -54,6 +54,8 @@ interface ClaimSummaryProps {
 }
 
 export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
+    const { flash } = usePage() as any;
+
     const { data, setData, put, errors, reset, transform } = useForm({
         id: expensesClaim?.id,
         committee_name: expensesClaim?.committee_name,
@@ -134,7 +136,11 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                 <h1 className="mb-6 text-xl font-medium text-gray-900">
                     Votre note de frais:
                 </h1>
-
+                {flash.error && (
+                    <div className="mb-4 rounded-xl bg-red-50 p-4 text-sm text-red-600">
+                        {flash.error}
+                    </div>
+                )}
                 <section className="my-4 flex w-full flex-col items-center gap-2 rounded-xl border border-gray-200 p-4">
                     <h2>Information concernant la note de frais :</h2>
                     <div className="my-4 flex w-full flex-col items-start gap-2">

@@ -20,12 +20,21 @@ class VehicleController extends Controller
 
     public function create(ExpensesClaim $expensesClaim, Request $request)
     {
-        $vehicle = Vehicle::with('expenses_claim')->get();
+        // TO REMOVE: Vehicle n'est plus lié à expensesClaim,
+        // remplacé par récupération faite par le user_id en session.
+        // $vehicle = Vehicle::with('expenses_claim')->get();
+
+        $userId = session('user_id');
+        $user = User::find($userId);
+
+        $vehicle = $user
+            ? Vehicle::where('user_id', $userId)->latest()->first()
+            : null;
 
         return Inertia::render('drivenTravel/Vehicle', [
             'vehicle' => $vehicle,
-            'expensesClaimId' => $expensesClaim->id]);
-
+            'expensesClaimId' => $expensesClaim->id,
+        ]);
     }
 
     public function store(Request $request, ExpensesClaim $expensesClaim)

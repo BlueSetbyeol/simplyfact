@@ -155,7 +155,7 @@
           <tr class="bg-white">
             <td class="px-4 py-3 text-gray-900">{{ $trip->expense_name ?? '' }}</td>
             <td class="px-4 py-3 text-right font-semibold text-gray-900">
-              {{ number_format($trip->expense_price ?? 0, 2, ',', ' ') }} €
+              {{ number_format($trip->reimbursed_price ?? 0, 2, ',', ' ') }} €
             </td>
           </tr>
           @endforeach
@@ -289,7 +289,7 @@
               @endif
             </td>
             <td class="px-4 py-3 text-right font-semibold text-gray-900">
-              {{ number_format($expense->expense_price ?? 0, 2, ',', ' ') }} €
+              {{ number_format($expense->reimbursed_price ?? 0, 2, ',', ' ') }} €
             </td>
           </tr>
           @endforeach

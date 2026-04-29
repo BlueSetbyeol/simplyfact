@@ -25,7 +25,7 @@ interface VehicleProps {
 
 export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
     const { data, setData, post, errors, reset, transform } = useForm({
-        vehicle_type: vehicle?.electrical || 'voiture',
+        vehicle_type: vehicle?.vehicle_type || 'voiture',
         electrical: vehicle?.electrical || false,
         power: vehicle?.power || '',
         number_plate: vehicle?.number_plate || '',

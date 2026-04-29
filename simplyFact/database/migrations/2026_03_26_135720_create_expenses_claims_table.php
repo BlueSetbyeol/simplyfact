@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('committee_name', 150);
             $table->string('action_name', 255);
             $table->string('action_dates', 255);
-            $table->decimal('total_given', 10, 2)->nullable();
-            $table->decimal('total_reimbursed', 10, 2)->nullable();
+            $table->unsignedInteger('total_reimbursed')->nullable();
+            $table->unsignedInteger('total_given')->nullable();
             $table->timestamps();
         });
     }

@@ -20,13 +20,16 @@ class DrivenTripController extends Controller
 
     public function create(ExpensesClaim $expensesClaim)
     {
-        $drivenTrip = DrivenTrip::with('expenses_claim')->get();
+        // TO REMOVE: Inutile et met en erreur
+        // Récupérer drivenTrip aurait sa place dans edit
+        // $drivenTrip = DrivenTrip::with('expenses_claim')->get();
 
         $vehicleID = session('vehicle_id');
         $vehicle = Vehicle::find($vehicleID);
 
         return Inertia::render('drivenTravel/DrivenTrip', [
-            'drivenTrip' => $drivenTrip,
+            // TO REMOVE
+            // 'drivenTrip' => $drivenTrip,
             'vehicle' => $vehicle,
             'expensesClaimId' => $expensesClaim->id]);
     }
