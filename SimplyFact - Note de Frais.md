@@ -123,7 +123,7 @@ possiblement `vehicule`
 | vehicule_type  | "voiture" \| "moto"                                 |
 | electrical     | boolean default false                               |
 | power          | string (select en dur dans le front)                |
-| price_given    | number                                              |
+| price_given    | number                                              | rate du prix          |
 | number_plate   | string                                              |
 | added_at       | timestamp                                           |
 

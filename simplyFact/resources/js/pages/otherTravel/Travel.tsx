@@ -49,22 +49,20 @@ export default function Travel({ expensesClaimId, otherTrips }: TravelProps) {
                 </div>
 
                 {otherTrips.length > 0 ? (
-                    <div className="flex flex-row">
-                        {otherTrips.map((otherTrip) => (
-                            <div
-                                key={otherTrip.id}
-                                className="mt-3 w-full rounded-xl bg-gray-50 p-4"
-                            >
-                                <p className="text-sm font-medium">
-                                    {otherTrip.expense_name}
-                                </p>
+                    otherTrips.map((otherTrip) => (
+                        <div
+                            key={otherTrip.id}
+                            className="mt-3 w-full rounded-xl bg-gray-50 p-4"
+                        >
+                            <p className="text-sm font-medium">
+                                {otherTrip.expense_name}
+                            </p>
 
-                                <p className="text-xs text-gray-500">
-                                    {otherTrip.total_price}€ payés
-                                </p>
-                            </div>
-                        ))}
-                    </div>
+                            <p className="text-xs text-gray-500">
+                                {otherTrip.total_price}€ payés
+                            </p>
+                        </div>
+                    ))
                 ) : (
                     <p className="mt-4 text-sm text-gray-400">
                         Aucun trajet pour le moment

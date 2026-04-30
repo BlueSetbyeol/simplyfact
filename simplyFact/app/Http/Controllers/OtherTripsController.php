@@ -19,7 +19,6 @@ class OtherTripsController extends Controller
 
     public function create(ExpensesClaim $expensesClaim)
     {
-
         return Inertia::render('otherTravel/OtherTrip', [
             'otherTrip' => null,
             'expensesClaimId' => $expensesClaim->id]);
@@ -27,7 +26,6 @@ class OtherTripsController extends Controller
 
     public function store(Request $request, ExpensesClaim $expensesClaim)
     {
-
         // validation de la data
         $validated = $request->validate([
             'expense_name' => 'required|string|min:5',
@@ -53,31 +51,27 @@ class OtherTripsController extends Controller
 
     public function edit(OtherTrip $otherTrip)
     {
-        $claimId = session('expenses_claim_id');
-        $otherTrip = OtherTrip::where('expenses_claim_id', $claimId)->get();
+        // $claimId = session('expenses_claim_id');
+        // $otherTrip = OtherTrip::where('expenses_claim_id', $claimId)->get();
     }
 
     public function update(Request $request, OtherTrip $otherTrip, ExpensesClaim $expensesClaim)
     {
-        $validated = $request->validate([
-            'expense_name' => 'required|string|min:5',
-            'total_price' => 'required|decimal:0,2|min:0',
-            'expenses_claim_id' => ['exists:expensesClaim,id'],
-        ]);
+        // $validated = $request->validate([
+        //     'expense_name' => 'required|string|min:5',
+        //     'total_price' => 'required|decimal:0,2|min:0',
+        //     'expenses_claim_id' => ['exists:expensesClaim,id'],
+        // ]);
 
         // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
-        $validated['reimbursed_price'] = $validated['total_price'];
-
-        $otherTrip->update($validated);
-
-        // Edit/update stays on the same page, no flow movement
-        return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
+        // $validated['reimbursed_price'] = $validated['total_price'];
+        // $otherTrip->update($validated);
+        // return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
     }
 
     public function destroy(OtherTrip $otherTrip, ExpensesClaim $expensesClaim)
     {
-        $otherTrip->delete();
-
-        return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
+        // $otherTrip->delete();
+        // return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
     }
 }

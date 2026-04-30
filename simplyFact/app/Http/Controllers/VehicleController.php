@@ -66,9 +66,6 @@ class VehicleController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(User $user)
     {
         // $vehicle = Vehicle::with(['users'])->findOrFail($user->id);
@@ -81,9 +78,6 @@ class VehicleController extends Controller
         // ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Vehicle $vehicle, Request $request)
     {
         // Not sure if we do authorize the modification at the end or not

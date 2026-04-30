@@ -7,6 +7,7 @@ import {
     Select,
     TextField,
 } from '@mui/material';
+import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
@@ -89,6 +90,8 @@ export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
         });
     }
 
+    const [hasDocument, setHasDocument] = useState(false);
+
     return (
         <Header>
             <Head title="Votre véhicule"></Head>
@@ -129,7 +132,10 @@ export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
                         <p className="mb-2 text-sm text-gray-500">
                             Carte grise
                         </p>
-                        <FileUpload expensesClaimId={expensesClaimId} />
+                        <FileUpload
+                            expensesClaimId={expensesClaimId}
+                            onUpload={(hasFiles) => setHasDocument(hasFiles)}
+                        />
                     </div>
 
                     <div>
@@ -248,6 +254,7 @@ export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
                     <Button
                         type="submit"
                         variant="contained"
+                        disabled={!hasDocument}
                         fullWidth
                         className="!mt-2"
                         sx={{

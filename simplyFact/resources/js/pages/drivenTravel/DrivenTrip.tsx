@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import { Select } from '@mui/material';
 import { Info } from 'lucide-react';
+import { useState } from 'react';
+import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
 interface DrivenTripsProps {
@@ -81,6 +83,8 @@ export default function DrivenTrips({
             },
         });
     }
+
+    const [hasDocument, setHasDocument] = useState(false);
 
     return (
         <Header>
@@ -254,18 +258,28 @@ export default function DrivenTrips({
                             error={!!errors['total_distance_given']}
                             helperText={errors['total_distance_given']}
                         />
+                        <p className="text-xs text-[#2D6A2D]">
+                            Donc km à rembourser : ({data.total_distance} -{' '}
+                            {data.total_distance_given}) ={' '}
+                            {data.total_distance - data.total_distance_given} km
+                        </p>
                     </div>
 
                     <hr className="mb-4 border-gray-100" />
 
                     <div className="flex flex-col items-center justify-around gap-2 rounded-xl bg-gray-50 p-4">
                         <div className="flex w-full items-center justify-between">
-                            <p className="text-sm text-gray-500">
-                                Total à rembourser ({rate} *{' '}
-                                {data.total_distance -
-                                    data.total_distance_given}
-                                )
-                            </p>
+                            <div className="flex flex-col">
+                                <p className="text-sm text-gray-500">
+                                    Total à rembourser :
+                                </p>
+                                <p className="mt-1 text-xs text-gray-400">
+                                    Taux de {rate}€ par km, soit :{' '}
+                                    {data.total_distance -
+                                        data.total_distance_given}{' '}
+                                    km * {rate}€
+                                </p>
+                            </div>
                             <p className="text-xl font-medium text-gray-900">
                                 {totalPrice.toFixed(2)}€
                             </p>
@@ -273,10 +287,16 @@ export default function DrivenTrips({
 
                         {data.total_distance_given > 0 && (
                             <div className="flex w-full items-center justify-between">
-                                <p className="text-sm text-gray-500">
-                                    Total abandon ({vehicle.price_given} *{' '}
-                                    {data.total_distance_given})
-                                </p>
+                                <div className="flex flex-col">
+                                    <p className="text-sm text-gray-500">
+                                        Total abandon :
+                                    </p>
+                                    <p className="mt-1 text-xs text-gray-400">
+                                        Taux de {vehicle.price_given}€ par km,
+                                        soit : {data.total_distance_given} km *{' '}
+                                        {vehicle.price_given}€
+                                    </p>
+                                </div>
                                 <p className="text-xl font-medium text-gray-900">
                                     {totalAbandonned.toFixed(2)}€
                                 </p>
@@ -284,9 +304,15 @@ export default function DrivenTrips({
                         )}
                     </div>
 
+                    <FileUpload
+                        expensesClaimId={expensesClaimId}
+                        onUpload={(hasFiles) => setHasDocument(hasFiles)}
+                    />
+
                     <Button
                         type="submit"
                         variant="contained"
+                        disabled={!hasDocument}
                         fullWidth
                         className="!mt-2"
                         sx={{

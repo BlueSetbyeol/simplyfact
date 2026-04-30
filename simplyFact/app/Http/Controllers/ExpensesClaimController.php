@@ -8,13 +8,10 @@ use App\Services\PdfGenerator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-// use Inertia\Inertia;
-
 class ExpensesClaimController extends Controller
 {
     public function index()
     {
-        // $expenses_claim = Expenses_claim::all();
         return Inertia::render('claim/Informations', [
             'expensesClaim' => ExpensesClaim::latest()->get(),
         ]);
@@ -56,13 +53,12 @@ class ExpensesClaimController extends Controller
 
     public function edit(ExpensesClaim $expensesClaim)
     {
-        $claim = ExpensesClaim::with(['meals'])->findOrFail($expensesClaim->id);
+        // $claim = ExpensesClaim::with(['meals'])->findOrFail($expensesClaim->id);
 
         // TODO Il va falloir créer une autre page pour présenter la claim dans son ensemble en fonction de là où on en est.
-
-        return Inertia::render('claim/Informations', [
-            'expensesClaim' => $expensesClaim,
-        ]);
+        // return Inertia::render('claim/Informations', [
+        //     'expensesClaim' => $expensesClaim,
+        // ]);
     }
 
     public function update(ExpensesClaim $expensesClaim, Request $request)

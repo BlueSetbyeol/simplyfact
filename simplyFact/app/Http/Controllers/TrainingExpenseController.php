@@ -17,9 +17,6 @@ class TrainingExpenseController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(ExpensesClaim $expensesClaim)
     {
         $trainingExpense = TrainingExpense::with('expenses_claim')->get();
@@ -29,9 +26,6 @@ class TrainingExpenseController extends Controller
             'expensesClaim' => $expensesClaim]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, ExpensesClaim $expensesClaim)
     {
 
@@ -53,17 +47,11 @@ class TrainingExpenseController extends Controller
         return (new FlowController)->completeStep($expensesClaim);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(TrainingExpense $trainingExpense)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(TrainingExpense $trainingExpense)
     {
         // return Inertia::render('trainingExpense/TrainingExpense', [
@@ -72,30 +60,23 @@ class TrainingExpenseController extends Controller
         // ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, TrainingExpense $trainingExpense, ExpensesClaim $expensesClaim)
     {
         // validation de la data
-        $validated = $request->validate([
-            'nb_days_of_training' => 'required|integer|min:1',
-        ]);
+        // $validated = $request->validate([
+        //     'nb_days_of_training' => 'required|integer|min:1',
+        // ]);
 
-        $price_per_day = 21.30;
-        $max_reimbursed = 149.10;
+        // $price_per_day = 21.30;
+        // $max_reimbursed = 149.10;
         // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
-        $validated['reimbursed_price'] = min($validated['nb_days_of_training'] * $price_per_day, $max_reimbursed);
+        // $validated['reimbursed_price'] = min($validated['nb_days_of_training'] * $price_per_day, $max_reimbursed);
 
-        $trainingExpense->update($validated);
+        // $trainingExpense->update($validated);
 
-        // Edit/update stays on the same page, no flow movement
-        return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
+        // return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(TrainingExpense $trainingExpense, ExpensesClaim $expensesClaim)
     {
         $trainingExpense->delete();

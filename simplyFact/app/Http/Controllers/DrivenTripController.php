@@ -58,7 +58,7 @@ class DrivenTripController extends Controller
 
         $validated['total_price_given'] = round($vehicle['price_given'] * ($validated['total_distance_given'] ?? 0), 2);
 
-        $validated['reimbursed_price'] = max(0, round($validated['total_price'] - $validated['total_price_given'], 2));
+        $validated['reimbursed_price'] = $validated['total_price'];
 
         DrivenTrip::create([
             'expenses_claim_id' => $expensesClaim->id,
