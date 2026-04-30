@@ -19,10 +19,9 @@ class OtherTripsController extends Controller
 
     public function create(ExpensesClaim $expensesClaim)
     {
-        $otherTrip = OtherTrip::with('expenses_claim')->get();
 
         return Inertia::render('otherTravel/OtherTrip', [
-            'otherTrip' => $otherTrip,
+            'otherTrip' => null,
             'expensesClaimId' => $expensesClaim->id]);
     }
 

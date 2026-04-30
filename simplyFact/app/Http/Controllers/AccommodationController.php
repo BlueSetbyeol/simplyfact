@@ -19,10 +19,8 @@ class AccommodationController extends Controller
 
     public function create(ExpensesClaim $expensesClaim)
     {
-        $accommodation = Accommodation::with('expenses_claim')->get();
-
         return Inertia::render('accommodation/AccommodationDetails', [
-            'accommodation' => $accommodation,
+            'accommodation' => null,
             'expensesClaimId' => $expensesClaim->id]);
     }
 
