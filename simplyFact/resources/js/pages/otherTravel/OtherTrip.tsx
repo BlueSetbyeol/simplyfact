@@ -1,5 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
-import { Button, MenuItem, TextField } from '@mui/material';
+import { Button, MenuItem, TextField, Tooltip } from '@mui/material';
+import { Info } from 'lucide-react';
 import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
@@ -62,31 +63,56 @@ export default function OtherTrip({
                         </MenuItem>
                     ))}
                 </TextField>
+                {errors.expense_name && <span>{errors.expense_name}</span>}
                 <hr className="mt-4 mb-8 border-gray-100" />
 
                 <div className="mb-4 flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
                         <p className="text-md mb-2 text-gray-500">
-                            Déplacement en train
+                            Déplacement en {data.expense_name}
                         </p>
-                        <TextField
-                            label="Montant dépensé"
-                            slotProps={{
-                                inputLabel: { shrink: true },
-                                htmlInput: {
-                                    step: 0.01,
-                                    min: 0,
-                                },
-                            }}
-                            type="number"
-                            defaultValue={data.total_price || ''}
-                            onChange={(e) =>
-                                setData('total_price', Number(e.target.value))
-                            }
-                            fullWidth
-                            error={!!errors['total_price']}
-                            helperText={errors['total_price']}
-                        />
+                        <div className="flex flex-col items-end gap-4 rounded-xl bg-gray-50 p-4">
+                            {data.expense_name === 'Avion (2nd classe)' && (
+                                <Tooltip
+                                    title="Remboursé uniquement si le trajet avec la SNCF est supérieur à 5h (train seul) et si le coüt reste inférieur à 1,5 fois la SNCF en 2nde classe."
+                                    arrow
+                                >
+                                    <Info className="h-4 w-4 cursor-pointer text-gray-400" />
+                                </Tooltip>
+                            )}
+                            {data.expense_name === 'Train (2nd classe)' && (
+                                <Tooltip
+                                    title="Tarif de remboursement seconde classe (sauf si le billet 1ère classe est moins cher ou égal au billet 2nde classe."
+                                    arrow
+                                >
+                                    <Info className="h-4 w-4 cursor-pointer text-gray-400" />
+                                </Tooltip>
+                            )}
+                            <TextField
+                                label="Montant dépensé"
+                                slotProps={{
+                                    inputLabel: { shrink: true },
+                                    htmlInput: {
+                                        step: 0.01,
+                                        min: 0,
+                                    },
+                                }}
+                                type="number"
+                                defaultValue={data.total_price || ''}
+                                onChange={(e) =>
+                                    setData(
+                                        'total_price',
+                                        Number(e.target.value),
+                                    )
+                                }
+                                fullWidth
+                                error={!!errors['total_price']}
+                                helperText={errors['total_price']}
+                            />
+                            {errors.total_price && (
+                                <span>{errors.total_price}</span>
+                            )}
+                        </div>
                     </div>
                 </div>
 

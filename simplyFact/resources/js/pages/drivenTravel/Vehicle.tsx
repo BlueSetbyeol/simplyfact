@@ -1,5 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
-import { Button, MenuItem, TextField } from '@mui/material';
+import { Button, MenuItem, TextField, Tooltip } from '@mui/material';
+import { Info } from 'lucide-react';
 import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
@@ -111,10 +112,12 @@ export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
                         <MenuItem value="voiture">voiture</MenuItem>
                         <MenuItem value="moto">moto</MenuItem>
                     </TextField>
+                    {errors.vehicle_type && <span>{errors.vehicle_type}</span>}
 
                     <TextField
                         label="Plaque d'immatriculation"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        required
                         type="text"
                         defaultValue={data.number_plate}
                         onChange={(e) =>
@@ -124,6 +127,7 @@ export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
                         error={!!errors['number_plate']}
                         helperText={errors['number_plate']}
                     />
+                    {errors.number_plate && <span>{errors.number_plate}</span>}
 
                     <div>
                         <p className="mb-2 text-sm text-gray-500">
@@ -193,43 +197,62 @@ export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
                         </div>
                     </div>
 
-                    {data.vehicle_type === 'voiture' ? (
-                        <TextField
-                            label="Puissance de la voiture"
-                            slotProps={{ inputLabel: { shrink: true } }}
-                            required
-                            select
-                            defaultValue={data.power || ''}
-                            onChange={(e) => setData('power', e.target.value)}
-                            fullWidth
-                            error={!!errors['power']}
-                            helperText={errors['power']}
+                    <div className="flex flex-col items-end gap-4 rounded-xl bg-gray-50 p-4">
+                        <Tooltip
+                            title="Le coefficient de calcul de la valeur kilométrique se fait en fonction de la puissance de votre véhicule."
+                            arrow
                         >
-                            <MenuItem value="3CV et moins">
-                                3CV et moins
-                            </MenuItem>
-                            <MenuItem value="4CV">4CV</MenuItem>
-                            <MenuItem value="5CV">5CV</MenuItem>
-                            <MenuItem value="6CV">6CV</MenuItem>
-                            <MenuItem value="7CV et plus">7CV et plus</MenuItem>
-                        </TextField>
-                    ) : (
-                        <TextField
-                            label="Puissance de la moto"
-                            slotProps={{ inputLabel: { shrink: true } }}
-                            required
-                            select
-                            defaultValue={data.power || ''}
-                            onChange={(e) => setData('power', e.target.value)}
-                            fullWidth
-                            error={!!errors['power']}
-                            helperText={errors['power']}
-                        >
-                            <MenuItem value="1 et 2CV">1 et 2CV</MenuItem>
-                            <MenuItem value="3, 4 et 5CV">3, 4 et 5CV</MenuItem>
-                            <MenuItem value="6CV et plus">6CV et plus</MenuItem>
-                        </TextField>
-                    )}
+                            <Info className="h-4 w-4 cursor-pointer text-gray-400" />
+                        </Tooltip>
+                        {data.vehicle_type === 'voiture' ? (
+                            <TextField
+                                label="Puissance de la voiture"
+                                slotProps={{ inputLabel: { shrink: true } }}
+                                required
+                                select
+                                defaultValue={data.power || ''}
+                                onChange={(e) =>
+                                    setData('power', e.target.value)
+                                }
+                                fullWidth
+                                error={!!errors['power']}
+                                helperText={errors['power']}
+                            >
+                                <MenuItem value="3CV et moins">
+                                    3CV et moins
+                                </MenuItem>
+                                <MenuItem value="4CV">4CV</MenuItem>
+                                <MenuItem value="5CV">5CV</MenuItem>
+                                <MenuItem value="6CV">6CV</MenuItem>
+                                <MenuItem value="7CV et plus">
+                                    7CV et plus
+                                </MenuItem>
+                            </TextField>
+                        ) : (
+                            <TextField
+                                label="Puissance de la moto"
+                                slotProps={{ inputLabel: { shrink: true } }}
+                                required
+                                select
+                                defaultValue={data.power || ''}
+                                onChange={(e) =>
+                                    setData('power', e.target.value)
+                                }
+                                fullWidth
+                                error={!!errors['power']}
+                                helperText={errors['power']}
+                            >
+                                <MenuItem value="1 et 2CV">1 et 2CV</MenuItem>
+                                <MenuItem value="3, 4 et 5CV">
+                                    3, 4 et 5CV
+                                </MenuItem>
+                                <MenuItem value="6CV et plus">
+                                    6CV et plus
+                                </MenuItem>
+                            </TextField>
+                        )}
+                        {errors.power && <span>{errors.power}</span>}
+                    </div>
 
                     <div className="mt-6 mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">
                         <div>

@@ -88,6 +88,7 @@ export default function Accommodation({
                     variant="contained"
                     fullWidth
                     className="mt-5!"
+                    disabled={accommodations.length <= 0}
                     sx={{
                         backgroundColor: '#2D6A2D',
                         '&:hover': { backgroundColor: '#1F4F1F' },

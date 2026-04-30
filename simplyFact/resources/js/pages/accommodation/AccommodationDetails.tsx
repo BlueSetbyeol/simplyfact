@@ -88,6 +88,9 @@ export default function AccommodationDetails({
                                     Hôtel Paris
                                 </MenuItem>
                             </TextField>
+                            {errors.accommodation_type && (
+                                <span>{errors.accommodation_type}</span>
+                            )}
 
                             <TextField
                                 label="Nombre de nuits"
@@ -111,6 +114,10 @@ export default function AccommodationDetails({
                                 error={!!errors['nb_of_night']}
                                 helperText={errors['nb_of_night']}
                             />
+                            {errors.nb_of_night && (
+                                <span>{errors.nb_of_night}</span>
+                            )}
+
                             <TextField
                                 label="Montant total dépensé"
                                 slotProps={{
@@ -133,6 +140,9 @@ export default function AccommodationDetails({
                                 error={!!errors['total_price']}
                                 helperText={errors['total_price']}
                             />
+                            {errors.total_price && (
+                                <span>{errors.total_price}</span>
+                            )}
                         </div>
                         <div className="mt-6 mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">
                             <div>
