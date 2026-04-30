@@ -10,14 +10,23 @@ export default function Home() {
         <Header showback={false}>
             <Head title="Accueil"></Head>
             <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
-                <h1 className="text-xl font-medium text-gray-900">
-                    Déclaration de notes de frais
-                </h1>
-                <p className="mt-1 mb-6 text-sm text-gray-500">
-                    Fédération Française de Spéléologie
-                </p>
+                <section className="flex w-full flex-row justify-between">
+                    <div>
+                        <h1 className="text-xl font-medium text-gray-900">
+                            Déclaration de notes de frais
+                        </h1>
+                        <p className="mt-1 mb-6 text-sm text-gray-500">
+                            Fédération Française de Spéléologie
+                        </p>
+                    </div>
+                    <img
+                        src="/img/ffs-xs-logo.svg"
+                        alt="Logo Fédération Française de Spéléologie"
+                        className="size-20"
+                    />
+                </section>
                 <img
-                    src="/img/speleo_Philippe_Crochet-SP23-1570.jpg"
+                    src="/img/stages_2024.jpg"
                     alt="Image de la fédération"
                     className="mb-6 rounded-lg"
                 />
