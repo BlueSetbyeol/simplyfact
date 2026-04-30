@@ -116,15 +116,15 @@ possiblement `vehicule`
 `vehicle`
 
 | champ          | caractéristiques                                    |
-| -------------- | --------------------------------------------------- |
+| -------------- | --------------------------------------------------- | --------------------- |
 | id             | uuid PK                                             |
 | user           | uuid FK                                             |
+| legal_document | uuid FK (car_registration_licence) si c'est utilisé | option à voir pour V2 |
 | vehicule_type  | "voiture" \| "moto"                                 |
 | electrical     | boolean default false                               |
-| power          | string (select en dur dans le front) nullable       |
+| power          | string (select en dur dans le front)                |
 | price_given    | number                                              |
 | number_plate   | string                                              |
-| legal_document | uuid FK (car_registration_licence) si c'est utilisé |
 | added_at       | timestamp                                           |
 
 `car_registration_licence` (pour la carte grise, optionnel - à decider)
@@ -196,6 +196,7 @@ possiblement `vehicule`
 | -------------------- | ------------------------ |
 | id                   | uuid PK                  |
 | expenses_claim       | uuid FK (expenses_claim) |
+| vehicle              | uuid FK (vehicle)        |
 | starting_city        | string                   |
 | strating_zip_code    | number                   |
 | ending_city          | string                   |
@@ -206,17 +207,19 @@ possiblement `vehicule`
 | total_distance_given | number nullable          |
 | total_price_given    | number nullable          |
 | description          | string nullable          |
+| reimbursed_price     | number                   |
 
 > question de savoir si on fait une table driven_trip_destination et destination ?
 
 `other_trip`
 
-| champ          | caractéristiques         |
-| -------------- | ------------------------ |
-| id             | uuid PK                  |
-| expenses_claim | uuid FK (expenses_claim) |
-| expense_name   | string                   |
-| expense_price  | number                   |
+| champ            | caractéristiques         |
+| ---------------- | ------------------------ |
+| id               | uuid PK                  |
+| expenses_claim   | uuid FK (expenses_claim) |
+| expense_name     | string                   |
+| total_price      | number                   |
+| reimbursed_price | number                   |
 
 #### Choix final
 

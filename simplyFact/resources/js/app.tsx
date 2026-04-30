@@ -26,6 +26,10 @@ createInertiaApp({
                 return null;
             case name.startsWith('choices/'):
                 return null;
+            case name.startsWith('drivenTravel/'):
+                return null;
+            case name.startsWith('otherTravel/'):
+                return null;
             case name.startsWith('accommodation/'):
                 return null;
             case name.startsWith('meal/'):
@@ -35,8 +39,6 @@ createInertiaApp({
             case name.startsWith('otherExpenses/'):
                 return null;
             case name.startsWith('end/'):
-                return null;
-            case name.startsWith('travel/'):
                 return null;
             default:
                 return AppLayout;

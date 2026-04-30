@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('meals', function (Blueprint $table) {
+        Schema::create('other_trips', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('expenses_claim_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->integer('number_of_meal');
+            $table->string('expense_name', 255);
             $table->unsignedInteger('total_price');
             $table->unsignedInteger('reimbursed_price');
             $table->timestamps();
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meals');
+        Schema::dropIfExists('other_trips');
     }
 };

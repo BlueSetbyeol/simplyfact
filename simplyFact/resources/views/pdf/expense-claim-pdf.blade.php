@@ -13,7 +13,7 @@
 </head>
 <body class="p-8 max-w-4xl mx-auto text-sm">
 
-  {{-- ─── HEADER ──────────────────────────────────────────────── --}}
+  {{-- ─── HEADER ─────────────────────────────────────────────── --}}
   <header class="flex items-start justify-between mb-8 pb-6 border-b-2 border-gray-200">
     <div class="flex items-center gap-4">
       @if(!empty($logoBase64))
@@ -155,7 +155,7 @@
           <tr class="bg-white">
             <td class="px-4 py-3 text-gray-900">{{ $trip->expense_name ?? '' }}</td>
             <td class="px-4 py-3 text-right font-semibold text-gray-900">
-              {{ number_format($trip->expense_price ?? 0, 2, ',', ' ') }} €
+              {{ number_format($trip->reimbursed_price ?? 0, 2, ',', ' ') }} €
             </td>
           </tr>
           @endforeach
@@ -202,7 +202,7 @@
   @endif
 
   {{-- ─── REPAS ───────────────────────────────────────────────── --}}
-  @if($meal->isNotEmpty())
+  @if(!empty($meal))
   <section class="mb-6">
     <div class="flex items-baseline justify-between mb-3">
       <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400">Repas</h2>
@@ -221,12 +221,42 @@
         <tbody class="divide-y divide-gray-100">
           <tr class="bg-white">
             <td class="px-4 py-3 text-gray-900">Repas</td>
-            <td class="px-4 py-3 text-right text-gray-600">{{ $meal->nb_of_meal ?? 0 }}</td>
+            <td class="px-4 py-3 text-right text-gray-600">{{ $meal->number_of_meal ?? 0 }}</td>
             <td class="px-4 py-3 text-right text-gray-600">
               {{ number_format($meal->total_price ?? 0, 2, ',', ' ') }} €
             </td>
             <td class="px-4 py-3 text-right font-semibold text-gray-900">
               {{ number_format($meal->reimbursed_price ?? 0, 2, ',', ' ') }} €
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>  
+  @endif
+
+  {{-- ─── FRAIS DE FORMATION ───────────────────────── --}}
+  @if(!empty($trainingExpense))
+  <section class="mb-6">
+    <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Frais de formation</h2>
+    <div class="rounded-xl overflow-hidden border border-gray-200">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-100 text-gray-600 text-xs uppercase tracking-wide">
+          <tr>
+            <th class="text-left px-4 py-3">Description</th>
+            <th class="text-right px-4 py-3">Nb jours</th>
+            <th class="text-right px-4 py-3">Montant retenu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bg-white">
+            <td class="px-4 py-3 text-gray-900">
+              Participation frais matériels
+              <span class="ml-2 text-xs text-gray-400">({{ $trainingExpense->nb_days_of_training ?? 0 }} jours x 21,30 EUR)</span>
+            </td>
+            <td class="px-4 py-3 text-right text-gray-600">{{ $trainingExpense->nb_days_of_training ?? 0 }}</td>
+            <td class="px-4 py-3 text-right font-semibold text-gray-900">
+              {{ number_format($trainingExpense->reimbursed_price ?? 0, 2, ',', ' ') }} €
             </td>
           </tr>
         </tbody>
@@ -259,7 +289,7 @@
               @endif
             </td>
             <td class="px-4 py-3 text-right font-semibold text-gray-900">
-              {{ number_format($expense->expense_price ?? 0, 2, ',', ' ') }} €
+              {{ number_format($expense->reimbursed_price ?? 0, 2, ',', ' ') }} €
             </td>
           </tr>
           @endforeach

@@ -6,16 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Str;
 
-class Accommodation extends Model
+class OtherTrip extends Model
 {
     protected $fillable = [
         'expenses_claim_id',
-        'accommodation_type',
-        'nb_of_night',
+        'expense_name',
         'total_price',
         'reimbursed_price',
     ];
-    
+
     // Generation d'un UUID à la place d'un id en integer
     protected $keyType = 'string';
 

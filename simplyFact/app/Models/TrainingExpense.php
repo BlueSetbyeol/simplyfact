@@ -30,4 +30,16 @@ class TrainingExpense extends Model
     {
         return $this->belongsTo(ExpensesClaim::class);
     }
+
+    // Accessors & Mutators (euros to cents and vice versa)
+    public function getReimbursedPriceAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    public function setReimbursedPriceAttribute($value)
+    {
+        $this->attributes['reimbursed_price'] = (int) round($value * 100);
+    }
+
 }
