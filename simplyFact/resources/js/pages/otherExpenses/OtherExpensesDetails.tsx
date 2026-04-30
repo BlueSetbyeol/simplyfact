@@ -33,7 +33,7 @@ export default function OtherExpensesDetails({
         });
     }
 
-    const [hasDocument, setHasDocument] = useState(false)
+    const [hasDocument, setHasDocument] = useState(false);
 
     return (
         <Header>
@@ -93,10 +93,10 @@ export default function OtherExpensesDetails({
                             </p>
                         </div>
 
-                        <FileUpload 
+                        <FileUpload
                             expensesClaimId={expensesClaimId}
                             onUpload={(hasFile) => setHasDocument(hasFile)}
-                         />
+                        />
 
                         <Button
                             type="submit"

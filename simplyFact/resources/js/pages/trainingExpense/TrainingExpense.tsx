@@ -1,8 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
 import { Button, TextField } from '@mui/material';
-import { useState } from 'react';
-import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
 interface TrainingExpenseProps {
@@ -37,8 +35,6 @@ export default function TrainingExpense({
             },
         });
     }
-
-    const [hasDocument, setHasDocument] = useState(false)
 
     return (
         <Header>
@@ -77,14 +73,15 @@ export default function TrainingExpense({
                             <span>{errors.nb_days_of_training}</span>
                         )}
                     </div>
-
                     <hr className="my-6 border-gray-100" />
-
                     <div className="mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">
                         <div>
                             <p className="text-sm text-gray-500">
                                 Total de la compensation
                             </p>
+                            {/* <p className="mt-1 text-xs text-gray-400">
+                                {data.nb_days_of_training} * {price_per_day}
+                            </p> */}
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
@@ -96,14 +93,8 @@ export default function TrainingExpense({
                         </div>
                     </div>
 
-                    <FileUpload 
-                        expensesClaimId={expensesClaimId}
-                        onUpload={(hasFile) => setHasDocument(hasFile)}
-                         />
-
                     <Button
                         type="submit"
-                        disabled={!hasDocument}
                         variant="contained"
                         fullWidth
                         className="mt-5!"

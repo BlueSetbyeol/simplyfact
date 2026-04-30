@@ -273,8 +273,4 @@ Q : possibilité de stocker les informations en plusieurs format (informatif ou 
 
 ## Questions :
 
-- comment rediriger vers une page spécifique (redirect d'Inertia ?) mais "aléatoire" dans le sens où l'on change de chemin en fonction du but de l'utilisateur ? ==> Flow
-- Est-ce que le back redirige vers la page suivante ou vers sa propre page (code Laravel/php) et Inertia (avec React) fait la redirection vers la suite du programme ? ==> Flow
-- Il faudra surement créer un tableau pour le chemin prévu avec des objects identifiant les pages. Ex : page.name (string), page.path (string), page.resolved (boolean). Où / Comment garder en mémoire le choix des pages ? ==> Flow
-- Comment on fait pour montrer les prix kilométrique en fonction de la voiture déjà sélectionné ?
 - Est-ce qu'il faut que l'on affiche un nom d'Hotel pour l'UI/UX ? Ou juste le type de logement suffit amplement ?
