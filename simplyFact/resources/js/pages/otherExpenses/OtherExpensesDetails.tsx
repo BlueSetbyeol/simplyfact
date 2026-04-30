@@ -33,10 +33,12 @@ export default function OtherExpensesDetails({
         });
     }
 
+    const [hasDocument, setHasDocument] = useState(false);
+
     return (
         <Header>
             <Head title="Ajout déplacement"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <div className="flex flex-col gap-4">
                     <h1 className="text-xl font-medium text-gray-900">
                         Ajout d'un autre frais
@@ -91,10 +93,14 @@ export default function OtherExpensesDetails({
                             </p>
                         </div>
 
-                        <FileUpload expensesClaimId={expensesClaimId} />
+                        <FileUpload
+                            expensesClaimId={expensesClaimId}
+                            onUpload={(hasFile) => setHasDocument(hasFile)}
+                        />
 
                         <Button
                             type="submit"
+                            disabled={!hasDocument}
                             variant="contained"
                             fullWidth
                             className="mt-5!"

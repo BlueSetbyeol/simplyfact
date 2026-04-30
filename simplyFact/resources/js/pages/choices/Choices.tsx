@@ -28,20 +28,20 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
     return (
         <Header>
             <Head title="Choix des étapes"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <h1 className="text-xl font-medium text-gray-900">
                     Choix des étapes
                 </h1>
-                <p className="mb-6 text-gray-500">
+                <p className="mb-4 text-gray-500">
                     Vous voulez déclarer une note de frais pour:
                 </p>
 
                 <hr className="mb-6 border-gray-100" />
 
                 <form onSubmit={submitChoices}>
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-4">
                         {/* Frais de déplacement */}
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2">
                             <p className="text-gray-700">
                                 Un ou des déplacements véhiculé ?
                             </p>
@@ -121,7 +121,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                 Un ou des frais de déplacements hors véhicule ?
                             </p>
 
-                            <div className="flex flex-row gap-2">
+                            <div className="flex flex-row gap-1">
                                 <Button
                                     variant={
                                         hasTravel ? 'contained' : 'outlined'
@@ -191,12 +191,12 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                         </div>
 
                         {/* Frais d'hébergement */}
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2">
                             <p className="text-gray-700">
                                 Un ou des hébergements ?
                             </p>
 
-                            <div className="flex flex-row gap-2">
+                            <div className="flex flex-row gap-1">
                                 <Button
                                     variant={
                                         hasAccommodation
@@ -270,10 +270,10 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                         </div>
 
                         {/* Frais de repas */}
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2">
                             <p className="text-gray-700">Un ou des repas ?</p>
 
-                            <div className="flex flex-row gap-2">
+                            <div className="flex flex-row gap-1">
                                 <Button
                                     variant={hasMeal ? 'contained' : 'outlined'}
                                     onClick={() => {
@@ -346,7 +346,7 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                                 Indémnisation de stage ?
                             </p>
 
-                            <div className="flex flex-row gap-2">
+                            <div className="flex flex-row gap-1">
                                 <Button
                                     variant={
                                         hasTraining ? 'contained' : 'outlined'
@@ -416,12 +416,12 @@ export default function Choices({ expensesClaim }: ChoicesProps) {
                         </div>
 
                         {/* Autres frais */}
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2">
                             <p className="text-gray-700">
                                 Un ou des autres frais ?
                             </p>
 
-                            <div className="flex flex-row gap-2">
+                            <div className="flex flex-row gap-1">
                                 <Button
                                     variant={
                                         hasOther ? 'contained' : 'outlined'

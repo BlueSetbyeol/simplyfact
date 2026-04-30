@@ -132,7 +132,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
     return (
         <Header>
             <Head title="Résumé des choix"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <h1 className="mb-6 text-xl font-medium text-gray-900">
                     Votre note de frais:
                 </h1>
@@ -142,11 +142,11 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                     </div>
                 )}
                 <section className="my-4 flex w-full flex-col items-center gap-2 rounded-xl border border-gray-200 p-4">
-                    <h2>Information concernant la note de frais :</h2>
+                    <h2 className='text-gray-500 font-bold'>Informations concernant la note de frais :</h2>
                     <div className="my-4 flex w-full flex-col items-start gap-2">
-                        <p>Commission : {expensesClaim?.committee_name}</p>
-                        <p>Nom de l'action : {expensesClaim?.action_name}</p>
-                        <p>
+                        <p className='text-gray-400'>Commission : {expensesClaim?.committee_name}</p>
+                        <p className='text-gray-400'>Nom de l'action : {expensesClaim?.action_name}</p>
+                        <p className='text-gray-400'>
                             Les dates de l'action :{' '}
                             {expensesClaim?.action_dates}
                         </p>
@@ -154,11 +154,11 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                 </section>
 
                 <section className="my-4 flex w-full flex-col items-center gap-2">
-                    <h2>Toutes les dépenses effectuées</h2>
+                    <h2 className='text-gray-500 font-bold'>Toutes les dépenses effectuées</h2>
                     {expensesClaim?.driven_trips &&
                         expensesClaim?.driven_trips.length > 0 && (
                             <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
-                                <h3>Les Trajets</h3>
+                                <h3 className='text-gray-500'>Les Trajets</h3>
                                 {expensesClaim?.driven_trips.map(
                                     (travel, index) => (
                                         <Card key={index} className="mb-1 p-2">
@@ -182,7 +182,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                     {expensesClaim?.other_trips &&
                         expensesClaim?.other_trips.length > 0 && (
                             <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
-                                <h3>Les Trajets non conduit</h3>
+                                <h3 className='text-gray-500'>Les Trajets non conduit</h3>
                                 {expensesClaim?.other_trips.map(
                                     (travel, index) => (
                                         <Card key={index} className="mb-1 p-2">
@@ -202,7 +202,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                     {expensesClaim?.accommodations &&
                         expensesClaim?.accommodations.length > 0 && (
                             <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
-                                <h3>Les Hébergements</h3>
+                                <h3 className='text-gray-500'>Les hébergements</h3>
                                 {expensesClaim?.accommodations.map(
                                     (lodge, index) => (
                                         <Card key={index} className="mb-1 p-2">
@@ -224,7 +224,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                         )}
                     {expensesClaim?.meals && (
                         <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
-                            <h3>Les Repas</h3>
+                            <h3 className='text-gray-500'>Les repas</h3>
                             <Card className="mb-1 p-2">
                                 <p className="mb-1 text-gray-500">
                                     Nombre de repas :{' '}
@@ -239,7 +239,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                     )}
                     {expensesClaim?.training_expenses && (
                         <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
-                            <h3>Les autres Frais</h3>
+                            <h3 className='text-gray-500'>Les autres frais</h3>
                             <Card className="mb-1 p-2">
                                 <p className="mb-1 text-gray-500">
                                     Nombre de jour du stage :{' '}
@@ -261,7 +261,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                     {expensesClaim?.other_expenses &&
                         expensesClaim?.other_expenses.length > 0 && (
                             <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
-                                <h3>Les autres Frais</h3>
+                                <h3 className='text-gray-500'>Les autres frais</h3>
                                 {expensesClaim?.other_expenses.map(
                                     (expense, index) => (
                                         <Card key={index} className="mb-1 p-2">
@@ -281,7 +281,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                 </section>
 
                 <section className="my-4 flex w-full flex-col items-center gap-2 rounded-xl border border-gray-200 p-4">
-                    <h2>Voulez vous abandonner certains frais ?</h2>
+                    <h2 className='text-gray-500 font-medium'>Voulez vous abandonner certain frais ?</h2>
                     <div className="flex w-full flex-row justify-center gap-2">
                         <Button
                             variant={willGive ? 'contained' : 'outlined'}
@@ -389,7 +389,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                     onChange={handleChange}
                                     required
                                 />
-                                <p>
+                                <p className='text-gray-400'>
                                     Je confirme que toutes les informations
                                     données sont exactes et que j'ai fourni tous
                                     les documents justificatifs.

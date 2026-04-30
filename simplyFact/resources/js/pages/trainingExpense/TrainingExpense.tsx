@@ -1,7 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
 import { Button, TextField } from '@mui/material';
-import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
 interface TrainingExpenseProps {
@@ -40,7 +39,7 @@ export default function TrainingExpense({
     return (
         <Header>
             <Head title="Repas" />
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <h1 className="text-xl font-medium text-gray-900">
                     Votre stage
                 </h1>
@@ -74,14 +73,15 @@ export default function TrainingExpense({
                             <span>{errors.nb_days_of_training}</span>
                         )}
                     </div>
-
                     <hr className="my-6 border-gray-100" />
-
                     <div className="mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">
                         <div>
                             <p className="text-sm text-gray-500">
                                 Total de la compensation
                             </p>
+                            {/* <p className="mt-1 text-xs text-gray-400">
+                                {data.nb_days_of_training} * {price_per_day}
+                            </p> */}
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
@@ -92,8 +92,6 @@ export default function TrainingExpense({
                             </p>
                         </div>
                     </div>
-
-                    <FileUpload expensesClaimId={expensesClaimId} />
 
                     <Button
                         type="submit"

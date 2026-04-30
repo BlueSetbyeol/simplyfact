@@ -29,16 +29,17 @@ export default function Informations({ expensesClaim }: InformationsProps) {
     return (
         <Header>
             <Head title="Informations complémentaires"></Head>
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
-                <h1 className="mb-6 text-xl font-medium text-gray-900">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
+                <h1 className="mb-4 text-xl font-medium text-gray-900">
                     Informations complémentaires
                 </h1>
 
                 <hr className="mb-6 border-gray-100" />
 
                 <form onSubmit={submitInformations}>
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-3">
                         <TextField
+                            size="small"
                             label="Commission"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
@@ -55,6 +56,7 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                         />
 
                         <TextField
+                            size="small"
                             label="Objet de l'action"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={
@@ -69,6 +71,7 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                         />
 
                         <TextField
+                            size="small"
                             label="Dates de l'action"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={

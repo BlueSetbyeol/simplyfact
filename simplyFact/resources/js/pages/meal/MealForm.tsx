@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
 import { Button, TextField } from '@mui/material';
+import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
@@ -29,11 +30,13 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
             },
         });
     }
+ 
+    const [hasDocument, setHasDocument] = useState(false)
 
     return (
         <Header>
             <Head title="Repas" />
-            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
                 <h1 className="text-xl font-medium text-gray-900">Vos repas</h1>
                 <p className="mt-1 mb-6 text-sm text-gray-500">
                     Renseignez vos dépenses de repas effectuées lors de votre
@@ -91,6 +94,8 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                             <p className="text-sm text-gray-500">
                                 Total remboursé
                             </p>
+                            <p className="text-xs text-gray-400 mt-1">{data.number_of_meal} repas x 25€ = {data.number_of_meal * 25}€ max</p>
+                            <p className='text-xs text-gray-400'>Montant dépensé: {data.total_price}</p>
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
@@ -102,10 +107,14 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                         </div>
                     </div>
 
-                    <FileUpload expensesClaimId={expensesClaimId} />
+                    <FileUpload 
+                        expensesClaimId={expensesClaimId}
+                        onUpload={(hasFiles) => setHasDocument(hasFiles)}
+                         />
 
                     <Button
                         type="submit"
+                        disabled={!hasDocument}
                         variant="contained"
                         fullWidth
                         className="mt-5!"
