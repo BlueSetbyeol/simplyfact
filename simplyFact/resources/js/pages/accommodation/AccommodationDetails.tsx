@@ -1,12 +1,5 @@
 import { Head, useForm } from '@inertiajs/react';
-import {
-    Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-} from '@mui/material';
+import { Button, MenuItem, TextField } from '@mui/material';
 import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
@@ -66,35 +59,43 @@ export default function AccommodationDetails({
                     </h1>
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col gap-5">
-                            <FormControl fullWidth>
-                                <InputLabel shrink>Type de logement</InputLabel>
-                                <Select
-                                    value={data.accommodation_type}
-                                    onChange={(e) =>
-                                        setData(
-                                            'accommodation_type',
-                                            e.target.value,
-                                        )
-                                    }
-                                    label="Type de logement"
-                                >
-                                    <MenuItem value="Hôtel province hors coeur de ville">
-                                        Hôtel province hors cœur de ville
-                                    </MenuItem>
-                                    <MenuItem value="Hôtel province coeur de ville">
-                                        Hôtel province cœur de ville
-                                    </MenuItem>
-                                    <MenuItem value="Hôtel Lyon">
-                                        Hôtel Lyon
-                                    </MenuItem>
-                                    <MenuItem value="Hôtel Paris">
-                                        Hôtel Paris
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
+                            <TextField
+                                label="Type de logement"
+                                slotProps={{ inputLabel: { shrink: true } }}
+                                required
+                                select
+                                defaultValue={data.accommodation_type || ''}
+                                onChange={(e) =>
+                                    setData(
+                                        'accommodation_type',
+                                        e.target.value,
+                                    )
+                                }
+                                fullWidth
+                                error={!!errors['accommodation_type']}
+                                helperText={errors['accommodation_type']}
+                            >
+                                <MenuItem value="Hôtel province hors coeur de ville">
+                                    Hôtel province hors cœur de ville
+                                </MenuItem>
+                                <MenuItem value="Hôtel province coeur de ville">
+                                    Hôtel province cœur de ville
+                                </MenuItem>
+                                <MenuItem value="Hôtel Lyon">
+                                    Hôtel Lyon
+                                </MenuItem>
+                                <MenuItem value="Hôtel Paris">
+                                    Hôtel Paris
+                                </MenuItem>
+                            </TextField>
+
                             <TextField
                                 label="Nombre de nuits"
-                                slotProps={{ inputLabel: { shrink: true } }}
+                                slotProps={{
+                                    inputLabel: { shrink: true },
+                                    htmlInput: { step: 0, min: 1 },
+                                }}
+                                type="number"
                                 defaultValue={
                                     data.nb_of_night !== 0
                                         ? data.nb_of_night
@@ -112,7 +113,11 @@ export default function AccommodationDetails({
                             />
                             <TextField
                                 label="Montant total dépensé"
-                                slotProps={{ inputLabel: { shrink: true } }}
+                                slotProps={{
+                                    inputLabel: { shrink: true },
+                                    htmlInput: { step: 0.01, min: 0 },
+                                }}
+                                type="number"
                                 defaultValue={
                                     data.total_price !== 0
                                         ? data.total_price

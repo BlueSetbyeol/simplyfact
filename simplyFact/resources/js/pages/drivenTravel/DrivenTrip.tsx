@@ -1,13 +1,5 @@
 import { Head, useForm } from '@inertiajs/react';
-import {
-    Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    TextField,
-    Tooltip,
-} from '@mui/material';
-import { Select } from '@mui/material';
+import { Button, MenuItem, TextField, Tooltip } from '@mui/material';
 import { Info } from 'lucide-react';
 import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
@@ -67,7 +59,12 @@ export default function DrivenTrips({
               : 0.14;
 
     const totalPrice = Number(
-        (rate * (data.total_distance - data.total_distance_given)).toFixed(2),
+        (
+            rate *
+            (data.total_distance - data.total_distance_given < 0
+                ? 0
+                : data.total_distance - data.total_distance_given)
+        ).toFixed(2),
     );
 
     const totalAbandonned = Number(
@@ -100,8 +97,9 @@ export default function DrivenTrips({
                     <div className="flex flex-row gap-2">
                         <TextField
                             label="Ville de départ"
-                            required
                             slotProps={{ inputLabel: { shrink: true } }}
+                            type="text"
+                            required
                             defaultValue={
                                 data.starting_city !== ''
                                     ? data.starting_city
@@ -117,12 +115,17 @@ export default function DrivenTrips({
 
                         <TextField
                             label="Code postal"
-                            required
-                            type="text"
                             slotProps={{
                                 inputLabel: { shrink: true },
-                                htmlInput: { maxLength: 6, minLength: 5 },
+                                htmlInput: {
+                                    step: 0,
+                                    min: 0,
+                                    maxLength: 6,
+                                    minLength: 5,
+                                },
                             }}
+                            required
+                            type="number"
                             defaultValue={
                                 data.starting_zip_code !== 0
                                     ? data.starting_zip_code
@@ -134,6 +137,7 @@ export default function DrivenTrips({
                                     Number(e.target.value),
                                 )
                             }
+                            fullWidth
                             error={!!errors['starting_zip_code']}
                             helperText={errors['starting_zip_code']}
                         />
@@ -142,8 +146,9 @@ export default function DrivenTrips({
                     <div className="flex flex-row gap-2">
                         <TextField
                             label="Ville d'arrivée"
-                            required
                             slotProps={{ inputLabel: { shrink: true } }}
+                            type="text"
+                            required
                             defaultValue={
                                 data.ending_city !== '' ? data.ending_city : ''
                             }
@@ -157,12 +162,17 @@ export default function DrivenTrips({
 
                         <TextField
                             label="Code postal"
-                            required
-                            type="text"
                             slotProps={{
                                 inputLabel: { shrink: true },
-                                htmlInput: { maxLength: 6, minLength: 5 },
+                                htmlInput: {
+                                    step: 0,
+                                    min: 0,
+                                    maxLength: 6,
+                                    minLength: 5,
+                                },
                             }}
+                            required
+                            type="number"
                             defaultValue={
                                 data.ending_zip_code !== 0
                                     ? data.ending_zip_code
@@ -174,6 +184,7 @@ export default function DrivenTrips({
                                     Number(e.target.value),
                                 )
                             }
+                            fullWidth
                             error={!!errors['ending_zip_code']}
                             helperText={errors['ending_zip_code']}
                         />
@@ -189,32 +200,39 @@ export default function DrivenTrips({
                             data.description !== '' ? data.description : ''
                         }
                         onChange={(e) => setData('description', e.target.value)}
+                        fullWidth
                     />
 
-                    <FormControl fullWidth className="flex flex-col gap-5">
-                        <InputLabel shrink>Type de véhicule</InputLabel>
-                        <Select
-                            label="Type de véhicule"
-                            value={data.trip_type || ''}
-                            onChange={(e) =>
-                                setData('trip_type', e.target.value)
-                            }
-                        >
-                            {TransportMode.map((transport, index) => (
-                                <MenuItem key={index} value={transport}>
-                                    {transport}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <TextField
+                        label="Type de véhicule"
+                        slotProps={{ inputLabel: { shrink: true } }}
+                        required
+                        select
+                        defaultValue={data.trip_type || ''}
+                        onChange={(e) => setData('trip_type', e.target.value)}
+                        fullWidth
+                        error={!!errors['trip_type']}
+                        helperText={errors['trip_type']}
+                    >
+                        {TransportMode.map((transport, index) => (
+                            <MenuItem key={index} value={transport}>
+                                {transport}
+                            </MenuItem>
+                        ))}
+                    </TextField>
 
                     <TextField
                         label="Total des km parcourus"
                         required
-                        type="text"
+                        type="number"
                         slotProps={{
                             inputLabel: { shrink: true },
-                            htmlInput: { maxLength: 15, minLength: 1 },
+                            htmlInput: {
+                                step: 0.01,
+                                min: 1,
+                                maxLength: 15,
+                                minLength: 1,
+                            },
                         }}
                         defaultValue={
                             data.total_distance !== 0 ? data.total_distance : ''
@@ -222,6 +240,7 @@ export default function DrivenTrips({
                         onChange={(e) =>
                             setData('total_distance', Number(e.target.value))
                         }
+                        fullWidth
                         error={!!errors['total_distance']}
                         helperText={errors['total_distance']}
                     />
@@ -240,10 +259,14 @@ export default function DrivenTrips({
                         </div>
                         <TextField
                             label="Total des km abandonnés"
-                            type="text"
                             slotProps={{
                                 inputLabel: { shrink: true },
+                                htmlInput: {
+                                    step: 0.01,
+                                    min: 0,
+                                },
                             }}
+                            type="number"
                             defaultValue={
                                 data.total_distance_given !== 0
                                     ? data.total_distance_given
@@ -255,8 +278,17 @@ export default function DrivenTrips({
                                     Number(e.target.value),
                                 )
                             }
-                            error={!!errors['total_distance_given']}
-                            helperText={errors['total_distance_given']}
+                            fullWidth
+                            error={
+                                !!errors['total_distance_given'] ||
+                                data.total_distance < data.total_distance_given
+                            }
+                            helperText={
+                                errors['total_distance_given'] ||
+                                data.total_distance < data.total_distance_given
+                                    ? `La distance ne peut pas dépasser ${data.total_distance} km`
+                                    : undefined
+                            }
                         />
                         <p className="text-xs text-[#2D6A2D]">
                             Donc km à rembourser : ({data.total_distance} -{' '}

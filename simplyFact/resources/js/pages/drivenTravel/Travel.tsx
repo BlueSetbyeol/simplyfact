@@ -86,7 +86,7 @@ export default function Travel({ expensesClaimId, drivenTrips }: TravelProps) {
                 <div className="mt-6 mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">
                     <p className="text-sm text-gray-500">Total à rembourser</p>
                     <p className="text-2xl font-medium text-gray-900">
-                        {totalReimbursed}€
+                        {totalReimbursed.toFixed(2)}€
                     </p>
                 </div>
 
