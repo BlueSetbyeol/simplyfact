@@ -30,7 +30,7 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
             },
         });
     }
-
+ 
     const [hasDocument, setHasDocument] = useState(false)
 
     return (
@@ -94,6 +94,8 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                             <p className="text-sm text-gray-500">
                                 Total remboursé
                             </p>
+                            <p className="text-xs text-gray-400 mt-1">{data.number_of_meal} repas x 25€ = {data.number_of_meal * 25}€ max</p>
+                            <p className='text-xs text-gray-400'>Montant dépensé: {data.total_price}</p>
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
