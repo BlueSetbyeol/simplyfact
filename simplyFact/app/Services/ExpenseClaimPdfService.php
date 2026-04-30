@@ -150,27 +150,25 @@ class ExpenseClaimPdfService
             'committee_name' => 'Commission Formation',
             'total_given' => 100.00,
             'total_reimbursed' => null,
-            // TODO: remplacer quand driven trips blade sera fait :
-            'drivenTrips' => collect(),
-            // collect([
-            //     (object) [
-            //         'starting_city' => 'Lyon',
-            //         'ending_city' => 'Grenoble',
-            //         'trip_type' => 'voiture',
-            //         'total_distance' => 220,
-            //         'total_distance_given' => 50,
-            //         'total_price' => 61.20,
-            //         'total_price_given' => 33.25,
-            //         'reimbursed_price' => 27.95,
-            //         'vehicle' => (object) [
-            //             'vehicle_type' => 'voiture',
-            //             'electrical' => false,
-            //             'number_plate' => 'AB-123-CD',
-            //             'power' => '6CV',
-            //             'price_given' => 0.665,
-            //         ],
-            //     ],
-            // ]),
+            'drivenTrips' => collect([
+                (object) [
+                    'starting_city' => 'Lyon',
+                    'ending_city' => 'Grenoble',
+                    'trip_type' => 'voiture',
+                    'total_distance' => 220,
+                    'total_distance_given' => 50,
+                    'total_price' => 61.20,
+                    'total_price_given' => 33.25,
+                    'reimbursed_price' => 27.95,
+                    'vehicle' => (object) [
+                        'vehicle_type' => 'voiture',
+                        'electrical' => false,
+                        'number_plate' => 'AB-123-CD',
+                        'power' => '6CV',
+                        'price_given' => 0.665,
+                    ],
+                ],
+            ]),
             'otherTrips' => collect([
                 (object) ['expense_name' => 'Péages autoroute', 'reimbursed_price' => 12.40],
                 (object) ['expense_name' => 'Train Lyon - Paris', 'reimbursed_price' => 67.00],
@@ -216,9 +214,7 @@ class ExpenseClaimPdfService
                 'logoBase64' => base64_encode(file_get_contents(public_path('images/logo-ffs.jpg'))),
                 'user' => $fakeUser,
                 'expensesClaim' => $fakeExpensesClaim,
-                // TODO: remplacer quand driven trips blade sera fait :
-                'drivenTrips' => collect(),
-                // 'drivenTrips' => $computed->drivenTrips,
+                'drivenTrips' => $computed->drivenTrips,
                 'otherTrips' => $fakeExpensesClaim->otherTrips,
                 'accommodations' => $fakeExpensesClaim->accommodations,
                 'meal' => $fakeExpensesClaim->meals,
