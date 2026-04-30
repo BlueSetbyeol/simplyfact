@@ -15,7 +15,7 @@ interface MealFormProps {
 }
 
 export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
-    const { data, setData, post, errors, reset } = useForm({
+    const { data, setData, post, errors, reset } = useForm('CreateMeal', {
         number_of_meal: meal?.number_of_meal || 0,
         total_price: meal?.total_price || 0,
     });

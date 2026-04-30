@@ -23,7 +23,7 @@ export default function OtherTrip({
     expensesClaimId,
     otherTrip,
 }: OtherTripProps) {
-    const { data, setData, post, errors } = useForm({
+    const { data, setData, post, errors } = useForm('CreateOtherTravel', {
         expense_name: otherTrip?.expense_name || '',
         total_price: otherTrip?.total_price || 0,
     });

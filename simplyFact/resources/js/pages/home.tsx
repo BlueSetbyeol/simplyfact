@@ -1,18 +1,9 @@
-import {
-    Head,
-    Link,
-    // usePage
-} from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Button } from '@mui/material';
 import Header from '@/layouts/Header';
-// import { dashboard, login, register } from '@/routes';
 
 export default function Home() {
-    // {
-    //     canRegister = true,
-    // }: {
-    //     canRegister?: boolean;
-    // }
+    // {canRegister = true,}: {canRegister?: boolean;}
     // const { auth } = usePage().props;
 
     return (

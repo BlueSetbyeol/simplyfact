@@ -25,11 +25,14 @@ export default function AccommodationDetails({
     expensesClaimId,
     accommodation,
 }: AccommodationDetailsProps) {
-    const { data, setData, post, errors, reset } = useForm({
-        accommodation_type: 'Hôtel province hors coeur de ville',
-        nb_of_night: accommodation?.nb_of_night || 0,
-        total_price: accommodation?.total_price || 0,
-    });
+    const { data, setData, post, errors, reset } = useForm(
+        'CreateAccomodation',
+        {
+            accommodation_type: 'Hôtel province hors coeur de ville',
+            nb_of_night: accommodation?.nb_of_night || 0,
+            total_price: accommodation?.total_price || 0,
+        },
+    );
 
     const ceilings: Record<string, number> = {
         'Hôtel province hors coeur de ville': 70,

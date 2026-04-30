@@ -17,7 +17,7 @@ export default function OtherExpensesDetails({
     expensesClaimId,
     otherExpense,
 }: OtherExpensesDetailsProps) {
-    const { data, setData, post, errors, reset } = useForm({
+    const { data, setData, post, errors, reset } = useForm('CreateExpenses', {
         expense_name: otherExpense?.expense_name || '',
         total_price: otherExpense?.total_price || 0,
     });

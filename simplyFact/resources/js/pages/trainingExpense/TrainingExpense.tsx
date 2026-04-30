@@ -15,7 +15,7 @@ export default function TrainingExpense({
     expensesClaimId,
     trainingExpense,
 }: TrainingExpenseProps) {
-    const { data, setData, post, errors, reset } = useForm({
+    const { data, setData, post, errors, reset } = useForm('CreateTraining', {
         nb_days_of_training: trainingExpense?.nb_days_of_training || 0,
     });
 

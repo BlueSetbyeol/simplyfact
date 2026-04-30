@@ -36,16 +36,19 @@ export default function DrivenTrips({
     drivenTrip,
     vehicle,
 }: DrivenTripsProps) {
-    const { data, setData, post, errors, reset } = useForm({
-        starting_city: drivenTrip?.starting_city || '',
-        starting_zip_code: drivenTrip?.starting_zip_code || 0,
-        ending_city: drivenTrip?.ending_city || '',
-        ending_zip_code: drivenTrip?.ending_zip_code || 0,
-        trip_type: drivenTrip?.trip_type || '',
-        total_distance: drivenTrip?.total_distance || 0,
-        total_distance_given: drivenTrip?.total_distance_given || 0,
-        description: drivenTrip?.description || '',
-    });
+    const { data, setData, post, errors, reset } = useForm(
+        'CreateDrivenTravel',
+        {
+            starting_city: drivenTrip?.starting_city || '',
+            starting_zip_code: drivenTrip?.starting_zip_code || 0,
+            ending_city: drivenTrip?.ending_city || '',
+            ending_zip_code: drivenTrip?.ending_zip_code || 0,
+            trip_type: drivenTrip?.trip_type || '',
+            total_distance: drivenTrip?.total_distance || 0,
+            total_distance_given: drivenTrip?.total_distance_given || 0,
+            description: drivenTrip?.description || '',
+        },
+    );
 
     const TransportMode = [
         `${vehicle.vehicle_type}`,

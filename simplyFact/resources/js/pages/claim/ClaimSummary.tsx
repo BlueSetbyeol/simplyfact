@@ -56,20 +56,23 @@ interface ClaimSummaryProps {
 export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
     const { flash } = usePage() as any;
 
-    const { data, setData, put, errors, reset, transform } = useForm({
-        id: expensesClaim?.id,
-        committee_name: expensesClaim?.committee_name,
-        action_name: expensesClaim?.action_name,
-        action_dates: expensesClaim?.action_dates,
-        total_reimbursed: expensesClaim?.total_reimbursed || 0,
-        total_given: expensesClaim?.total_given || 0,
-        driven_trips: expensesClaim?.driven_trips,
-        other_trips: expensesClaim?.other_trips,
-        accommodations: expensesClaim?.accommodations,
-        meals: expensesClaim?.meals,
-        training_expenses: expensesClaim?.training_expenses,
-        other_expenses: expensesClaim?.other_expenses,
-    });
+    const { data, setData, put, errors, reset, transform } = useForm(
+        'AddClaimPrices',
+        {
+            id: expensesClaim?.id,
+            committee_name: expensesClaim?.committee_name,
+            action_name: expensesClaim?.action_name,
+            action_dates: expensesClaim?.action_dates,
+            total_reimbursed: expensesClaim?.total_reimbursed || 0,
+            total_given: expensesClaim?.total_given || 0,
+            driven_trips: expensesClaim?.driven_trips,
+            other_trips: expensesClaim?.other_trips,
+            accommodations: expensesClaim?.accommodations,
+            meals: expensesClaim?.meals,
+            training_expenses: expensesClaim?.training_expenses,
+            other_expenses: expensesClaim?.other_expenses,
+        },
+    );
 
     const totalSpend = useMemo(() => {
         let total = 0;

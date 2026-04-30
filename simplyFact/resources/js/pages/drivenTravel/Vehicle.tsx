@@ -24,13 +24,16 @@ interface VehicleProps {
 }
 
 export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
-    const { data, setData, post, errors, reset, transform } = useForm({
-        vehicle_type: vehicle?.vehicle_type || 'voiture',
-        electrical: vehicle?.electrical || false,
-        power: vehicle?.power || '',
-        number_plate: vehicle?.number_plate || '',
-        price_given: vehicle?.price_given || '',
-    });
+    const { data, setData, post, errors, reset, transform } = useForm(
+        'CreateVehicle',
+        {
+            vehicle_type: vehicle?.vehicle_type || 'voiture',
+            electrical: vehicle?.electrical || false,
+            power: vehicle?.power || '',
+            number_plate: vehicle?.number_plate || '',
+            price_given: vehicle?.price_given || '',
+        },
+    );
 
     const carRates: Record<string, number> = {
         '3CV et moins': 0.529,
