@@ -81,28 +81,10 @@
           <tr class="text-center">
             <th class="px-4 py-3">Trajet</th>
             <th class="px-4 py-3">Type</th>
-            <th colspan="2" class="text-center px-4 py-3">À rembourser</th>
-            <th colspan="2" class="text-center px-4 py-3">Abandon</th>
+            <th class="px-4 py-3">A rembourser</th>
+            <th class="px-4 py-3">En abandon</th>
             <th class="px-4 py-3">Total kms</th>
           </tr>
-          <thead class="bg-gray-100 text-gray-600 text-xs uppercase tracking-wide">
-            <tr class="text-center">
-              <th class="px-4 py-3">Trajet</th>
-              <th class="px-4 py-3">Type</th>
-              <th colspan="2" class="px-4 py-3">À rembourser</th>
-              <th colspan="2" class="px-4 py-3">Abandon</th>
-              <th class="px-4 py-3">Total kms</th>
-            </tr>
-            <tr class="text-center border-t border-gray-200">
-              <th class="px-4 py-3"></th>
-              <th class="px-4 py-3"></th>
-              <th class="px-4 py-3">Kms</th>
-              <th class="px-4 py-3 border-r border-gray-200">Montant</th>
-              <th class="px-4 py-3">Kms</th>
-              <th class="px-4 py-3 border-r border-gray-200">Montant</th>
-              <th class="px-4 py-3"></th>
-            </tr>
-          </thead>
         </thead>
         <tbody class="divide-y divide-gray-100">
           @foreach($drivenTrips as $trip)
@@ -115,26 +97,20 @@
               $kmHorsAbandon = $trip->total_distance - ($trip->total_distance_given ?? 0);
               $rateAbandon = $trip->vehicle->price_given ?? 0;
           @endphp
-          <tr class="bg-white text-center">
+          <tr class="bg-white">
               <td class="px-4 py-3 font-medium text-gray-900">
                   {{ $trip->starting_city ?? '' }} - {{ $trip->ending_city ?? '' }}
               </td>
               <td class="px-4 py-3 text-gray-600">
-                  {{ $trip->vehicle->vehicle_type ?? '' }}
+                  {{ $trip->trip_type ?? '' }}
               </td>
-              <td class="px-4 py-3 text-gray-900">
-                  {{ number_format($kmHorsAbandon, 0, ',', ' ') }} km
-              </td>
-              <td class="px-4 py-3 font-semibold text-gray-900">
-                  <span class="text-xs text-gray-400 mr-1">{{ $kmHorsAbandon }} x {{ number_format($rateFFS, 2, ',', '.') }} €</span>
+              <td class="px-4 py-3 font-semibold text-gray-900 whitespace-nowrap">
+                  <span class="text-xs text-gray-400 mr-1">{{ $kmHorsAbandon }} kms x {{ number_format($rateFFS, 2, ',', '.') }} €</span><br>
                   {{ number_format($trip->reimbursed_price ?? 0, 2, ',', ' ') }} €
               </td>
-              <td class="px-4 py-3 text-gray-500">
-                  {{ !empty($trip->total_distance_given) ? number_format($trip->total_distance_given, 0, ',', ' ').' km' : '-' }}
-              </td>
-              <td class="px-4 py-3 font-semibold text-gray-900">
+              <td class="px-4 py-3 font-semibold text-gray-900 whitespace-nowrap">
                   @if(!empty($trip->total_distance_given))
-                      <span class="text-xs text-gray-400 mr-1">{{ $trip->total_distance_given }} x {{ number_format($rateAbandon, 3, ',', '.') }} €</span>
+                      <span class="text-xs text-gray-400 mr-1">{{ $trip->total_distance_given }} km x {{ number_format($rateAbandon, 3, ',', '.') }} €</span><br>
                       {{ number_format($trip->total_price_given ?? 0, 2, ',', ' ') }} €
                   @else
                       -
@@ -147,18 +123,16 @@
           @endforeach
         </tbody>
         <tfoot class="bg-gray-800 text-white text-xs">
-          <tr class="font-bold text-center">
+          <tr class="font-bold">
             <td colspan="2" class="px-4 py-3 uppercase tracking-wide">Totaux</td>
-            <td class="px-4 py-3 font-bold">
+            <td class="px-4 py-3 font-bold whitespace-nowrap">
               {{ number_format($drivenTrips->sum('total_distance') - ($computed->totalDistanceGiven ?? 0), 0, ',', ' ') }} km
-            </td>
-            <td class="px-4 py-3">
+              =>
               {{ number_format($computed->totalReimbursedKm ?? 0, 2, ',', ' ') }} €
             </td>
-            <td class="px-4 py-3">
+            <td class="px-4 py-3 whitespace-nowrap">
               {{ number_format($computed->totalDistanceGiven ?? 0, 0, ',', ' ') }} km
-            </td>
-            <td class="px-4 py-3">
+              =>
               {{ number_format($computed->abandonKm ?? 0, 2, ',', ' ') }} €
             </td>
             <td class="px-4 py-3">
@@ -339,7 +313,7 @@
     <table class="w-full text-sm">
       <tfoot class="bg-gray-800 text-white text-xs">
         <tr>
-          <td class="px-4 py-3 text-right font-bold uppercase tracking-wide">Total hors kilomètres</td>
+          <td class="px-4 py-3 font-bold uppercase tracking-wide">Total hors kilomètres</td>
           <td class="px-4 py-3 text-right font-bold w-28">
             {{ number_format($computed->totalWithoutKm ?? 0, 2, ',', ' ') }} €
           </td>

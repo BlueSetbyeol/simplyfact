@@ -56,7 +56,7 @@ class ExpenseClaimPdfService
                 'otherExpenses' => $expensesClaim->otherExpenses,
                 'computed' => $computed,
             ])
-            ->urls($proofs)
+            ->urls([]) // ($proofs)
             ->getDocument();
 
         Mail::to(config('mail.to_accountant'))
