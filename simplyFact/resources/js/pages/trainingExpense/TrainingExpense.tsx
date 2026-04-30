@@ -25,7 +25,7 @@ export default function TrainingExpense({
     const totalRefund = Math.min(
         data.nb_days_of_training * price_per_day,
         max_reimbursed,
-    ).toFixed(2);
+    );
 
     function submitMeal(e: { preventDefault: () => void }) {
         e.preventDefault();
@@ -53,7 +53,14 @@ export default function TrainingExpense({
                     <div className="flex flex-col gap-5">
                         <TextField
                             label="Nombre de jour"
-                            slotProps={{ inputLabel: { shrink: true } }}
+                            slotProps={{
+                                inputLabel: { shrink: true },
+                                htmlInput: {
+                                    step: 0,
+                                    min: 1,
+                                },
+                            }}
+                            type="number"
                             defaultValue={
                                 data.nb_days_of_training !== 0
                                     ? data.nb_days_of_training
@@ -89,7 +96,7 @@ export default function TrainingExpense({
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
-                                {totalRefund}€
+                                {Number(totalRefund).toFixed(2)}€
                             </p>
                         </div>
                     </div>

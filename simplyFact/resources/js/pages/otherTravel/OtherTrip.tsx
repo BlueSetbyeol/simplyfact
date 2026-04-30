@@ -1,12 +1,5 @@
 import { Head, useForm } from '@inertiajs/react';
-import {
-    Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-} from '@mui/material';
+import { Button, MenuItem, TextField } from '@mui/material';
 import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
@@ -52,22 +45,23 @@ export default function OtherTrip({
                 </h1>
 
                 <hr className="my-4 border-gray-100" />
-                <FormControl fullWidth className="flex flex-col gap-5">
-                    <InputLabel shrink>Type de transport</InputLabel>
-                    <Select
-                        label="Type de véhicule"
-                        value={data.expense_name || ''}
-                        onChange={(e) =>
-                            setData('expense_name', e.target.value)
-                        }
-                    >
-                        {modes.map((transport, index) => (
-                            <MenuItem key={index} value={transport}>
-                                {transport}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <TextField
+                    label="Type de transport"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                    required
+                    select
+                    defaultValue={data.expense_name || ''}
+                    onChange={(e) => setData('expense_name', e.target.value)}
+                    fullWidth
+                    error={!!errors['expense_name']}
+                    helperText={errors['expense_name']}
+                >
+                    {modes.map((transport, index) => (
+                        <MenuItem key={index} value={transport}>
+                            {transport}
+                        </MenuItem>
+                    ))}
+                </TextField>
                 <hr className="mt-4 mb-8 border-gray-100" />
 
                 <div className="mb-4 flex flex-col gap-4">
@@ -77,7 +71,14 @@ export default function OtherTrip({
                         </p>
                         <TextField
                             label="Montant dépensé"
-                            slotProps={{ inputLabel: { shrink: true } }}
+                            slotProps={{
+                                inputLabel: { shrink: true },
+                                htmlInput: {
+                                    step: 0.01,
+                                    min: 0,
+                                },
+                            }}
+                            type="number"
                             defaultValue={data.total_price || ''}
                             onChange={(e) =>
                                 setData('total_price', Number(e.target.value))

@@ -83,9 +83,9 @@ export default function User({ user }: UserProps) {
                 <form onSubmit={submitUser} className="mt-6">
                     <div className="mb-3 flex flex-col gap-3 lg:flex-row">
                         <TextField
-                            size="small"
                             label="Nom"
                             slotProps={{ inputLabel: { shrink: true } }}
+                            type="text"
                             defaultValue={
                                 data.lastname !== '' ? data.lastname : ''
                             }
@@ -97,9 +97,9 @@ export default function User({ user }: UserProps) {
                             helperText={errors['lastname']}
                         />
                         <TextField
-                            size="small"
                             label="Prénom"
                             slotProps={{ inputLabel: { shrink: true } }}
+                            type="text"
                             defaultValue={
                                 data.firstname !== '' ? data.firstname : ''
                             }
@@ -114,9 +114,9 @@ export default function User({ user }: UserProps) {
 
                     <div className="mb-3 flex flex-col gap-3 lg:flex-row">
                         <TextField
-                            size="small"
                             label="Adresse"
                             slotProps={{ inputLabel: { shrink: true } }}
+                            type="text"
                             defaultValue={
                                 data.address_street !== ''
                                     ? data.address_street
@@ -133,9 +133,17 @@ export default function User({ user }: UserProps) {
 
                     <div className="mb-3 flex flex-col gap-3 lg:flex-row">
                         <TextField
-                            size="small"
                             label="Code postal"
-                            slotProps={{ inputLabel: { shrink: true } }}
+                            slotProps={{
+                                inputLabel: { shrink: true },
+                                htmlInput: {
+                                    step: 0,
+                                    min: 0,
+                                    maxLength: 6,
+                                    minLength: 5,
+                                },
+                            }}
+                            type="number"
                             defaultValue={
                                 data.address_zipcode !== ''
                                     ? data.address_zipcode
@@ -149,9 +157,9 @@ export default function User({ user }: UserProps) {
                             helperText={errors['address_zipcode']}
                         />
                         <TextField
-                            size="small"
                             label="Ville"
                             slotProps={{ inputLabel: { shrink: true } }}
+                            type="text"
                             defaultValue={
                                 data.address_city !== ''
                                     ? data.address_city
@@ -168,9 +176,9 @@ export default function User({ user }: UserProps) {
 
                     <div className="mb-3 flex flex-col gap-3 lg:flex-row">
                         <TextField
-                            size="small"
                             label="Email"
                             slotProps={{ inputLabel: { shrink: true } }}
+                            type="email"
                             defaultValue={
                                 data.email_address !== ''
                                     ? data.email_address
@@ -187,7 +195,6 @@ export default function User({ user }: UserProps) {
 
                     <div className="mb-3 flex flex-col gap-3 lg:flex-row">
                         <TextField
-                            size="small"
                             label="Téléphone"
                             slotProps={{ inputLabel: { shrink: true } }}
                             defaultValue={

@@ -1,12 +1,5 @@
 import { Head, useForm } from '@inertiajs/react';
-import {
-    Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-} from '@mui/material';
+import { Button, MenuItem, TextField } from '@mui/material';
 import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
@@ -102,23 +95,27 @@ export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
                 <hr className="mb-4 border-gray-100" />
 
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                    <FormControl fullWidth className="flex flex-col gap-5">
-                        <InputLabel shrink>Type de véhicule</InputLabel>
-                        <Select
-                            label="Type de véhicule"
-                            value={data.vehicle_type || 'voiture'}
-                            onChange={(e) =>
-                                setData('vehicle_type', e.target.value)
-                            }
-                        >
-                            <MenuItem value="voiture">voiture</MenuItem>
-                            <MenuItem value="moto">moto</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <TextField
+                        label="Type de véhicule"
+                        slotProps={{ inputLabel: { shrink: true } }}
+                        required
+                        select
+                        defaultValue={data.vehicle_type || ''}
+                        onChange={(e) =>
+                            setData('vehicle_type', e.target.value)
+                        }
+                        fullWidth
+                        error={!!errors['vehicle_type']}
+                        helperText={errors['vehicle_type']}
+                    >
+                        <MenuItem value="voiture">voiture</MenuItem>
+                        <MenuItem value="moto">moto</MenuItem>
+                    </TextField>
 
                     <TextField
                         label="Plaque d'immatriculation"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        type="text"
                         defaultValue={data.number_plate}
                         onChange={(e) =>
                             setData('number_plate', e.target.value)
@@ -197,47 +194,41 @@ export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
                     </div>
 
                     {data.vehicle_type === 'voiture' ? (
-                        <FormControl fullWidth>
-                            <InputLabel shrink>
-                                Puissance de la voiture
-                            </InputLabel>
-                            <Select
-                                value={data.power || ''}
-                                onChange={(e) =>
-                                    setData('power', e.target.value)
-                                }
-                                label="Puissance de la voiture"
-                            >
-                                <MenuItem value="3CV et moins">
-                                    3CV et moins
-                                </MenuItem>
-                                <MenuItem value="4CV">4CV</MenuItem>
-                                <MenuItem value="5CV">5CV</MenuItem>
-                                <MenuItem value="6CV">6CV</MenuItem>
-                                <MenuItem value="7CV et plus">
-                                    7CV et plus
-                                </MenuItem>
-                            </Select>
-                        </FormControl>
+                        <TextField
+                            label="Puissance de la voiture"
+                            slotProps={{ inputLabel: { shrink: true } }}
+                            required
+                            select
+                            defaultValue={data.power || ''}
+                            onChange={(e) => setData('power', e.target.value)}
+                            fullWidth
+                            error={!!errors['power']}
+                            helperText={errors['power']}
+                        >
+                            <MenuItem value="3CV et moins">
+                                3CV et moins
+                            </MenuItem>
+                            <MenuItem value="4CV">4CV</MenuItem>
+                            <MenuItem value="5CV">5CV</MenuItem>
+                            <MenuItem value="6CV">6CV</MenuItem>
+                            <MenuItem value="7CV et plus">7CV et plus</MenuItem>
+                        </TextField>
                     ) : (
-                        <FormControl fullWidth>
-                            <InputLabel shrink>Puissance de la moto</InputLabel>
-                            <Select
-                                value={data.power || ''}
-                                onChange={(e) =>
-                                    setData('power', e.target.value)
-                                }
-                                label="Puissance de la moto"
-                            >
-                                <MenuItem value="1 et 2CV">1 et 2CV</MenuItem>
-                                <MenuItem value="3, 4 et 5CV">
-                                    3, 4 et 5CV
-                                </MenuItem>
-                                <MenuItem value="6CV et plus">
-                                    6CV et plus
-                                </MenuItem>
-                            </Select>
-                        </FormControl>
+                        <TextField
+                            label="Puissance de la moto"
+                            slotProps={{ inputLabel: { shrink: true } }}
+                            required
+                            select
+                            defaultValue={data.power || ''}
+                            onChange={(e) => setData('power', e.target.value)}
+                            fullWidth
+                            error={!!errors['power']}
+                            helperText={errors['power']}
+                        >
+                            <MenuItem value="1 et 2CV">1 et 2CV</MenuItem>
+                            <MenuItem value="3, 4 et 5CV">3, 4 et 5CV</MenuItem>
+                            <MenuItem value="6CV et plus">6CV et plus</MenuItem>
+                        </TextField>
                     )}
 
                     <div className="mt-6 mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">

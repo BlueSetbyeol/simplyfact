@@ -39,9 +39,9 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                 <form onSubmit={submitInformations}>
                     <div className="flex flex-col gap-3">
                         <TextField
-                            size="small"
                             label="Commission"
                             slotProps={{ inputLabel: { shrink: true } }}
+                            type="text"
                             defaultValue={
                                 data.committee_name !== ''
                                     ? data.committee_name
@@ -56,9 +56,9 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                         />
 
                         <TextField
-                            size="small"
                             label="Objet de l'action"
                             slotProps={{ inputLabel: { shrink: true } }}
+                            type="text"
                             defaultValue={
                                 data.action_name !== '' ? data.action_name : ''
                             }
@@ -71,9 +71,9 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                         />
 
                         <TextField
-                            size="small"
                             label="Dates de l'action"
                             slotProps={{ inputLabel: { shrink: true } }}
+                            type="text"
                             defaultValue={
                                 data.action_dates !== ''
                                     ? data.action_dates

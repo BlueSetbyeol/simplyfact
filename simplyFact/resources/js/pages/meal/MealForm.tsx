@@ -54,7 +54,14 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                     <div className="flex flex-col gap-5">
                         <TextField
                             label="Nombre de repas"
-                            slotProps={{ inputLabel: { shrink: true } }}
+                            slotProps={{
+                                inputLabel: { shrink: true },
+                                htmlInput: {
+                                    step: 0,
+                                    min: 1,
+                                },
+                            }}
+                            type="number"
                             defaultValue={
                                 data.number_of_meal !== 0
                                     ? data.number_of_meal
@@ -76,7 +83,14 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
 
                         <TextField
                             label="Montant total"
-                            slotProps={{ inputLabel: { shrink: true } }}
+                            slotProps={{
+                                inputLabel: { shrink: true },
+                                htmlInput: {
+                                    step: 0.01,
+                                    min: 0,
+                                },
+                            }}
+                            type="number"
                             defaultValue={
                                 data.total_price !== 0 ? data.total_price : ''
                             }
@@ -106,7 +120,7 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
-                                {totalRefund}€
+                                {totalRefund.toFixed(2)}€
                             </p>
                         </div>
                     </div>

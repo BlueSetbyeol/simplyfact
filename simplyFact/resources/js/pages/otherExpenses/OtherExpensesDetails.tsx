@@ -48,6 +48,7 @@ export default function OtherExpensesDetails({
                             <TextField
                                 label="Sujet de la dépense"
                                 slotProps={{ inputLabel: { shrink: true } }}
+                                type="text"
                                 defaultValue={
                                     data.expense_name !== ''
                                         ? data.expense_name
@@ -66,7 +67,14 @@ export default function OtherExpensesDetails({
 
                             <TextField
                                 label="Montant total dépensé"
-                                slotProps={{ inputLabel: { shrink: true } }}
+                                slotProps={{
+                                    inputLabel: { shrink: true },
+                                    htmlInput: {
+                                        step: 0.01,
+                                        min: 0,
+                                    },
+                                }}
+                                type="number"
                                 defaultValue={
                                     data.total_price !== 0
                                         ? data.total_price

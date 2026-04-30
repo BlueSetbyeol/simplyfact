@@ -74,7 +74,7 @@ export default function Travel({ expensesClaimId, otherTrips }: TravelProps) {
                         Total des trajets à rembourser
                     </p>
                     <p className="text-2xl font-medium text-gray-900">
-                        {totalReimbursed}€
+                        {totalReimbursed.toFixed(2)}€
                     </p>
                 </div>
 
