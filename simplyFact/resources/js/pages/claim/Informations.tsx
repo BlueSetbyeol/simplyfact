@@ -54,6 +54,9 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                             error={!!errors['committee_name']}
                             helperText={errors['committee_name']}
                         />
+                        {errors.committee_name && (
+                            <span>{errors.committee_name}</span>
+                        )}
 
                         <TextField
                             label="Objet de l'action"
@@ -69,6 +72,9 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                             error={!!errors['action_name']}
                             helperText={errors['action_name']}
                         />
+                        {errors.action_name && (
+                            <span>{errors.action_name}</span>
+                        )}
 
                         <TextField
                             label="Dates de l'action"
@@ -86,6 +92,9 @@ export default function Informations({ expensesClaim }: InformationsProps) {
                             error={!!errors['action_dates']}
                             helperText={errors['action_dates']}
                         />
+                        {errors.action_dates && (
+                            <span>{errors.action_dates}</span>
+                        )}
                     </div>
 
                     <Button

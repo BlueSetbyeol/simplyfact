@@ -112,6 +112,9 @@ export default function DrivenTrips({
                             error={!!errors['starting_city']}
                             helperText={errors['starting_city']}
                         />
+                        {errors.starting_city && (
+                            <span>{errors.starting_city}</span>
+                        )}
 
                         <TextField
                             label="Code postal"
@@ -141,6 +144,9 @@ export default function DrivenTrips({
                             error={!!errors['starting_zip_code']}
                             helperText={errors['starting_zip_code']}
                         />
+                        {errors.starting_zip_code && (
+                            <span>{errors.starting_zip_code}</span>
+                        )}
                     </div>
 
                     <div className="flex flex-row gap-2">
@@ -159,6 +165,9 @@ export default function DrivenTrips({
                             error={!!errors['ending_city']}
                             helperText={errors['ending_city']}
                         />
+                        {errors.ending_city && (
+                            <span>{errors.ending_city}</span>
+                        )}
 
                         <TextField
                             label="Code postal"
@@ -188,20 +197,37 @@ export default function DrivenTrips({
                             error={!!errors['ending_zip_code']}
                             helperText={errors['ending_zip_code']}
                         />
+                        {errors.ending_zip_code && (
+                            <span>{errors.ending_zip_code}</span>
+                        )}
                     </div>
 
-                    <TextField
-                        label="Description"
-                        multiline
-                        rows={3}
-                        type="text"
-                        slotProps={{ inputLabel: { shrink: true } }}
-                        defaultValue={
-                            data.description !== '' ? data.description : ''
-                        }
-                        onChange={(e) => setData('description', e.target.value)}
-                        fullWidth
-                    />
+                    <div className="flex flex-col items-end gap-4 rounded-xl bg-gray-50 p-4">
+                        <Tooltip
+                            title="Détails des déplacements si plusieurs destinations et dans le cas d'un covoiturage : Noms des passagers."
+                            arrow
+                        >
+                            <Info className="h-4 w-4 cursor-pointer text-gray-400" />
+                        </Tooltip>
+
+                        <TextField
+                            label="Description"
+                            multiline
+                            rows={3}
+                            type="text"
+                            slotProps={{ inputLabel: { shrink: true } }}
+                            defaultValue={
+                                data.description !== '' ? data.description : ''
+                            }
+                            onChange={(e) =>
+                                setData('description', e.target.value)
+                            }
+                            fullWidth
+                        />
+                        {errors.description && (
+                            <span>{errors.description}</span>
+                        )}
+                    </div>
 
                     <TextField
                         label="Type de véhicule"
@@ -220,6 +246,7 @@ export default function DrivenTrips({
                             </MenuItem>
                         ))}
                     </TextField>
+                    {errors.trip_type && <span>{errors.trip_type}</span>}
 
                     <TextField
                         label="Total des km parcourus"
@@ -244,9 +271,12 @@ export default function DrivenTrips({
                         error={!!errors['total_distance']}
                         helperText={errors['total_distance']}
                     />
+                    {errors.total_distance && (
+                        <span>{errors.total_distance}</span>
+                    )}
 
                     <div className="flex flex-col gap-4 rounded-xl bg-gray-50 p-4">
-                        <div className="flex items-baseline gap-2">
+                        <div className="flex items-baseline justify-between gap-2">
                             <p className="mb-4 text-sm font-medium text-gray-500">
                                 OPTIONNEL: Déclaration de km en abandon
                             </p>
@@ -290,11 +320,19 @@ export default function DrivenTrips({
                                     : undefined
                             }
                         />
-                        <p className="text-xs text-[#2D6A2D]">
-                            Donc km à rembourser : ({data.total_distance} -{' '}
-                            {data.total_distance_given}) ={' '}
-                            {data.total_distance - data.total_distance_given} km
-                        </p>
+                        {errors.total_distance_given && (
+                            <span>{errors.total_distance_given}</span>
+                        )}
+
+                        {data.total_distance_given !== 0 && (
+                            <p className="text-xs text-[#2D6A2D]">
+                                Donc km à rembourser : ({data.total_distance} -{' '}
+                                {data.total_distance_given}) ={' '}
+                                {data.total_distance -
+                                    data.total_distance_given}{' '}
+                                km
+                            </p>
+                        )}
                     </div>
 
                     <hr className="mb-4 border-gray-100" />

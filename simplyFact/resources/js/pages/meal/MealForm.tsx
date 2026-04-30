@@ -87,10 +87,11 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                                 inputLabel: { shrink: true },
                                 htmlInput: {
                                     step: 0.01,
-                                    min: 0,
+                                    min: 1,
                                 },
                             }}
                             type="number"
+                            required
                             defaultValue={
                                 data.total_price !== 0 ? data.total_price : ''
                             }

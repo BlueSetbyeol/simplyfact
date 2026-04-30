@@ -96,6 +96,7 @@ export default function User({ user }: UserProps) {
                             error={!!errors['lastname']}
                             helperText={errors['lastname']}
                         />
+                        {errors.lastname && <span>{errors.lastname}</span>}
                         <TextField
                             label="Prénom"
                             slotProps={{ inputLabel: { shrink: true } }}
@@ -110,6 +111,7 @@ export default function User({ user }: UserProps) {
                             error={!!errors['firstname']}
                             helperText={errors['firstname']}
                         />
+                        {errors.firstname && <span>{errors.firstname}</span>}
                     </div>
 
                     <div className="mb-3 flex flex-col gap-3 lg:flex-row">
@@ -129,6 +131,9 @@ export default function User({ user }: UserProps) {
                             error={!!errors['address_street']}
                             helperText={errors['address_street']}
                         />
+                        {errors.address_street && (
+                            <span>{errors.address_street}</span>
+                        )}
                     </div>
 
                     <div className="mb-3 flex flex-col gap-3 lg:flex-row">
@@ -156,6 +161,9 @@ export default function User({ user }: UserProps) {
                             error={!!errors['address_zipcode']}
                             helperText={errors['address_zipcode']}
                         />
+                        {errors.address_zipcode && (
+                            <span>{errors.address_zipcode}</span>
+                        )}
                         <TextField
                             label="Ville"
                             slotProps={{ inputLabel: { shrink: true } }}
@@ -172,6 +180,9 @@ export default function User({ user }: UserProps) {
                             error={!!errors['address_city']}
                             helperText={errors['address_city']}
                         />
+                        {errors.address_city && (
+                            <span>{errors.address_city}</span>
+                        )}
                     </div>
 
                     <div className="mb-3 flex flex-col gap-3 lg:flex-row">
@@ -191,6 +202,9 @@ export default function User({ user }: UserProps) {
                             error={!!errors['email_address']}
                             helperText={errors['email_address']}
                         />
+                        {errors.email_address && (
+                            <span>{errors.email_address}</span>
+                        )}
                     </div>
 
                     <div className="mb-3 flex flex-col gap-3 lg:flex-row">
@@ -209,6 +223,9 @@ export default function User({ user }: UserProps) {
                             error={!!errors['phone_number']}
                             helperText={errors['phone_number']}
                         />
+                        {errors.phone_number && (
+                            <span>{errors.phone_number}</span>
+                        )}
                     </div>
 
                     <Button

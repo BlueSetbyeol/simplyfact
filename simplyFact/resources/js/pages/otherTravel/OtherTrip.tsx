@@ -62,6 +62,7 @@ export default function OtherTrip({
                         </MenuItem>
                     ))}
                 </TextField>
+                {errors.expense_name && <span>{errors.expense_name}</span>}
                 <hr className="mt-4 mb-8 border-gray-100" />
 
                 <div className="mb-4 flex flex-col gap-4">
@@ -87,6 +88,9 @@ export default function OtherTrip({
                             error={!!errors['total_price']}
                             helperText={errors['total_price']}
                         />
+                        {errors.total_price && (
+                            <span>{errors.total_price}</span>
+                        )}
                     </div>
                 </div>
 
