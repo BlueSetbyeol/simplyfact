@@ -15,12 +15,17 @@ interface MealFormProps {
 }
 
 export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
-    const { data, setData, post, errors, reset } = useForm({
+    const { data, setData, post, errors, reset } = useForm('CreateMeal', {
         number_of_meal: meal?.number_of_meal || 0,
         total_price: meal?.total_price || 0,
     });
 
-    const totalRefund = Math.min(data.total_price, 25 * data.number_of_meal);
+    const mealMaxPrice: number = 25;
+
+    const totalRefund = Math.min(
+        data.total_price,
+        mealMaxPrice * data.number_of_meal,
+    );
 
     function submitMeal(e: { preventDefault: () => void }) {
         e.preventDefault();
@@ -30,8 +35,8 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
             },
         });
     }
- 
-    const [hasDocument, setHasDocument] = useState(false)
+
+    const [hasDocument, setHasDocument] = useState(false);
 
     return (
         <Header>
@@ -94,23 +99,22 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                             <p className="text-sm text-gray-500">
                                 Total remboursé
                             </p>
-                            <p className="text-xs text-gray-400 mt-1">{data.number_of_meal} repas x 25€ = {data.number_of_meal * 25}€ max</p>
-                            <p className='text-xs text-gray-400'>Montant dépensé: {data.total_price}</p>
+                            <p className="mt-1 text-xs text-gray-400">
+                                Plafond de {mealMaxPrice}€ par repas, soit :{' '}
+                                {data.number_of_meal} repas * {mealMaxPrice}€
+                            </p>
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
                                 {totalRefund}€
                             </p>
-                            <p className="mt-1 text-xs text-gray-400">
-                                Plafond : 25 € par repas
-                            </p>
                         </div>
                     </div>
 
-                    <FileUpload 
+                    <FileUpload
                         expensesClaimId={expensesClaimId}
                         onUpload={(hasFiles) => setHasDocument(hasFiles)}
-                         />
+                    />
 
                     <Button
                         type="submit"

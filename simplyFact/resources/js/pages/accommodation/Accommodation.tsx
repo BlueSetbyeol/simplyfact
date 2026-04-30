@@ -69,7 +69,7 @@ export default function Accommodation({
                             <p className="text-xs text-gray-500">
                                 {accommodation.nb_of_night} nuit(s) -{' '}
                                 {accommodation.total_price}€ payés -{' '}
-                                {accommodation.reimbursed_price}€ remboursés
+                                {accommodation.reimbursed_price}€ à rembourser
                             </p>
                         </div>
                     ))

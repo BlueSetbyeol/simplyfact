@@ -20,10 +20,6 @@ class VehicleController extends Controller
 
     public function create(ExpensesClaim $expensesClaim, Request $request)
     {
-        // TO REMOVE: Vehicle n'est plus lié à expensesClaim,
-        // remplacé par récupération faite par le user_id en session.
-        // $vehicle = Vehicle::with('expenses_claim')->get();
-
         $userId = session('user_id');
         $user = User::find($userId);
 
@@ -70,9 +66,6 @@ class VehicleController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(User $user)
     {
         // $vehicle = Vehicle::with(['users'])->findOrFail($user->id);
@@ -85,9 +78,6 @@ class VehicleController extends Controller
         // ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Vehicle $vehicle, Request $request)
     {
         // Not sure if we do authorize the modification at the end or not

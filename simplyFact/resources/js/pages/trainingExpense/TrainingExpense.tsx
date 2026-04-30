@@ -15,7 +15,7 @@ export default function TrainingExpense({
     expensesClaimId,
     trainingExpense,
 }: TrainingExpenseProps) {
-    const { data, setData, post, errors, reset } = useForm({
+    const { data, setData, post, errors, reset } = useForm('CreateTraining', {
         nb_days_of_training: trainingExpense?.nb_days_of_training || 0,
     });
 
@@ -79,16 +79,17 @@ export default function TrainingExpense({
                             <p className="text-sm text-gray-500">
                                 Total de la compensation
                             </p>
-                            {/* <p className="mt-1 text-xs text-gray-400">
-                                {data.nb_days_of_training} * {price_per_day}
-                            </p> */}
+                            <p className="mt-1 text-xs text-gray-400">
+                                Plafond de 149.10€ par stage,
+                            </p>
+                            <p className="mt-1 text-xs text-gray-400">
+                                Rémunération de {price_per_day}€ par jour, soit
+                                : {data.nb_days_of_training} * {price_per_day}€
+                            </p>
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-medium text-gray-900">
                                 {totalRefund}€
-                            </p>
-                            <p className="mt-1 text-xs text-gray-400">
-                                Plafond : 149,10 € par stage
                             </p>
                         </div>
                     </div>

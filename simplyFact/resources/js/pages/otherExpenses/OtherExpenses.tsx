@@ -66,8 +66,7 @@ export default function OtherExpenses({
                                 {otherExpense.expense_name}
                             </p>
                             <p className="text-xs text-gray-500">
-                                {otherExpense.total_price}€ payés -{' '}
-                                {otherExpense.reimbursed_price}€ remboursés
+                                {otherExpense.total_price}€ payés
                             </p>
                         </div>
                     ))

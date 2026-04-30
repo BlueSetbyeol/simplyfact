@@ -128,7 +128,6 @@ class FlowController extends Controller
             'current_child' => null,
         ]);
 
-        // Return to the parent step's index/summary page
         return $this->routeToStep($steps[$index]['name'], $expensesClaim);
     }
 
@@ -177,8 +176,6 @@ class FlowController extends Controller
         ]);
 
         return Inertia::render('end/End');
-        // TODO préparer la prochaine fonction de destination pour la page de confirmation
-        // return (new FlowController)->completeClaim ??($expensesClaim); expensesClaim.edit ?
     }
 
     private function routeToStep(string $step, ExpensesClaim $expensesClaim): RedirectResponse

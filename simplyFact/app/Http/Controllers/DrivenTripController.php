@@ -20,16 +20,11 @@ class DrivenTripController extends Controller
 
     public function create(ExpensesClaim $expensesClaim)
     {
-        // TO REMOVE: Inutile et met en erreur
-        // Récupérer drivenTrip aurait sa place dans edit
-        // $drivenTrip = DrivenTrip::with('expenses_claim')->get();
-
         $vehicleID = session('vehicle_id');
         $vehicle = Vehicle::find($vehicleID);
 
         return Inertia::render('drivenTravel/DrivenTrip', [
-            // TO REMOVE
-            // 'drivenTrip' => $drivenTrip,
+            'drivenTrip' => null,
             'vehicle' => $vehicle,
             'expensesClaimId' => $expensesClaim->id]);
     }
@@ -63,7 +58,7 @@ class DrivenTripController extends Controller
 
         $validated['total_price_given'] = round($vehicle['price_given'] * ($validated['total_distance_given'] ?? 0), 2);
 
-        $validated['reimbursed_price'] = max(0, round($validated['total_price'] - $validated['total_price_given'], 2));
+        $validated['reimbursed_price'] = $validated['total_price'];
 
         DrivenTrip::create([
             'expenses_claim_id' => $expensesClaim->id,
@@ -84,10 +79,13 @@ class DrivenTripController extends Controller
         // $claimId = session('expenses_claim_id');
         // $drivenTrip = DrivenTrip::where('expenses_claim_id', $claimId)->get();
 
-        // return Inertia::render('drivenTravel/DrivenTravel', [
+        // $vehicleID = session('vehicle_id');
+        // $vehicle = Vehicle::find($vehicleID);
+
+        // return Inertia::render('drivenTravel/DrivenTrip', [
+        //     'drivenTrip' => null,
         //     'vehicle' => $vehicle,
-        //     'user' => $user,
-        // ]);
+        //     'expensesClaimId' => $expensesClaim->id]);
     }
 
     public function update(Request $request, DrivenTrip $drivenTrip, ExpensesClaim $expensesClaim)

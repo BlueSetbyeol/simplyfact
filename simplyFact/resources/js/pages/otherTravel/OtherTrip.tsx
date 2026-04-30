@@ -7,6 +7,7 @@ import {
     Select,
     TextField,
 } from '@mui/material';
+import { useState } from 'react';
 import FileUpload from '@/components/FileUpload';
 import Header from '@/layouts/Header';
 
@@ -23,7 +24,7 @@ export default function OtherTrip({
     expensesClaimId,
     otherTrip,
 }: OtherTripProps) {
-    const { data, setData, post, errors } = useForm({
+    const { data, setData, post, errors } = useForm('CreateOtherTravel', {
         expense_name: otherTrip?.expense_name || '',
         total_price: otherTrip?.total_price || 0,
     });
@@ -39,6 +40,8 @@ export default function OtherTrip({
         e.preventDefault();
         post(`/expenses-claims/${expensesClaimId}/other-travels`);
     }
+
+    const [hasDocument, setHasDocument] = useState(false);
 
     return (
         <Header>
@@ -67,7 +70,7 @@ export default function OtherTrip({
                 </FormControl>
                 <hr className="mt-4 mb-8 border-gray-100" />
 
-                <div className="flex flex-col gap-4">
+                <div className="mb-4 flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
                         <p className="text-md mb-2 text-gray-500">
                             Déplacement en train
@@ -83,7 +86,6 @@ export default function OtherTrip({
                             error={!!errors['total_price']}
                             helperText={errors['total_price']}
                         />
-                        <FileUpload expensesClaimId={expensesClaimId} />
                     </div>
                 </div>
 
@@ -94,9 +96,15 @@ export default function OtherTrip({
                     </p>
                 </div>
 
+                <FileUpload
+                    expensesClaimId={expensesClaimId}
+                    onUpload={(hasFiles) => setHasDocument(hasFiles)}
+                />
+
                 <Button
                     onClick={handleSubmit}
                     variant="contained"
+                    disabled={!hasDocument}
                     fullWidth
                     className="!mt-2"
                     sx={{

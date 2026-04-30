@@ -17,7 +17,7 @@ export default function OtherExpensesDetails({
     expensesClaimId,
     otherExpense,
 }: OtherExpensesDetailsProps) {
-    const { data, setData, post, errors, reset } = useForm({
+    const { data, setData, post, errors, reset } = useForm('CreateExpenses', {
         expense_name: otherExpense?.expense_name || '',
         total_price: otherExpense?.total_price || 0,
     });
@@ -87,7 +87,10 @@ export default function OtherExpensesDetails({
                                 <span>{errors.total_price}</span>
                             )}
                         </div>
-                        <div className="mt-6 mb-6 flex items-center justify-center rounded-xl bg-gray-50 p-4">
+                        <div className="mt-6 mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">
+                            <p className="text-sm text-gray-500">
+                                Total à rembourser
+                            </p>
                             <p className="text-2xl font-medium text-gray-900">
                                 {reimbursedPrice}€
                             </p>

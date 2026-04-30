@@ -11,7 +11,7 @@ interface InformationsProps {
 }
 
 export default function Informations({ expensesClaim }: InformationsProps) {
-    const { data, setData, post, errors, reset } = useForm({
+    const { data, setData, post, errors, reset } = useForm('CreateClaim', {
         committee_name: expensesClaim?.committee_name || '',
         action_name: expensesClaim?.action_name || '',
         action_dates: expensesClaim?.action_dates || '',

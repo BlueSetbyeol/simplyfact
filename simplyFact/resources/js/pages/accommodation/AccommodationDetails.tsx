@@ -25,11 +25,14 @@ export default function AccommodationDetails({
     expensesClaimId,
     accommodation,
 }: AccommodationDetailsProps) {
-    const { data, setData, post, errors, reset } = useForm({
-        accommodation_type: 'Hôtel province hors coeur de ville',
-        nb_of_night: accommodation?.nb_of_night || 0,
-        total_price: accommodation?.total_price || 0,
-    });
+    const { data, setData, post, errors, reset } = useForm(
+        'CreateAccomodation',
+        {
+            accommodation_type: 'Hôtel province hors coeur de ville',
+            nb_of_night: accommodation?.nb_of_night || 0,
+            total_price: accommodation?.total_price || 0,
+        },
+    );
 
     const ceilings: Record<string, number> = {
         'Hôtel province hors coeur de ville': 70,
@@ -51,7 +54,7 @@ export default function AccommodationDetails({
         });
     }
 
-    const [hasDocument, setHasDocument] = useState(false)
+    const [hasDocument, setHasDocument] = useState(false);
 
     return (
         <Header>
@@ -132,7 +135,8 @@ export default function AccommodationDetails({
                                     Total à rembourser
                                 </p>
                                 <p className="mt-1 text-xs text-gray-400">
-                                    Plafond: {ceiling}€ par nuit
+                                    Plafond de {ceiling}€ par nuit, soit :{' '}
+                                    {data.nb_of_night} nuits * {ceiling}€
                                 </p>
                             </div>
                             <p className="text-2xl font-medium text-gray-900">
@@ -140,7 +144,7 @@ export default function AccommodationDetails({
                             </p>
                         </div>
 
-                        <FileUpload 
+                        <FileUpload
                             expensesClaimId={expensesClaimId}
                             onUpload={(hasFiles) => setHasDocument(hasFiles)}
                         />

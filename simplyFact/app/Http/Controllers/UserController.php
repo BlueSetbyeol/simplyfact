@@ -15,9 +15,6 @@ class UserController extends Controller
         return Inertia::render('user/User', ['user' => $user]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $user = User::with('email_address');
@@ -25,9 +22,6 @@ class UserController extends Controller
         return Inertia::render('user/User', ['user' => $user]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
 
@@ -62,17 +56,11 @@ class UserController extends Controller
         return redirect()->route('expenses-claims.create');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $user = User::with('email_address');
@@ -80,9 +68,6 @@ class UserController extends Controller
         return Inertia::render('user/User', ['user' => $user]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         // Not sure if we do authorize the modification at the end or not
@@ -96,9 +81,6 @@ class UserController extends Controller
         // return redirect('/')->with('success', 'Expenses Claim updated!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         // Not sure if we do authorize the deletion at the end or not, what if someone give up midway ?
