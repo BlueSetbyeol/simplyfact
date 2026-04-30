@@ -117,6 +117,7 @@ export default function Vehicle({ expensesClaimId, vehicle }: VehicleProps) {
                     <TextField
                         label="Plaque d'immatriculation"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        required
                         type="text"
                         defaultValue={data.number_plate}
                         onChange={(e) =>

@@ -71,7 +71,6 @@ export default function DrivenTrips({
         (vehicle.price_given * data.total_distance_given).toFixed(2),
     );
 
-    console.log(data);
     function handleSubmit(e: { preventDefault: () => void }) {
         e.preventDefault();
         post(`/expenses-claims/${expensesClaimId}/driven-travels`, {
