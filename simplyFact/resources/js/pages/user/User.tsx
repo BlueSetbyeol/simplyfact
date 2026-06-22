@@ -86,6 +86,7 @@ export default function User({ user }: UserProps) {
                             label="Nom"
                             slotProps={{ inputLabel: { shrink: true } }}
                             type="text"
+                            required
                             defaultValue={
                                 data.lastname !== '' ? data.lastname : ''
                             }
@@ -101,6 +102,7 @@ export default function User({ user }: UserProps) {
                             label="Prénom"
                             slotProps={{ inputLabel: { shrink: true } }}
                             type="text"
+                            required
                             defaultValue={
                                 data.firstname !== '' ? data.firstname : ''
                             }
@@ -117,6 +119,7 @@ export default function User({ user }: UserProps) {
                     <div className="mb-3 flex flex-col gap-3 lg:flex-row">
                         <TextField
                             label="Adresse"
+                            required
                             slotProps={{ inputLabel: { shrink: true } }}
                             type="text"
                             defaultValue={
@@ -148,7 +151,8 @@ export default function User({ user }: UserProps) {
                                     minLength: 5,
                                 },
                             }}
-                            type="number"
+                            required
+                            type="string"
                             defaultValue={
                                 data.address_zipcode !== ''
                                     ? data.address_zipcode
@@ -168,6 +172,7 @@ export default function User({ user }: UserProps) {
                             label="Ville"
                             slotProps={{ inputLabel: { shrink: true } }}
                             type="text"
+                            required
                             defaultValue={
                                 data.address_city !== ''
                                     ? data.address_city
@@ -190,6 +195,7 @@ export default function User({ user }: UserProps) {
                             label="Email"
                             slotProps={{ inputLabel: { shrink: true } }}
                             type="email"
+                            required
                             defaultValue={
                                 data.email_address !== ''
                                     ? data.email_address
@@ -211,6 +217,7 @@ export default function User({ user }: UserProps) {
                         <TextField
                             label="Téléphone"
                             slotProps={{ inputLabel: { shrink: true } }}
+                            required
                             defaultValue={
                                 data.phone_number !== ''
                                     ? data.phone_number

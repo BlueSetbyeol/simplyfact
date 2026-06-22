@@ -13,15 +13,14 @@ class DrivenTripController extends Controller
     public function index(ExpensesClaim $expensesClaim)
     {
         return Inertia::render('drivenTravel/Travel', [
-            'drivenTrips' => DrivenTrip::where('expenses_claim_id', $expensesClaim->id)->get(),
+            'drivenTrips' => $expensesClaim->drivenTrips,
             'expensesClaimId' => $expensesClaim->id,
         ]);
     }
 
     public function create(ExpensesClaim $expensesClaim)
     {
-        $vehicleID = session('vehicle_id');
-        $vehicle = Vehicle::find($vehicleID);
+        $vehicle = Vehicle::findOrFail(session('vehicle_id'));
 
         return Inertia::render('drivenTravel/DrivenTrip', [
             'drivenTrip' => null,
@@ -35,9 +34,9 @@ class DrivenTripController extends Controller
         // validation de la data
         $validated = $request->validate([
             'starting_city' => 'required|string|max:150|min:4',
-            'starting_zip_code' => 'required|integer',
+            'starting_zip_code' => 'required|string|max:6|min:5',
             'ending_city' => 'required|string|max:150|min:4',
-            'ending_zip_code' => 'required|integer',
+            'ending_zip_code' => 'required|string|max:6|min:5',
             'trip_type' => 'string|max:255|min:4',
             'total_distance' => 'required|integer|min:1',
             'total_distance_given' => 'nullable|integer',
@@ -46,7 +45,7 @@ class DrivenTripController extends Controller
         );
 
         $vehicleID = session('vehicle_id');
-        $vehicle = Vehicle::find($vehicleID);
+        $vehicle = Vehicle::findOrFail($vehicleID);
 
         $rate = match (true) {
             in_array($validated['trip_type'], ['Covoiturage, remorque, salarié...', 'Déplacements pendant stage fédéral']) => 0.4,
@@ -56,7 +55,7 @@ class DrivenTripController extends Controller
 
         $validated['total_price'] = round($rate * ($validated['total_distance'] - ($validated['total_distance_given'] ?? 0)), 2);
 
-        $validated['total_price_given'] = round($vehicle['price_given'] * ($validated['total_distance_given'] ?? 0), 2);
+        $validated['total_price_given'] = round($vehicle->price_given * ($validated['total_distance_given'] ?? 0), 2);
 
         $validated['reimbursed_price'] = $validated['total_price'];
 

@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('firstname', 150);
             $table->string('lastname', 150);
             $table->string('address_street', 150);
-            $table->integer('address_zipcode');
+            $table->string('address_zipcode'); // a corriger sur les autres éléments 6 max
             $table->string('address_city', 150);
             $table->string('address_country', 150);
-            $table->string('email_address', 250)->unique();
+            $table->string('email_address', 250);
             $table->string('phone_number', 15); // international max length of a phone number
             $table->timestamps();
             // $table->timestamp('email_verified_at')->nullable();

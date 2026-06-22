@@ -13,7 +13,7 @@ class VehicleController extends Controller
     public function index(ExpensesClaim $expensesClaim)
     {
         return Inertia::render('drivenTravel/Vehicle', [
-            'vehicle' => Vehicle::latest()->get(),
+            'vehicle' => Vehicle::where('user_id', session('user_id'))->latest()->get(),
             'expensesClaimId' => $expensesClaim->id,
         ]);
     }
@@ -21,11 +21,7 @@ class VehicleController extends Controller
     public function create(ExpensesClaim $expensesClaim, Request $request)
     {
         $userId = session('user_id');
-        $user = User::find($userId);
-
-        $vehicle = $user
-            ? Vehicle::where('user_id', $userId)->latest()->first()
-            : null;
+        $vehicle = Vehicle::where('user_id', $userId)->latest()->first();
 
         return Inertia::render('drivenTravel/Vehicle', [
             'vehicle' => $vehicle,

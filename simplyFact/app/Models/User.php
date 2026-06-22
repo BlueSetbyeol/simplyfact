@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(ExpensesClaim::class);
     }
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
 }

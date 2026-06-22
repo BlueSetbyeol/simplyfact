@@ -72,7 +72,6 @@ class ExpensesClaim extends Model
         return $value / 100;
     }
 
-
     public function setTotalGivenAttribute($value)
     {
         $this->attributes['total_given'] = (int) round($value * 100);

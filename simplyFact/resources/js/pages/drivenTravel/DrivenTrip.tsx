@@ -10,7 +10,7 @@ interface DrivenTripsProps {
     drivenTrip?: {
         id: number;
         starting_city: string;
-        starting_zip_code: number;
+        starting_zip_code: string;
         ending_city: string;
         ending_zip_code: string;
         trip_type?: string;
@@ -34,9 +34,9 @@ export default function DrivenTrips({
         'CreateDrivenTravel',
         {
             starting_city: drivenTrip?.starting_city || '',
-            starting_zip_code: drivenTrip?.starting_zip_code || 0,
+            starting_zip_code: drivenTrip?.starting_zip_code || '',
             ending_city: drivenTrip?.ending_city || '',
-            ending_zip_code: drivenTrip?.ending_zip_code || 0,
+            ending_zip_code: drivenTrip?.ending_zip_code || '',
             trip_type: drivenTrip?.trip_type || '',
             total_distance: drivenTrip?.total_distance || 0,
             total_distance_given: drivenTrip?.total_distance_given || 0,
@@ -127,17 +127,14 @@ export default function DrivenTrips({
                                 },
                             }}
                             required
-                            type="number"
+                            type="string"
                             defaultValue={
-                                data.starting_zip_code !== 0
+                                data.starting_zip_code !== null
                                     ? data.starting_zip_code
                                     : ''
                             }
                             onChange={(e) =>
-                                setData(
-                                    'starting_zip_code',
-                                    Number(e.target.value),
-                                )
+                                setData('starting_zip_code', e.target.value)
                             }
                             fullWidth
                             error={!!errors['starting_zip_code']}
@@ -180,17 +177,14 @@ export default function DrivenTrips({
                                 },
                             }}
                             required
-                            type="number"
+                            type="string"
                             defaultValue={
-                                data.ending_zip_code !== 0
+                                data.ending_zip_code !== null
                                     ? data.ending_zip_code
                                     : ''
                             }
                             onChange={(e) =>
-                                setData(
-                                    'ending_zip_code',
-                                    Number(e.target.value),
-                                )
+                                setData('ending_zip_code', e.target.value)
                             }
                             fullWidth
                             error={!!errors['ending_zip_code']}
@@ -254,7 +248,7 @@ export default function DrivenTrips({
                         slotProps={{
                             inputLabel: { shrink: true },
                             htmlInput: {
-                                step: 0.01,
+                                step: 1,
                                 min: 1,
                                 maxLength: 15,
                                 minLength: 1,
@@ -291,7 +285,7 @@ export default function DrivenTrips({
                             slotProps={{
                                 inputLabel: { shrink: true },
                                 htmlInput: {
-                                    step: 0.01,
+                                    step: 1,
                                     min: 0,
                                 },
                             }}

@@ -13,7 +13,7 @@ class ExpensesClaimController extends Controller
     public function index()
     {
         return Inertia::render('claim/Informations', [
-            'expensesClaim' => ExpensesClaim::latest()->get(),
+            'expensesClaim' => ExpensesClaim::latest('created_at')->get(),
         ]);
     }
 

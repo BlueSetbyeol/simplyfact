@@ -1,4 +1,4 @@
-import { Head, router } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { Button } from '@mui/material';
 import { useState } from 'react';
 import Header from '@/layouts/Header';
@@ -8,14 +8,26 @@ interface ChoicesProps {
 }
 
 export default function Choices({ expensesClaim }: ChoicesProps) {
+    const { selectedSteps } = usePage<{ selectedSteps: string[] }>().props;
+
     // Déclaration des états pour chaque choix
-    const [hasADrive, setHasADrive] = useState(false);
-    const [hasTravel, setHasTravel] = useState(false);
-    const [hasAccommodation, setHasAccommodation] = useState(false);
-    const [hasMeal, setHasMeal] = useState(false);
-    const [hasTraining, setHasTraining] = useState(false);
-    const [hasOther, setHasOther] = useState(false);
-    const [chosenSteps, setChosenSteps] = useState<string[]>([]);
+    const [hasADrive, setHasADrive] = useState(
+        selectedSteps.includes('driven_travel'),
+    );
+    const [hasTravel, setHasTravel] = useState(
+        selectedSteps.includes('other_travel'),
+    );
+    const [hasAccommodation, setHasAccommodation] = useState(
+        selectedSteps.includes('accommodation'),
+    );
+    const [hasMeal, setHasMeal] = useState(selectedSteps.includes('meal'));
+    const [hasTraining, setHasTraining] = useState(
+        selectedSteps.includes('training'),
+    );
+    const [hasOther, setHasOther] = useState(
+        selectedSteps.includes('other_expenses'),
+    );
+    const [chosenSteps, setChosenSteps] = useState<string[]>(selectedSteps);
 
     function submitChoices(e: { preventDefault: () => void }) {
         e.preventDefault();

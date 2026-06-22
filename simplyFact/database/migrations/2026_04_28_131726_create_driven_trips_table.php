@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('driven_trips', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('expenses_claim_id')
-                ->constrained()
+                ->constrained('expenses_claims')
                 ->cascadeOnDelete();
             $table->foreignUuid('vehicle_id')
                 ->constrained();
             $table->string('starting_city', 150);
-            $table->integer('starting_zip_code');
+            $table->string('starting_zip_code'); // a corriger sur les autres éléments
             $table->string('ending_city', 150);
-            $table->integer('ending_zip_code');
+            $table->string('ending_zip_code'); // a corriger sur les autres éléments
             $table->string('trip_type', 255)->nullable();
             $table->integer('total_distance');
             $table->float('total_price');

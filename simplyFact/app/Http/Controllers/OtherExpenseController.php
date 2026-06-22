@@ -12,7 +12,7 @@ class OtherExpenseController extends Controller
     public function index(ExpensesClaim $expensesClaim)
     {
         return Inertia::render('otherExpenses/OtherExpenses', [
-            'otherExpenses' => OtherExpense::where('expenses_claim_id', $expensesClaim->id)->get(),
+            'otherExpenses' => $expensesClaim->otherExpenses,
             'expensesClaimId' => $expensesClaim->id,
         ]);
     }
