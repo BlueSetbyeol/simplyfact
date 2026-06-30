@@ -69,21 +69,10 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         // Not sure if we do authorize the modification at the end or not
-
-        // Validate
-        // $validated = $request->validate([
-        // 'message' => 'required|string|max:255',
-        // ]);
-        // Update
-        // $expenses_claim->update($validated);
-        // return redirect('/')->with('success', 'Expenses Claim updated!');
     }
 
     public function destroy(string $id)
     {
         // Not sure if we do authorize the deletion at the end or not, what if someone give up midway ?
-
-        // $expenses_claim->delete();
-        // return redirect('/')->with('success', 'Expenses Claim deleted!');
     }
 }

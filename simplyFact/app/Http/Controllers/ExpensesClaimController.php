@@ -53,12 +53,7 @@ class ExpensesClaimController extends Controller
 
     public function edit(ExpensesClaim $expensesClaim)
     {
-        // $claim = ExpensesClaim::with(['meals'])->findOrFail($expensesClaim->id);
-
         // TODO Il va falloir créer une autre page pour présenter la claim dans son ensemble en fonction de là où on en est.
-        // return Inertia::render('claim/Informations', [
-        //     'expensesClaim' => $expensesClaim,
-        // ]);
     }
 
     public function update(ExpensesClaim $expensesClaim, Request $request)
@@ -85,8 +80,5 @@ class ExpensesClaimController extends Controller
     public function destroy(string $id)
     {
         // Not sure if we do authorize the deletion at the end or not, what if someone give up midway ?
-
-        // $expenses_claim->delete();
-        // return redirect('/')->with('success', 'Expenses Claim deleted!');
     }
 }
