@@ -30,10 +30,10 @@ class UserController extends Controller
             'firstname' => 'required|string|max:150|min:3',
             'lastname' => 'required|string|max:150|min:3',
             'address_street' => 'required|string|max:150|min:3',
-            'address_zipcode' => 'required|string|max:6|min:5',
+            'address_zipcode' => 'required|string|max:6|min:5|regex:/^[0-9]+$/',
             'address_city' => 'required|string|max:150|min:3',
             'address_country' => 'required|string|max:150|min:3',
-            'email_address' => 'required|string|max:250|min:3',
+            'email_address' => 'required|email|max:250|min:3',
             'phone_number' => 'required|string|max:15|min:10',
         ]
         );
@@ -48,8 +48,6 @@ class UserController extends Controller
             'email_address' => $validated['email_address'],
             'phone_number' => $validated['phone_number'],
         ]);
-
-        // Auth::login($user);
 
         session(['user_id' => $user->id]);
 

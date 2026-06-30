@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('expenses_claims', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->constrained();
+            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->string('committee_name', 150);
             $table->string('action_name', 255);
             $table->string('action_dates', 255);

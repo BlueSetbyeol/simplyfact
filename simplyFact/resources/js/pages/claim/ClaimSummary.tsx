@@ -391,31 +391,31 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                     <span>{errors.total_given}</span>
                                 )}
                             </div>
-                            <div className="mb-2 flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                            <div className="mb-2 flex w-[90%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <p className="text-sm text-gray-500">
                                     Total du montant abandonné :
                                 </p>
-                                <p className="text-2xl font-medium text-gray-900">
+                                <p className="min-w-[40%] text-xl font-medium text-gray-900">
                                     {(
                                         totalGivenVehicle + data.total_given
                                     ).toFixed(2)}{' '}
                                     €
                                 </p>
                             </div>
-                            <div className="flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                            <div className="flex w-[90%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <div>
                                     <p className="text-sm text-gray-500">
                                         Total remboursé
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-2xl font-medium text-gray-900">
+                                    <p className="min-w-[40%] text-xl font-medium text-gray-900">
                                         {totalReimbursed.toFixed(2)}€
                                     </p>
                                 </div>
                             </div>
 
-                            <section className="flex w-[70%] items-center justify-between py-3">
+                            <section className="flex w-[90%] items-center justify-between py-3">
                                 <Checkbox
                                     checked={informationConfirmed}
                                     onChange={handleChange}
@@ -435,7 +435,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                 sx={{
                                     backgroundColor: '#2D6A2D',
                                     '&:hover': { backgroundColor: '#1F4F1F' },
-                                    width: '70%',
+                                    width: '90%',
                                 }}
                             >
                                 Valider la note de frais
@@ -443,31 +443,31 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                         </form>
                     ) : (
                         <div className="m-4 mb-6 flex w-full flex-col items-center justify-between rounded-xl p-4">
-                            <div className="mb-2 flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                            <div className="mb-2 flex w-[90%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <p className="text-sm text-gray-500">
                                     Total du montant abandonné :
                                 </p>
-                                <p className="text-2xl font-medium text-gray-900">
+                                <p className="min-w-[40%] text-xl font-medium text-gray-900">
                                     {(
                                         totalGivenVehicle + data.total_given
                                     ).toFixed(2)}{' '}
                                     €
                                 </p>
                             </div>
-                            <div className="flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                            <div className="flex w-[90%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <div>
                                     <p className="text-sm text-gray-500">
                                         Total remboursé
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-2xl font-medium text-gray-900">
+                                    <p className="min-w-[40%] text-xl font-medium text-gray-900">
                                         {totalReimbursed.toFixed(2)}€
                                     </p>
                                 </div>
                             </div>
 
-                            <section className="flex w-[70%] items-center justify-between py-3">
+                            <section className="flex w-[90%] items-center justify-between py-3">
                                 <Checkbox
                                     checked={informationConfirmed}
                                     onChange={handleChange}
@@ -487,7 +487,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                 sx={{
                                     backgroundColor: '#2D6A2D',
                                     '&:hover': { backgroundColor: '#1F4F1F' },
-                                    width: '70%',
+                                    width: '90%',
                                 }}
                             >
                                 Valider la note de frais

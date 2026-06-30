@@ -17,9 +17,6 @@ class MealController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(ExpensesClaim $expensesClaim)
     {
         return Inertia::render('meal/MealForm', [
@@ -29,7 +26,6 @@ class MealController extends Controller
 
     public function store(Request $request, ExpensesClaim $expensesClaim)
     {
-        // validation de la data
         $validated = $request->validate([
             'number_of_meal' => 'required|integer|min:1',
             'total_price' => 'required|decimal:0,2|min:0',

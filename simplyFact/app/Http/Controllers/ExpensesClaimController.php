@@ -63,8 +63,6 @@ class ExpensesClaimController extends Controller
 
     public function update(ExpensesClaim $expensesClaim, Request $request)
     {
-        // Not sure if we do authorize the modification at the end or not
-
         // ajout des valeurs de fin de note de frais
         $validated = $request->validate([
             'total_reimbursed' => 'decimal:0,2',

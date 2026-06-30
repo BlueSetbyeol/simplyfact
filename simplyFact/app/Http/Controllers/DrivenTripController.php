@@ -34,9 +34,9 @@ class DrivenTripController extends Controller
         // validation de la data
         $validated = $request->validate([
             'starting_city' => 'required|string|max:150|min:4',
-            'starting_zip_code' => 'required|string|max:6|min:5',
+            'starting_zip_code' => 'required|string|max:6|min:5|regex:/^[0-9]+$/',
             'ending_city' => 'required|string|max:150|min:4',
-            'ending_zip_code' => 'required|string|max:6|min:5',
+            'ending_zip_code' => 'required|string|max:6|min:5|regex:/^[0-9]+$/',
             'trip_type' => 'string|max:255|min:4',
             'total_distance' => 'required|integer|min:1',
             'total_distance_given' => 'nullable|integer',

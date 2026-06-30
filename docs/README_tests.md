@@ -47,9 +47,9 @@ Vous devez également préciser clairement que cette démarche est reconstruite 
 Le projet utilisant le framework Laravel, certaines options ont été installé de base. Voici ce qui existe et qui ne va pas être modifié :
 
 - le dossier _tests_ (les tests seront ajouté dans les dossiers enfants suivant)
-- le dossier _Feature_ (pas de modification) - le dossier _Auth_ (pas de modification) - le dossier _Settings_ (pas de modification) - le fichier _DashboardTest.php_ (pas de modification)
-  le dossier _Unit_ (les tests seront ajouté ici)
-  Les fichiers _ExampleTest.php_ existant qui seront laissé tel quel.
+- le dossier _Feature_ (suppression) sauf fichier _ExampleTest.php_
+- le dossier _Unit_ (les tests seront ajouté ici)
+- Les fichiers _ExampleTest.php_ existant qui seront laissé tel quel.
 
 ## Ajouts
 
@@ -108,4 +108,5 @@ Il faut utilisé Cypress, Playwright en priorité - simuler un comportement util
 
 - composer install
 - composer run dev
-- composer run test (???)
+- ./vendor/bin/pest
+-
