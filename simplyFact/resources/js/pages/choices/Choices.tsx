@@ -1,0 +1,523 @@
+import { Head, router, usePage } from '@inertiajs/react';
+import { Button } from '@mui/material';
+import { useState } from 'react';
+import Header from '@/layouts/Header';
+
+interface ChoicesProps {
+    expensesClaim: { id: number };
+}
+
+export default function Choices({ expensesClaim }: ChoicesProps) {
+    const { selectedSteps } = usePage<{ selectedSteps: string[] }>().props;
+
+    // Déclaration des états pour chaque choix
+    const [hasADrive, setHasADrive] = useState(
+        selectedSteps.includes('driven_travel'),
+    );
+    const [hasTravel, setHasTravel] = useState(
+        selectedSteps.includes('other_travel'),
+    );
+    const [hasAccommodation, setHasAccommodation] = useState(
+        selectedSteps.includes('accommodation'),
+    );
+    const [hasMeal, setHasMeal] = useState(selectedSteps.includes('meal'));
+    const [hasTraining, setHasTraining] = useState(
+        selectedSteps.includes('training'),
+    );
+    const [hasOther, setHasOther] = useState(
+        selectedSteps.includes('other_expenses'),
+    );
+    const [chosenSteps, setChosenSteps] = useState<string[]>(selectedSteps);
+
+    function submitChoices(e: { preventDefault: () => void }) {
+        e.preventDefault();
+        router.post(`/expenses-claims/${expensesClaim.id}/flow/choices`, {
+            steps: chosenSteps,
+            expensesClaimId: expensesClaim.id,
+        });
+    }
+
+    return (
+        <Header>
+            <Head title="Choix des étapes"></Head>
+            <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-4">
+                <h1 className="text-xl font-medium text-gray-900">
+                    Choix des étapes
+                </h1>
+                <p className="mb-4 text-gray-500">
+                    Vous voulez déclarer une note de frais pour:
+                </p>
+
+                <hr className="mb-6 border-gray-100" />
+
+                <form onSubmit={submitChoices}>
+                    <div className="flex flex-col gap-4">
+                        {/* Frais de déplacement */}
+                        <div className="flex flex-col gap-2">
+                            <p className="text-gray-700">
+                                Un ou des déplacements véhiculé ?
+                            </p>
+
+                            <div className="flex flex-row gap-2">
+                                <Button
+                                    variant={
+                                        hasADrive ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasADrive(true);
+                                        chosenSteps.push('driven_travel');
+                                        setChosenSteps(chosenSteps);
+                                    }}
+                                    sx={
+                                        hasADrive
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Oui
+                                </Button>
+                                <Button
+                                    variant={
+                                        !hasADrive ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasADrive(false);
+                                        setChosenSteps(
+                                            chosenSteps.filter(
+                                                (e) => e !== 'driven_travel',
+                                            ),
+                                        );
+                                    }}
+                                    sx={
+                                        !hasADrive
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Non
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Frais de déplacement */}
+                        <div className="flex flex-col gap-3">
+                            <p className="text-gray-700">
+                                Un ou des frais de déplacements hors véhicule ?
+                            </p>
+
+                            <div className="flex flex-row gap-1">
+                                <Button
+                                    variant={
+                                        hasTravel ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasTravel(true);
+                                        chosenSteps.push('other_travel');
+                                        setChosenSteps(chosenSteps);
+                                    }}
+                                    sx={
+                                        hasTravel
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Oui
+                                </Button>
+                                <Button
+                                    variant={
+                                        !hasTravel ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasTravel(false);
+                                        setChosenSteps(
+                                            chosenSteps.filter(
+                                                (e) => e !== 'other_travel',
+                                            ),
+                                        );
+                                    }}
+                                    sx={
+                                        !hasTravel
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Non
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Frais d'hébergement */}
+                        <div className="flex flex-col gap-2">
+                            <p className="text-gray-700">
+                                Un ou des hébergements ?
+                            </p>
+
+                            <div className="flex flex-row gap-1">
+                                <Button
+                                    variant={
+                                        hasAccommodation
+                                            ? 'contained'
+                                            : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasAccommodation(true);
+                                        chosenSteps.push('accommodation');
+                                        setChosenSteps(chosenSteps);
+                                    }}
+                                    sx={
+                                        hasAccommodation
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Oui
+                                </Button>
+                                <Button
+                                    variant={
+                                        !hasAccommodation
+                                            ? 'contained'
+                                            : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasAccommodation(false);
+                                        setChosenSteps(
+                                            chosenSteps.filter(
+                                                (e) => e !== 'accommodation',
+                                            ),
+                                        );
+                                    }}
+                                    sx={
+                                        !hasAccommodation
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Non
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Frais de repas */}
+                        <div className="flex flex-col gap-2">
+                            <p className="text-gray-700">Un ou des repas ?</p>
+
+                            <div className="flex flex-row gap-1">
+                                <Button
+                                    variant={hasMeal ? 'contained' : 'outlined'}
+                                    onClick={() => {
+                                        setHasMeal(true);
+                                        chosenSteps.push('meal');
+                                        setChosenSteps(chosenSteps);
+                                    }}
+                                    sx={
+                                        hasMeal
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Oui
+                                </Button>
+                                <Button
+                                    variant={
+                                        !hasMeal ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasMeal(false);
+                                        setChosenSteps(
+                                            chosenSteps.filter(
+                                                (e) => e !== 'meal',
+                                            ),
+                                        );
+                                    }}
+                                    sx={
+                                        !hasMeal
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Non
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Stage */}
+                        <div className="flex flex-col gap-3">
+                            <p className="text-gray-700">
+                                Indémnisation de stage ?
+                            </p>
+
+                            <div className="flex flex-row gap-1">
+                                <Button
+                                    variant={
+                                        hasTraining ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasTraining(true);
+                                        chosenSteps.push('training');
+                                        setChosenSteps(chosenSteps);
+                                    }}
+                                    sx={
+                                        hasTraining
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Oui
+                                </Button>
+                                <Button
+                                    variant={
+                                        !hasTraining ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasTraining(false);
+                                        setChosenSteps(
+                                            chosenSteps.filter(
+                                                (e) => e !== 'training',
+                                            ),
+                                        );
+                                    }}
+                                    sx={
+                                        !hasTraining
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Non
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Autres frais */}
+                        <div className="flex flex-col gap-2">
+                            <p className="text-gray-700">
+                                Un ou des autres frais ?
+                            </p>
+
+                            <div className="flex flex-row gap-1">
+                                <Button
+                                    variant={
+                                        hasOther ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasOther(true);
+                                        chosenSteps.push('other_expenses');
+                                        setChosenSteps(chosenSteps);
+                                    }}
+                                    sx={
+                                        hasOther
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Oui
+                                </Button>
+                                <Button
+                                    variant={
+                                        !hasOther ? 'contained' : 'outlined'
+                                    }
+                                    onClick={() => {
+                                        setHasOther(false);
+                                        setChosenSteps(
+                                            chosenSteps.filter(
+                                                (e) => e !== 'other_expenses',
+                                            ),
+                                        );
+                                    }}
+                                    sx={
+                                        !hasOther
+                                            ? {
+                                                  backgroundColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      backgroundColor:
+                                                          '#1F4F1F',
+                                                  },
+                                              }
+                                            : {
+                                                  color: '#2D6A2D',
+                                                  borderColor: '#2D6A2D',
+                                                  '&:hover': {
+                                                      borderColor: '#1F4F1F',
+                                                      backgroundColor:
+                                                          '#F0F7F0',
+                                                  },
+                                              }
+                                    }
+                                >
+                                    Non
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        disabled={chosenSteps.length < 1 ? true : false}
+                        className="!mt-6"
+                        sx={{
+                            backgroundColor: '#2D6A2D',
+                            '&:hover': { backgroundColor: '#1F4F1F' },
+                        }}
+                    >
+                        Suivant
+                    </Button>
+                </form>
+            </div>
+        </Header>
+    );
+}
