@@ -54,7 +54,7 @@ class VehicleController extends Controller
 
         session(['vehicle_id' => $vehicle->id]);
 
-        return (new FlowController)->enterChild('driven_trip', $expensesClaim);
+        return app(FlowController::class)->enterChild('driven_trip', $expensesClaim);
     }
 
     public function show(string $id)

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('firstname', 150);
             $table->string('lastname', 150);
             $table->string('address_street', 150);
-            $table->string('address_zipcode'); // a corriger sur les autres éléments 6 max
+            $table->string('address_zipcode');
             $table->string('address_city', 150);
             $table->string('address_country', 150);
             $table->string('email_address', 250);

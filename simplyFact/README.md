@@ -1,4 +1,26 @@
-# SimplyFact - Create expense claims for FFS
+# SimplyFact - Create expense claims for Fédération Française de Spéléologie
+
+SimplyFact is a school group project made in the first semester of 2026.
+
+It aims to help an French association's member to claim their expenses made during some activities or other.
+
+We made this project around a flow that simplify the process to the utmost necessary details.
+To complete the expenses claim, members will have first to declare wich expenses they are interested to reclaim and then follow the flow as they guide them from one step to another.
+
+## Technologies
+
+The project was made with the Starter pack of Laravel and use the following library :
+
+- React Js
+- Inertia
+- TypeScript
+- Tailwind CSS
+- Material UI
+
+To start with clone this repository and run the following command :
+
+- php artisan:migrate
+- composer run dev
 
 ## Send email
 

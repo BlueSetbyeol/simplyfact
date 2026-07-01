@@ -70,7 +70,7 @@ class DrivenTripController extends Controller
             ...$validated,
         ]);
 
-        return (new FlowController)->enterChild('driven_travel', $expensesClaim);
+        return app(FlowController::class)->enterChild('driven_travel', $expensesClaim);
     }
 
     public function show(DrivenTrip $drivenTrip)

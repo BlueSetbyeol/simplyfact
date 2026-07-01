@@ -2,8 +2,11 @@
 
 namespace Tests;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Laravel\Fortify\Features;
+
+uses(RefreshDatabase::class);
 
 abstract class TestCase extends BaseTestCase
 {

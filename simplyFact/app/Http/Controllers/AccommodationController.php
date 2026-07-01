@@ -53,7 +53,7 @@ class AccommodationController extends Controller
             ...$validated,
         ]);
 
-        return (new FlowController)->enterChild('accommodation', $expensesClaim);
+        return app(FlowController::class)->enterChild('accommodation', $expensesClaim);
     }
 
     public function show(Accommodation $accommodation)

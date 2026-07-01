@@ -45,7 +45,7 @@ class TrainingExpenseController extends Controller
             ...$validated,
         ]);
 
-        return (new FlowController)->completeStep($expensesClaim);
+        return app(FlowController::class)->completeStep($expensesClaim);
     }
 
     public function show(TrainingExpense $trainingExpense)

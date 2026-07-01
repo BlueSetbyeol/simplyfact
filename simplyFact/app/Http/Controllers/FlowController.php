@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\ExpensesClaim;
+use App\Services\FlowCleaner;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class FlowController extends Controller
 {
+    public function __construct(private FlowCleaner $flowCleaner) {}
+
     // Montre la page de choix
     public function choices(ExpensesClaim $expensesClaim)
     {
+        $this->flowCleaner->resetSessionIfClaimChanged($expensesClaim);
+
         return Inertia::render('choices/Choices', [
             'expensesClaim' => $expensesClaim,
         ]);
@@ -20,12 +25,14 @@ class FlowController extends Controller
     // Récupère les choix de l'utilisateur et renvoie vers la page suivante qui résume les choix
     public function saveChoices(Request $request, ExpensesClaim $expensesClaim)
     {
+        $this->flowCleaner->resetSessionIfClaimChanged($expensesClaim);
+
         $selected = $request->input('steps', []);
 
         $valid = ['driven_travel', 'other_travel', 'accommodation', 'meal', 'training', 'other_expenses'];
         $selected = array_values(array_intersect($selected, $valid));
 
-        session(['pending_steps' => $selected]);
+        session(['pending_steps' => $selected, 'expensesClaimId' => $expensesClaim->id]);
 
         return redirect()->route('expenses-claims.flow.summary', $expensesClaim);
     }

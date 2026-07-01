@@ -41,7 +41,7 @@ class OtherTripsController extends Controller
             ...$validated,
         ]);
 
-        return (new FlowController)->enterChild('other_travel', $expensesClaim);
+        return app(FlowController::class)->enterChild('other_travel', $expensesClaim);
     }
 
     public function show(OtherTrip $otherTrip)

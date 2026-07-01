@@ -34,14 +34,17 @@ class MealController extends Controller
 
         // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
         $max_price_per_day = 25;
-        $validated['reimbursed_price'] = PriceCalculator::calculateMaximumPricePerMeal($validated['total_price'], $max_price_per_day, $validated['number_of_meal']);
+        $validated['reimbursed_price'] = PriceCalculator::calculateMaximumPricePerMeal(
+            $validated['total_price'],
+            $max_price_per_day, $validated['number_of_meal']
+        );
 
         Meal::create([
             'expenses_claim_id' => $expensesClaim->id,
             ...$validated,
         ]);
 
-        return (new FlowController)->completeStep($expensesClaim);
+        return app(FlowController::class)->completeStep($expensesClaim);
     }
 
     public function show(Meal $meal)

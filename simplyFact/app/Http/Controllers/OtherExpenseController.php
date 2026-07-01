@@ -41,7 +41,7 @@ class OtherExpenseController extends Controller
             ...$validated,
         ]);
 
-        return (new FlowController)->enterChild('other_expenses', $expensesClaim);
+        return app(FlowController::class)->enterChild('other_expenses', $expensesClaim);
     }
 
     public function show(OtherExpense $otherExpense)
