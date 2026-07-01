@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Accommodation;
 use App\Models\ExpensesClaim;
+use App\Services\PriceCalculator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -45,14 +46,14 @@ class AccommodationController extends Controller
         $ceiling = $ceilings[$validated['accommodation_type']] ?? 0;
 
         // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
-        $validated['reimbursed_price'] = min($validated['total_price'], $ceiling * $validated['nb_of_night']);
+        $validated['reimbursed_price'] = PriceCalculator::calculateMaximumPricePerNight($validated['total_price'], $ceiling, $validated['nb_of_night']);
 
         Accommodation::create([
             'expenses_claim_id' => $expensesClaim->id,
             ...$validated,
         ]);
 
-        return (new FlowController)->enterChild('accommodation', $expensesClaim);
+        return app(FlowController::class)->enterChild('accommodation', $expensesClaim);
     }
 
     public function show(Accommodation $accommodation)
@@ -62,41 +63,16 @@ class AccommodationController extends Controller
 
     public function edit(Accommodation $accommodation)
     {
-        $claimId = session('expenses_claim_id');
-        $accommodations = Accommodation::where('expenses_claim_id', $claimId)->get();
+        //
     }
 
     public function update(Request $request, Accommodation $accommodation, ExpensesClaim $expensesClaim)
     {
-        $validated = $request->validate([
-            'accommodation_type' => 'required|string|min:5',
-            'nb_of_night' => 'required|integer|min:1',
-            'total_price' => 'required|decimal:0,2|min:0',
-            'expenses_claim_id' => ['exists:expensesClaim,id'],
-        ]);
-
-        $ceilings = [
-            'Hôtel province hors coeur de ville' => 70,
-            'Hôtel province coeur de ville' => 90,
-            'Hôtel Lyon' => 100,
-            'Hôtel Paris' => 150,
-        ];
-
-        $ceiling = $ceilings[$validated['accommodation_type']] ?? 0;
-
-        // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
-        $validated['reimbursed_price'] = min($validated['total_price'], $ceiling * $validated['nb_of_night']);
-
-        $accommodation->update($validated);
-
-        // Edit/update stays on the same page, no flow movement
-        return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
+        //
     }
 
     public function destroy(Accommodation $accommodation, ExpensesClaim $expensesClaim)
     {
-        $accommodation->delete();
-
-        return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
+        //
     }
 }

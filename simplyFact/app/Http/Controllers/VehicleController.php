@@ -54,7 +54,7 @@ class VehicleController extends Controller
 
         session(['vehicle_id' => $vehicle->id]);
 
-        return (new FlowController)->enterChild('driven_trip', $expensesClaim);
+        return app(FlowController::class)->enterChild('driven_trip', $expensesClaim);
     }
 
     public function show(string $id)
@@ -64,39 +64,16 @@ class VehicleController extends Controller
 
     public function edit(User $user)
     {
-        // $vehicle = Vehicle::with(['users'])->findOrFail($user->id);
-
-        // TODO Il va falloir créer une autre page pour présenter la claim dans son ensemble en fonction de là où on en est.
-
-        // return Inertia::render('drivenTravel/Vehicle', [
-        //     'vehicle' => $vehicle,
-        //     'user' => $user,
-        // ]);
+        //
     }
 
     public function update(Vehicle $vehicle, Request $request)
     {
-        // Not sure if we do authorize the modification at the end or not
-
-        // ajout des valeurs de fin de note de frais
-        // $validated = $request->validate([
-        //     'vehicle_type' => 'required|enum',
-        //     'electrical' => 'required|boolean',
-        //     'power' => 'required|string|max:150|min:3',
-        //     'price_given' => 'required|decimal:0,2|min:0',
-        //     'number_plate' => 'required|string|max:150|min:8',
-        // ]);
-
-        // $vehicle->update($validated);
-
-        // return redirect()->route('vehicle', $vehicle);
+        //
     }
 
     public function destroy(string $id)
     {
-        // Not sure if we do authorize the deletion at the end or not, what if someone give up midway ?
-
-        // $vehicle->delete();
-        // return redirect('/')->with('success', 'Vehicle deleted!');
+        //
     }
 }

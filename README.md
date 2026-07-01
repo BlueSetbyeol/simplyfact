@@ -1,45 +1,37 @@
-# SimplyFact - Create expense claims for FFS
+# Présentation
 
-## Send email
+Ce projet a été réalisé à l'occasion de plusieurs cours applicatif qui m'ont donné l'occasion de mettre en pratique plusieurs disciplines :
 
-To test email sending locally:
+- Application Web ;
+- Laravel + PHP & Inertia ;
+- Utilisation de S3, Mailpit et création de PDF ;
+- Tests unitaires, d'intégration, fonctionnels & E2E ;
+- À confirmer : Déploiement sur Laravel Cloud ;
 
-- Install Mailpit: https://mailpit.axllent.org/docs/install/
+Je vous invite à venir le découvrir et, pourquoi pas, à le prendre en main à votre tour si celui-ci vous intéresse.
 
-- Change your `.env` file:
+## SimplyFact, c'est quoi ?
 
-```env
-MAIL_MAILER=smtp
-MAIL_SCHEME=null
-MAIL_HOST=127.0.0.1
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_FROM_ADDRESS="noreply@simplyfact.fr"
-MAIL_FROM_NAME="${APP_NAME}"
-MAIL_TO_ACCOUNTANT="comptable@ffs.fr"
-```
+SimplyFact répond à la demande de la Fédération Française de Spéléologie, qui doit traiter les notes de frais et les remboursements associés de toutes les associations qui lui sont rattachées.
+_Les photos utilisés dans la page d'accueil sont la propriété de la FFS_
 
-- Start Mailpit in a terminal:
+Originellement, un fichier Excel existait, mais il restait peu accessible et compliqué pour la plupart des gens.
+C'est pourquoi il nous a été demandé de proposer une solution web, facile d'accès et d'usage pour tous les utilisateurs.
 
-```bash
-mailpit
-```
+De cette demande, en apparence simple, est né SimplyFact.
 
-- Mailpit UI available at http://localhost:8025
+## Ce que vous trouverez dans ce projet
 
-## S3 storage
+### docs
 
-Our app uses s3 storage and signed url to stock uploaded files.
-You need to :
+Le projet étant issu d'un travail de groupe dans le cadre d'une formation, vous trouverez dans ce dossier les documents de réflexion ayant mené au développement de ce projet.
 
-- configure your own s3 bucket and add a user with appropriate policies in IAM.
-- complete env variables as needed
+Il s'y trouve aussi le document descriptif des tests effectués pour le projet ainsi qu'un README plus spécifique pour expliquer les démarches effectuées.
 
-```env
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=tour_secret_access_key
-AWS_DEFAULT_REGION=eu-west-3
-AWS_BUCKET=simplyfact
-AWS_USE_PATH_STYLE_ENDPOINT=false
-```
+### simplyFact
+
+Ce dossier contient le projet lui-même, construit en utilisant Laravel et son architecture si caractéristique.
+
+## Comment installer le projet
+
+Entrez dans le dossier simplyFact et lisez le README local.

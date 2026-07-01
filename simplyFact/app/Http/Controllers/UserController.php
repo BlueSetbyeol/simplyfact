@@ -30,10 +30,10 @@ class UserController extends Controller
             'firstname' => 'required|string|max:150|min:3',
             'lastname' => 'required|string|max:150|min:3',
             'address_street' => 'required|string|max:150|min:3',
-            'address_zipcode' => 'required|string|max:6|min:5',
+            'address_zipcode' => 'required|string|max:6|min:5|regex:/^[0-9]+$/',
             'address_city' => 'required|string|max:150|min:3',
             'address_country' => 'required|string|max:150|min:3',
-            'email_address' => 'required|string|max:250|min:3',
+            'email_address' => 'required|email|max:250|min:3',
             'phone_number' => 'required|string|max:15|min:10',
         ]
         );
@@ -48,8 +48,6 @@ class UserController extends Controller
             'email_address' => $validated['email_address'],
             'phone_number' => $validated['phone_number'],
         ]);
-
-        // Auth::login($user);
 
         session(['user_id' => $user->id]);
 
@@ -71,21 +69,10 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         // Not sure if we do authorize the modification at the end or not
-
-        // Validate
-        // $validated = $request->validate([
-        // 'message' => 'required|string|max:255',
-        // ]);
-        // Update
-        // $expenses_claim->update($validated);
-        // return redirect('/')->with('success', 'Expenses Claim updated!');
     }
 
     public function destroy(string $id)
     {
         // Not sure if we do authorize the deletion at the end or not, what if someone give up midway ?
-
-        // $expenses_claim->delete();
-        // return redirect('/')->with('success', 'Expenses Claim deleted!');
     }
 }

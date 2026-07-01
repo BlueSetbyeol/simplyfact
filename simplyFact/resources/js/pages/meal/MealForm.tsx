@@ -112,7 +112,7 @@ export default function MealForm({ expensesClaimId, meal }: MealFormProps) {
                     <div className="mb-6 flex items-center justify-between rounded-xl bg-gray-50 p-4">
                         <div>
                             <p className="text-sm text-gray-500">
-                                Total remboursé
+                                Total à rembourser
                             </p>
                             <p className="mt-1 text-xs text-gray-400">
                                 Plafond de {mealMaxPrice}€ par repas, soit :{' '}

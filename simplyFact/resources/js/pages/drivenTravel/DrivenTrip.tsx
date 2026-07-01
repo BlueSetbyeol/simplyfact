@@ -84,10 +84,10 @@ export default function DrivenTrips({
 
     return (
         <Header>
-            <Head title="Trajet conduit"></Head>
+            <Head title="Trajet conduits"></Head>
             <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6">
                 <h1 className="mb-2 text-xl font-medium text-gray-900">
-                    Trajet conduit
+                    Trajet conduits
                 </h1>
 
                 <hr className="mb-8 border-gray-100" />

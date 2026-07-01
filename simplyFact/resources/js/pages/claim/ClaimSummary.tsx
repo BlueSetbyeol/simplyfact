@@ -180,7 +180,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                                 {travel.total_price_given}
                                             </p>
                                             <p className="mb-1 text-gray-500">
-                                                Total remboursé :{' '}
+                                                Total à rembourser :{' '}
                                                 {travel.reimbursed_price}
                                             </p>
                                         </Card>
@@ -192,7 +192,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                         expensesClaim?.other_trips.length > 0 && (
                             <div className="mb-2 flex w-full flex-col gap-2 rounded-xl bg-gray-50 px-4 py-4">
                                 <h3 className="text-gray-500">
-                                    Les Trajets non conduit
+                                    Les Trajets non conduits
                                 </h3>
                                 {expensesClaim?.other_trips.map(
                                     (travel, index) => (
@@ -202,7 +202,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                                 {travel.expense_name}
                                             </p>
                                             <p className="mb-1 text-gray-500">
-                                                Total remboursé :{' '}
+                                                Total à rembourser :{' '}
                                                 {travel.reimbursed_price}
                                             </p>
                                         </Card>
@@ -227,7 +227,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                                 {lodge.nb_of_night}
                                             </p>
                                             <p className="mb-1 text-gray-500">
-                                                Total remboursé :{' '}
+                                                Total à rembourser :{' '}
                                                 {lodge.reimbursed_price}
                                             </p>
                                         </Card>
@@ -244,7 +244,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                     {expensesClaim?.meals.number_of_meal}
                                 </p>
                                 <p className="mb-1 text-gray-500">
-                                    Total remboursé :{' '}
+                                    Total à rembourser :{' '}
                                     {expensesClaim?.meals.reimbursed_price}
                                 </p>
                             </Card>
@@ -262,7 +262,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                     }
                                 </p>
                                 <p className="mb-1 text-gray-500">
-                                    Total remboursé :{' '}
+                                    Total à rembourser :{' '}
                                     {
                                         expensesClaim?.training_expenses
                                             .reimbursed_price
@@ -285,7 +285,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                                 {expense.expense_name}
                                             </p>
                                             <p className="mb-1 text-gray-500">
-                                                Total remboursé :{' '}
+                                                Total à rembourser :{' '}
                                                 {expense.reimbursed_price}
                                             </p>
                                         </Card>
@@ -356,7 +356,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                             onSubmit={endFlow}
                             className="flex w-full flex-col items-center justify-between"
                         >
-                            <div className="my-2 flex w-[70%] flex-col items-center justify-between gap-5">
+                            <div className="my-2 flex w-[90%] flex-col items-center justify-between gap-5">
                                 <TextField
                                     label="Somme abandonnée"
                                     slotProps={{
@@ -391,31 +391,31 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                     <span>{errors.total_given}</span>
                                 )}
                             </div>
-                            <div className="mb-2 flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                            <div className="mb-2 flex w-[90%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <p className="text-sm text-gray-500">
                                     Total du montant abandonné :
                                 </p>
-                                <p className="text-2xl font-medium text-gray-900">
+                                <p className="min-w-[40%] text-end text-xl font-medium text-gray-900">
                                     {(
                                         totalGivenVehicle + data.total_given
                                     ).toFixed(2)}{' '}
                                     €
                                 </p>
                             </div>
-                            <div className="flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                            <div className="flex w-[90%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <div>
                                     <p className="text-sm text-gray-500">
-                                        Total remboursé
+                                        Total à rembourser
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-2xl font-medium text-gray-900">
-                                        {totalReimbursed.toFixed(2)}€
+                                    <p className="min-w-[40%] text-end text-xl font-medium text-gray-900">
+                                        {totalReimbursed.toFixed(2)} €
                                     </p>
                                 </div>
                             </div>
 
-                            <section className="flex w-[70%] items-center justify-between py-3">
+                            <section className="flex w-[90%] items-center justify-between py-3">
                                 <Checkbox
                                     checked={informationConfirmed}
                                     onChange={handleChange}
@@ -435,7 +435,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                 sx={{
                                     backgroundColor: '#2D6A2D',
                                     '&:hover': { backgroundColor: '#1F4F1F' },
-                                    width: '70%',
+                                    width: '90%',
                                 }}
                             >
                                 Valider la note de frais
@@ -443,31 +443,31 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                         </form>
                     ) : (
                         <div className="m-4 mb-6 flex w-full flex-col items-center justify-between rounded-xl p-4">
-                            <div className="mb-2 flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                            <div className="mb-2 flex w-[90%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <p className="text-sm text-gray-500">
                                     Total du montant abandonné :
                                 </p>
-                                <p className="text-2xl font-medium text-gray-900">
+                                <p className="min-w-[40%] text-end text-xl font-medium text-gray-900">
                                     {(
                                         totalGivenVehicle + data.total_given
                                     ).toFixed(2)}{' '}
                                     €
                                 </p>
                             </div>
-                            <div className="flex w-[70%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
+                            <div className="flex w-[90%] items-center justify-between gap-2 rounded-xl bg-gray-50 p-4">
                                 <div>
                                     <p className="text-sm text-gray-500">
-                                        Total remboursé
+                                        Total à rembourser
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-2xl font-medium text-gray-900">
-                                        {totalReimbursed.toFixed(2)}€
+                                    <p className="min-w-[40%] text-end text-xl font-medium text-gray-900">
+                                        {totalReimbursed.toFixed(2)} €
                                     </p>
                                 </div>
                             </div>
 
-                            <section className="flex w-[70%] items-center justify-between py-3">
+                            <section className="flex w-[90%] items-center justify-between py-3">
                                 <Checkbox
                                     checked={informationConfirmed}
                                     onChange={handleChange}
@@ -487,7 +487,7 @@ export default function ClaimSummary({ expensesClaim }: ClaimSummaryProps) {
                                 sx={{
                                     backgroundColor: '#2D6A2D',
                                     '&:hover': { backgroundColor: '#1F4F1F' },
-                                    width: '70%',
+                                    width: '90%',
                                 }}
                             >
                                 Valider la note de frais

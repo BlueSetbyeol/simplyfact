@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DrivenTrip;
 use App\Models\ExpensesClaim;
 use App\Models\Vehicle;
+use App\Services\PriceCalculator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -34,9 +35,9 @@ class DrivenTripController extends Controller
         // validation de la data
         $validated = $request->validate([
             'starting_city' => 'required|string|max:150|min:4',
-            'starting_zip_code' => 'required|string|max:6|min:5',
+            'starting_zip_code' => 'required|string|max:6|min:5|regex:/^[0-9]+$/',
             'ending_city' => 'required|string|max:150|min:4',
-            'ending_zip_code' => 'required|string|max:6|min:5',
+            'ending_zip_code' => 'required|string|max:6|min:5|regex:/^[0-9]+$/',
             'trip_type' => 'string|max:255|min:4',
             'total_distance' => 'required|integer|min:1',
             'total_distance_given' => 'nullable|integer',
@@ -53,9 +54,13 @@ class DrivenTripController extends Controller
             default => 0.14,
         };
 
-        $validated['total_price'] = round($rate * ($validated['total_distance'] - ($validated['total_distance_given'] ?? 0)), 2);
+        $validated['total_price'] = PriceCalculator::calculateTotalPrice(
+            $rate,
+            $validated['total_distance'],
+            $validated['total_distance_given'] ?? 0
+        );
 
-        $validated['total_price_given'] = round($vehicle->price_given * ($validated['total_distance_given'] ?? 0), 2);
+        $validated['total_price_given'] = PriceCalculator::calculateTotalPriceGiven($vehicle->price_given, $validated['total_distance_given'] ?? 0);
 
         $validated['reimbursed_price'] = $validated['total_price'];
 
@@ -65,7 +70,7 @@ class DrivenTripController extends Controller
             ...$validated,
         ]);
 
-        return (new FlowController)->enterChild('driven_travel', $expensesClaim);
+        return app(FlowController::class)->enterChild('driven_travel', $expensesClaim);
     }
 
     public function show(DrivenTrip $drivenTrip)
@@ -75,46 +80,16 @@ class DrivenTripController extends Controller
 
     public function edit(DrivenTrip $drivenTrip)
     {
-        // $claimId = session('expenses_claim_id');
-        // $drivenTrip = DrivenTrip::where('expenses_claim_id', $claimId)->get();
-
-        // $vehicleID = session('vehicle_id');
-        // $vehicle = Vehicle::find($vehicleID);
-
-        // return Inertia::render('drivenTravel/DrivenTrip', [
-        //     'drivenTrip' => null,
-        //     'vehicle' => $vehicle,
-        //     'expensesClaimId' => $expensesClaim->id]);
+        //
     }
 
     public function update(Request $request, DrivenTrip $drivenTrip, ExpensesClaim $expensesClaim)
     {
-        // $validated = $request->validate([
-        // 'starting_city' => 'required|string|max:150|min:5',
-        // 'strating_zip_code' => 'required|numeric',
-        // 'ending_city' => 'required|string|max:150|min:5',
-        // 'ending_zip_code' => 'required|numeric',
-        // 'trip_type' => 'string|max:255|min:5',
-        // 'total_distance' => 'required|integer|min:1',
-        // 'total_price' => 'required|decimal:0,2|min:0',
-        // 'total_distance_given' => 'required|integer|min:1',
-        // 'total_price_given' => 'required|decimal:0,2|min:0',
-        // 'description' => 'required|string|max:255|min:5',
-        // ]);
-
-        // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
-        // $validated['reimbursed_price'] = $validated['total_price'];
-
-        // $drivenTrip->update($validated);
-
-        // Edit/update stays on the same page, no flow movement
-        // return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
+        //
     }
 
     public function destroy(DrivenTrip $drivenTrip, ExpensesClaim $expensesClaim)
     {
-        $drivenTrip->delete();
-
-        return redirect()->route('expenses-claims.flow.return-parent', $expensesClaim);
+        //
     }
 }

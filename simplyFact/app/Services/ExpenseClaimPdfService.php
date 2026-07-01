@@ -15,10 +15,7 @@ class ExpenseClaimPdfService
         private readonly PdfGenerator $pdfGenerator
     ) {}
 
-    /**
-     * Génère le PDF d'une note de frais depuis la BDD.
-     * À implémenter quand les Models seront disponibles.
-     */
+    /** Génère le PDF d'une note de frais depuis la BDD.*/
     public function generateAndSend(string $expenseClaimId): void
     {
         ini_set('memory_limit', '512M');
@@ -35,7 +32,7 @@ class ExpenseClaimPdfService
 
         $computed = $this->computeAmounts($expensesClaim);
 
-        // Proofs s3 signed URLs for merging in PDF
+        // Preuves s3 signed URLs pour merger dans le PDF
         $proofService = new ProofUploadService;
         $proofs = $proofService->getSignedUrls($expenseClaimId);
 
