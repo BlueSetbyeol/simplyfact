@@ -1,0 +1,52 @@
+{
+  "hash": "c0691c56",
+  "configHash": "3bf05928",
+  "lockfileHash": "716d8809",
+  "browserHash": "6e6df948",
+  "optimized": {
+    "@inertiajs/react": {
+      "src": "../../node_modules/@inertiajs/react/dist/index.js",
+      "file": "@inertiajs_react.js",
+      "fileHash": "ad4bb019",
+      "needsInterop": false
+    },
+    "@mui/material": {
+      "src": "../../node_modules/@mui/material/index.mjs",
+      "file": "@mui_material.js",
+      "fileHash": "fa048bf7",
+      "needsInterop": false
+    },
+    "@radix-ui/react-tooltip": {
+      "src": "../../node_modules/@radix-ui/react-tooltip/dist/index.mjs",
+      "file": "@radix-ui_react-tooltip.js",
+      "fileHash": "e3b7a0f7",
+      "needsInterop": false
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "25e94f33",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "ec6debe1",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "jsx-runtime-CQlWB7iP": {
+      "file": "jsx-runtime-CQlWB7iP.js",
+      "isDynamicEntry": false
+    },
+    "react-3_O8oni9": {
+      "file": "react-3_O8oni9.js",
+      "isDynamicEntry": false
+    },
+    "react-dom-CyLqNIDr": {
+      "file": "react-dom-CyLqNIDr.js",
+      "isDynamicEntry": false
+    }
+  }
+}

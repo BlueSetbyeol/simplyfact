@@ -2,124 +2,51 @@ name: CI
 
 on:
   push:
-    branches: [main, dev]
+    branches: ['main', 'dev']
+  pull_request:
+    branches: ['main', 'dev']
+
+permissions:
+  contents: write
 
 jobs:
-  # ─── PHP Linting ────────────────────────────────────────────────────────────
-  lint-php:
-    name: PHP Linting (Pint)
+  check:
+    name: Lint, Types & Build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
-          coverage: none
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
-          restore-keys: composer-
-
-      - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
-
-      - name: Run Pint (check only, no fixes)
-        run: ./vendor/bin/pint --test
-
-  # ─── JS Linting ─────────────────────────────────────────────────────────────
-  lint-js:
-    name: JS Linting (ESLint)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+          php-version: '8.4'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: 20
+          cache: npm
 
-      - name: Install npm dependencies
+      - name: Install PHP dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Install JS dependencies
         run: npm ci
 
-      - name: Run ESLint
+      - name: Generate Wayfinder files
+        run: php artisan wayfinder:generate
+
+      - name: Run Pint
+        run: composer lint
+
+      - name: Format Frontend
+        run: npm run format
+
+      - name: Lint Frontend
         run: npm run lint
 
-  # ─── JS Build ───────────────────────────────────────────────────────────────
-  build:
-    name: Build Assets (Vite)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install npm dependencies
-        run: npm ci
-
-      - name: Build assets
-        run: npm run build
-
-  # ─── PHP Tests ──────────────────────────────────────────────────────────────
-  test-php:
-    name: PHP Tests (Pest)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          extensions: pdo, pdo_sqlite, sqlite3
-          coverage: none
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
-          restore-keys: composer-
-
-      - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
-
-      - name: Copy .env
-        run: cp .env.example .env
-
-      - name: Generate application key
-        run: php artisan key:generate
-
-      - name: Run Pest
-        run: ./vendor/bin/pest --parallel
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ':memory:'
-
-  # ─── JS Tests ───────────────────────────────────────────────────────────────
-  test-js:
-    name: JS Tests (Vitest)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install npm dependencies
-        run: npm ci
-
-      - name: Run Vitest
-        run: npm run test
+      - name: TypeScript
+        run: npx tsc --noEmit

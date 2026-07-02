@@ -1,6 +1,6 @@
 # Présentation
 
-Ce projet a été réalisé à l'occasion de plusieurs cours applicatif qui m'ont donné l'occasion de mettre en pratique plusieurs disciplines :
+Ce projet a été réalisé à l'occasion de plusieurs cours applicatif, durant le premier semestre de 2026, qui m'ont donné l'occasion de mettre en pratique plusieurs disciplines :
 
 - Application Web ;
 - Laravel + PHP & Inertia ;
@@ -20,18 +20,90 @@ C'est pourquoi il nous a été demandé de proposer une solution web, facile d'a
 
 De cette demande, en apparence simple, est né SimplyFact.
 
+Nous avons réalisé cette web application autour d'un Flow (flu d'action) qui simplifient la complétion de la note de frais à ses tâches les plus essentiel.
+Pour finaliser la note de frais, les adhérents de l'association auront d'abord à choisir quels dépenses ils veulent déclarer puis à suivre le chemin (Flow) qui les guides une étape par une étape jusqu'à la confirmation et la proposition d'inclure un don.
+
+## Technologies
+
+- React Js
+- Inertia
+- TypeScript
+- Tailwind CSS
+- Material UI
+- Mailpit
+- S3
+
 ## Ce que vous trouverez dans ce projet
 
 ### docs
 
-Le projet étant issu d'un travail de groupe dans le cadre d'une formation, vous trouverez dans ce dossier les documents de réflexion ayant mené au développement de ce projet.
+Le projet étant issu d'un travail de groupe dans le cadre d'une formation, vous trouverez dans ce repo/dossier les documents de réflexion ayant mené au développement de ce projet.
 
-Il s'y trouve aussi le document descriptif des tests effectués pour le projet ainsi qu'un README plus spécifique pour expliquer les démarches effectuées.
+### app
 
-### simplyFact
+Le Back end du projet
 
-Ce dossier contient le projet lui-même, construit en utilisant Laravel et son architecture si caractéristique.
+### database
+
+Les migrations et les factories de la Base de données
+
+### resources
+
+Les routes API et le Front end du projet
+
+### tests
+
+Tous les tests réalisés
+
+## Send email
+
+Pour tester l'envoie d'email localement:
+
+- Installer Mailpit: https://mailpit.axllent.org/docs/install/
+
+- Changer votre fichier `.env`:
+
+```env
+MAIL_MAILER=smtp
+MAIL_SCHEME=null
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_FROM_ADDRESS="noreply@simplyfact.fr"
+MAIL_FROM_NAME="${APP_NAME}"
+MAIL_TO_ACCOUNTANT="comptable@ffs.fr"
+```
+
+- Lancer Mailpit depuis le terminal:
+
+```bash
+mailpit
+```
+
+- Mailpit UI est disponible à cette [url](http://localhost:8025)
+
+## S3 storage
+
+Notre application utilises le stockage de S3 et les url signé ("signed url") pour les fichiers uploader.
+Vous aurez besoin de :
+
+- configurer votre propre 'bucket' s3 et ajouter un utilisateur avec les bonnes authorisation dans IAM.
+- completer les variables env :
+
+```env
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=tour_secret_access_key
+AWS_DEFAULT_REGION=eu-west-3
+AWS_BUCKET=simplyfact
+AWS_USE_PATH_STYLE_ENDPOINT=false
+```
 
 ## Comment installer le projet
 
-Entrez dans le dossier simplyFact et lisez le README local.
+Pour commencer, cloner ce repo/dossier et faites les commandes suivantes :
+
+- composer update
+- npm install
+- php artisan:migrate
+- composer run dev
