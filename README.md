@@ -1,67 +1,120 @@
-# Présentation
+# SimplyFact
 
-Ce projet a été réalisé à l'occasion de plusieurs cours applicatif, durant le premier semestre de 2026, qui m'ont donné l'occasion de mettre en pratique plusieurs disciplines :
+> A web application for managing expense reports and reimbursements, built for the French Speleology Federation (FFS).
 
-- Application Web ;
-- Laravel + PHP & Inertia ;
-- Utilisation de S3, Mailpit et création de PDF ;
-- Tests unitaires, d'intégration, fonctionnels & E2E ;
-- À confirmer : Déploiement sur Laravel Cloud ;
+## Academic Context
 
-Je vous invite à venir le découvrir et, pourquoi pas, à le prendre en main à votre tour si celui-ci vous intéresse.
+This project was developed as part of several applied courses during the first semester of 2026. It served as a hands-on opportunity to put the following disciplines into practice:
 
-## SimplyFact, c'est quoi ?
+- Web application development
+- Laravel + PHP with Inertia.js
+- File storage with S3, local email testing with Mailpit, and PDF generation
+- Unit, integration, functional, and end-to-end testing
+- Deployment on Laravel Cloud
 
-SimplyFact répond à la demande de la Fédération Française de Spéléologie, qui doit traiter les notes de frais et les remboursements associés de toutes les associations qui lui sont rattachées.
-_Les photos utilisés dans la page d'accueil sont la propriété de la FFS_
+## What is SimplyFact?
 
-Originellement, un fichier Excel existait, mais il restait peu accessible et compliqué pour la plupart des gens.
-C'est pourquoi il nous a été demandé de proposer une solution web, facile d'accès et d'usage pour tous les utilisateurs.
+The French Speleology Federation (FFS) needs to process expense reports and reimbursements submitted by all of its affiliated associations. Until now, this was handled through an Excel file — an approach that was both hard to access and difficult to use for most people.
 
-De cette demande, en apparence simple, est né SimplyFact.
+SimplyFact is the web-based solution built to address that problem. It guides users through a step-by-step flow — selecting expenses, following a guided path, and confirming their submission — making the process as straightforward as possible for every member.
 
-Nous avons réalisé cette web application autour d'un Flow (flu d'action) qui simplifient la complétion de la note de frais à ses tâches les plus essentiel.
-Pour finaliser la note de frais, les adhérents de l'association auront d'abord à choisir quels dépenses ils veulent déclarer puis à suivre le chemin (Flow) qui les guides une étape par une étape jusqu'à la confirmation et la proposition d'inclure un don.
+> _Photos used on the home and end page are the property of the FFS._
 
-## Technologies
+## Tech Stack
 
-- React Js
-- Inertia
-- TypeScript
-- Tailwind CSS
-- Material UI
-- Mailpit
-- S3
+| Layer         | Technologies                                 |
+| ------------- | -------------------------------------------- |
+| Frontend      | React, TypeScript, Tailwind CSS, Material UI |
+| Backend       | Laravel (PHP), Inertia.js                    |
+| Storage       | Amazon S3 (signed URLs)                      |
+| Email (local) | Mailpit                                      |
+| Output        | PDF generation                               |
 
-## Ce que vous trouverez dans ce projet
+## Project Structure
 
-### docs
+```
+├── app/          # Backend application logic
+├── database/     # Migrations and factories
+├── docs/         # Design and planning documents (group work artifacts)
+├── lang/         # Translation into different language (French included for this project)
+├── resources/    # Frontend source
+├── routes/    # API routes
+└── tests/        # All test suites (unit, integration, feature, E2E)
+```
 
-Le projet étant issu d'un travail de groupe dans le cadre d'une formation, vous trouverez dans ce repo/dossier les documents de réflexion ayant mené au développement de ce projet.
+## Installation
 
-### app
+### Prerequisites
 
-Le Back end du projet
+Make sure the following are installed on your machine:
 
-### database
+- PHP >= 8.2
+- Composer
+- Node.js & npm
+- A configured database (MySQL or SQLite for local development)
 
-Les migrations et les factories de la Base de données
+### Steps
 
-### resources
+**1. Clone the repository**
 
-Les routes API et le Front end du projet
+```bash
+git clone <repository-url>
+cd simplyfact
+```
 
-### tests
+**2. Install PHP dependencies**
 
-Tous les tests réalisés
+```bash
+composer install
+```
 
-## Send email
+**3. Install JavaScript dependencies**
 
-Pour tester l'envoie d'email localement:
+```bash
+npm install
+```
 
-- Installer Mailpit: https://mailpit.axllent.org/docs/install/
+**4. Set up your environment file**
 
-- Changer votre fichier `.env`:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Then open `.env` and update the following values to match your local environment:
+
+```env
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=simplyfact
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+**5. Run database migrations**
+
+```bash
+php artisan migrate
+```
+
+**6. Start the development server**
+
+```bash
+composer run dev
+```
+
+The application will be available at [http://localhost:8000](http://localhost:8000).
+
+## Email — Local Testing with Mailpit
+
+Mailpit is used to intercept and inspect outgoing emails during local development. It does **not** replace a production mail provider.
+
+**Install Mailpit:** https://mailpit.axllent.org/docs/install/
+
+**Update your `.env`:**
 
 ```env
 MAIL_MAILER=smtp
@@ -75,35 +128,28 @@ MAIL_FROM_NAME="${APP_NAME}"
 MAIL_TO_ACCOUNTANT="comptable@ffs.fr"
 ```
 
-- Lancer Mailpit depuis le terminal:
+**Start Mailpit:**
 
 ```bash
 mailpit
 ```
 
-- Mailpit UI est disponible à cette [url](http://localhost:8025)
+The Mailpit UI will be available at [http://localhost:8025](http://localhost:8025).
 
-## S3 storage
+## File Storage — Amazon S3
 
-Notre application utilises le stockage de S3 et les url signé ("signed url") pour les fichiers uploader.
-Vous aurez besoin de :
+SimplyFact uses Amazon S3 with signed URLs to securely handle uploaded files.
 
-- configurer votre propre 'bucket' s3 et ajouter un utilisateur avec les bonnes authorisation dans IAM.
-- completer les variables env :
+**Setup steps:**
+
+1. Create an S3 bucket on AWS.
+2. Create an IAM user with the appropriate permissions for that bucket.
+3. Fill in the following variables in your `.env`:
 
 ```env
 AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=tour_secret_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_access_key
 AWS_DEFAULT_REGION=eu-west-3
 AWS_BUCKET=simplyfact
 AWS_USE_PATH_STYLE_ENDPOINT=false
 ```
-
-## Comment installer le projet
-
-Pour commencer, cloner ce repo/dossier et faites les commandes suivantes :
-
-- composer update
-- npm install
-- php artisan:migrate
-- composer run dev
