@@ -30,6 +30,9 @@ export default [
     reactHooks.configs.flat['recommended-latest'],
     ...typescript.configs.recommended,
     {
+        ignores: ['.vite/**', 'node_modules/**', 'public/**'],
+    },
+    {
         ...react.configs.flat.recommended,
         ...react.configs.flat['jsx-runtime'], // Required for React 17+
         languageOptions: {
@@ -125,7 +128,11 @@ export default [
         },
         rules: {
             curly: ['error', 'all'],
-            '@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: false }],
+            '@stylistic/brace-style': [
+                'error',
+                '1tbs',
+                { allowSingleLine: false },
+            ],
         },
     },
 ];

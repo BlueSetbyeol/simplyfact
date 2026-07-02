@@ -103,5 +103,7 @@ AWS_USE_PATH_STYLE_ENDPOINT=false
 
 Pour commencer, cloner ce repo/dossier et faites les commandes suivantes :
 
+- composer update
+- npm install
 - php artisan:migrate
 - composer run dev
