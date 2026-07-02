@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 
-export default function AppLayout({
+export default function Header({
     children,
     showback = true,
 }: {

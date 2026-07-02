@@ -1,6 +1,6 @@
+import Header from '@/layouts/Header';
 import { Head, Link } from '@inertiajs/react';
 import { Button } from '@mui/material';
-import Header from '@/layouts/Header';
 
 export default function Home() {
     // {canRegister = true,}: {canRegister?: boolean;}
