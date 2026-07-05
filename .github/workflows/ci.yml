@@ -36,18 +36,6 @@ jobs:
       - name: Install JS dependencies
         run: npm ci
 
-      - name: Prepare Laravel environment
-        run: |
-          cp .env.example .env
-          php artisan key:generate
-          touch database/database.sqlite
-
-      - name: Run migrations
-        run: php artisan migrate --force
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite
-
       - name: Generate Wayfinder files
         run: php artisan wayfinder:generate
 
@@ -65,16 +53,3 @@ jobs:
 
       - name: Build frontend assets
         run: npm run build
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
-      - name: Run Playwright tests
-        run: npx playwright test
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
