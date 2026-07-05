@@ -230,8 +230,13 @@ Cela dans le but de vérifier plusieurs exemples d'intéraction avec les routes 
 
 ## 9. Test E2E
 
-- Pourquoi le parcours E2E choisi est pertinent
-- Ce qui est couvert
+- Le test de la page d'accueil
+- Deux tests de la page Utilisateur :
+    - Remplissage de la page
+    - Ne rien remplir dans la page => renvois sur la 1ère textbox
+- Le test pour commencer une note de frais, arrivant sur la première page d'ajout de dépense.
+
+Ces tests montrent que le projet fonctionne pour les fonctionnalités les plus fondamentals et basiques.
 
 ## 10. CI/CD
 
@@ -426,9 +431,13 @@ it('rejects training days below 1', function () {
 Je n'ai pas pu mettre en place des tests pour le Front bien qu'ayant tenté avec Vitest.
 Travaille à finir sur la branche Feature/more_tests
 
+Impossibilité de tester en E2E la totalité de la note de frais à cause de l'ajout de pièce jointe difficile à simuler ou à la fin à l'envoi d'un pdf dans un email.
+
 ## 13. Améliorations possibles
 
 Ajoutés des tests Front avec Vitest qui fonctionnent et valider les mêmes calculs qu'en Back End
+
+Testé une dépense qui ne demande pas l'ajout d'une pièce jointe (le stage) pour faire au moins une dépense au complet.
 
 ## 14. Preuves d'éxécution attendues
 
@@ -440,6 +449,6 @@ Ajoutés des tests Front avec Vitest qui fonctionnent et valider les mêmes calc
 
 ![Résultats de Test](simplyfact/public/images/proofOfTests/testsResults.png)
 
-```
+![Résultats de Test E2E 1ère page](simplyfact/public/images/proofOfTests/proofE2E.png)
 
-```
+![Résultats de Test E2E page User et début d'une note de frais](simplyfact/public/images/proofOfTests/testsE2E.png)
