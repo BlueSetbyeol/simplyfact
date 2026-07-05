@@ -53,6 +53,7 @@ readonly class PdfGenerator implements Responsable
     public function getDocument(): string
     {
         if (! isset($this->document)) {
+
             $response = Http::post($this->apiUrl, [
                 'html' => $this->html,
                 'merge' => $this->urls ?? [],

@@ -67,12 +67,12 @@ class ExpensesClaimController extends Controller
         $expensesClaim->update($validated);
 
         // Génère PDF et envoie par email
-        try {
-            $service = new ExpenseClaimPdfService(new PdfGenerator);
-            $service->generateAndSend($expensesClaim->id);
-        } catch (\Exception $e) {
-            return Inertia::flash('error', $e->getMessage())->back();
-        }
+        // try {
+        $service = new ExpenseClaimPdfService(new PdfGenerator);
+        $service->generateAndSend($expensesClaim->id);
+        // } catch (\Exception $e) {
+        //     return Inertia::flash('error', $e->getMessage())->back();
+        // }
 
         return redirect()->route('expenses-claims.flow.done', $expensesClaim);
     }
