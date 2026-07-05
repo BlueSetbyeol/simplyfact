@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Str;
 
 class OtherTrip extends Model
 {
+    /** @use HasFactory<OtherTripFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'expenses_claim_id',
         'expense_name',

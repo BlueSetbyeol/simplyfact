@@ -1,71 +1,104 @@
-# Deploy
+# Deployment Guide
 
-To deploy this solution a few things to know :
+This document covers how to deploy SimplyFact to a production environment. The recommended and tested approach is **Laravel Cloud**.
+Docker and GitHub Container Registry are also documented as alternative options.
 
-## Optimization
+## Before You Deploy — Optimization
 
-First off, to be able to hide a few file that you won't want public and assure yourself that the project is the smallest possible, run the command :
+Before deploying, optimize the application to clear compiled files and reduce the project's footprint:
 
-```
+```bash
 php artisan optimize
 ```
 
-or to remove all old cache files :
+To clear all previously cached files instead:
 
-```
+```bash
 php artisan optimize:clear
 ```
 
-## Laravel Cloud
+## Option 1 — Laravel Cloud (Recommended)
 
-To deploy this project you can use Laravel Cloud, a fully-managed, auto-scalling deployment platform.
+Laravel Cloud is a fully managed, auto-scaling deployment platform built specifically for Laravel applications.
 
-One of it's strong point is that, linked to your github account, it will self deploy when a push is made on the main branch allowing instant deployment as soon as possible.
+**Key advantage:** Once linked to your GitHub account, it automatically redeploys on every push to the `main` branch — no manual steps required after the initial setup.
 
-[Laravel Cloud](https://laravel.com/cloud)
+→ [Laravel Cloud documentation](https://laravel.com/cloud)
 
-## Docker
+### Environment variables on Laravel Cloud
 
-To deploy this project, you can also use Docker (compose and Dockerfile)
+Set all required environment variables directly in the Laravel Cloud dashboard. Pay particular attention to:
 
-If you choose this solution, be carefull to first set up a specialized folder for docker :
+- `APP_ENV=production` and `APP_DEBUG=false`
+- Your database connection settings
+  (Don't forget to change this line in `config/database.php`)
+
+```php
+'default' => env('DB_CONNECTION', 'mysql'),
+```
+
+- Your S3 credentials (see the S3 section in the README)
+- Your production mail provider credentials
+
+> Mailpit is a local development tool and is **not compatible** with production environments. You must configure a transactional email provider (e.g. Mailgun, Amazon SES, or Resend) before deploying.
+
+## Option 2 — Docker
+
+Docker can be used to containerize and deploy the application on any infrastructure that supports containers.
+
+### Recommended folder structure
+
+Organize your Docker configuration as follows:
 
 ```
-── docker/
+├── docker/
 │   ├── common/
 │   │   └── php-fpm/
 │   │       ├── Dockerfile
 │   │       └── conf.d/
 │   │           └── 20-status-path.conf
 │   ├── development/
-│   ├── production/
-│   │   ├── php-fpm/
-│   │   │   └── entrypoint.sh
-│   │   ├── workspace/
-│   │   │   └── Dockerfile
-│   │   └── nginx
-│   │       ├── Dockerfile
-│   │       └── nginx.conf
+│   └── production/
+│       ├── php-fpm/
+│       │   └── entrypoint.sh
+│       ├── workspace/
+│       │   └── Dockerfile
+│       └── nginx/
+│           ├── Dockerfile
+│           └── nginx.conf
 ├── compose.dev.yaml
 ├── compose.prod.yaml
-├── .dockerignore
+└── .dockerignore
 ```
 
-Then create a Dockerfile for PHP, that will create an optimized image of your project. And then create a Docker Compose configuration to define services, volumes and networks as well as an environnement where your project will work perfectly.
+### What to configure
 
-Then run :
+- A **PHP Dockerfile** that builds an optimized image of the application.
+- A **Docker Compose file** (`compose.prod.yaml`) that defines services (PHP-FPM, Nginx, database), volumes, and networks.
 
+### Build and run
+
+```bash
+docker compose -f compose.prod.yaml up --build -d
 ```
- docker compose -f compose.prod.yaml up --build -d
-```
 
-> [source](https://docs.docker.com/guides/frameworks/laravel/)
+→ [Laravel + Docker guide](https://docs.docker.com/guides/frameworks/laravel/)
 
-## GitHub
+## Option 3 — GitHub + GHCR (GitHub Container Registry)
 
-Another solution would be to use Github.
-While the project is on line and versionned on GitHub, a good practice would be to use GitHub's own Docker managing service : **GHCR**
+If the project is already versioned on GitHub, GitHub Container Registry (GHCR) provides an integrated way to manage Docker images alongside your repository.
 
-[GHCR](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
+Combined with **GitHub Actions**, this approach enables a full Continuous Deployment pipeline: each push to `main` automatically builds a new Docker image and deploys it, with no additional tooling required.
 
-It basically is the same as a Docker Image manager but associated with GitHub and GitHub Actions help for a more comprehensive Continu Deployement as each push on the main branch would then create and then deploy a new Image.
+→ [GHCR documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
+
+## Deployment Checklist
+
+Before going live, verify the following:
+
+- `APP_ENV=production` and `APP_DEBUG=false` are set
+- `php artisan optimize` has been run
+- Database migrations are up to date (`php artisan migrate --force`)
+- S3 bucket and IAM credentials are configured
+- A production mail provider is configured (Mailpit must not be used)
+- `APP_KEY` is set and not exposed publicly

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ExpensesClaim;
 use Pest\Exceptions\InvalidArgumentException;
 
 class PriceCalculator
@@ -54,5 +55,40 @@ class PriceCalculator
     {
 
         return round(min($numberOfTrainingDays * $pricePerDay, $maxReimbursed), 2);
+    }
+
+    public static function calculateTotalPriceAndTotalReimbursed(ExpensesClaim $claim, float $totalGiven): float
+    {
+        $hasManyRelations = [
+            'drivenTrips', 'otherTrips', 'accommodations', 'otherExpenses',
+        ];
+
+        $hasOneRelations = [
+            'meals', 'trainingExpenses',
+        ];
+
+        $totalFromClaim = 0;
+
+        foreach ($hasManyRelations as $relation) {
+            $related = $claim->{$relation};
+
+            if ($related === null) {
+                continue;
+            }
+
+            $totalFromClaim += $related->sum('total_price');
+        }
+
+        foreach ($hasOneRelations as $relation) {
+            $related = $claim->{$relation};
+
+            if ($related === null) {
+                continue;
+            }
+
+            $totalFromClaim += $related->total_price;
+        }
+
+        return round(($totalFromClaim - $totalGiven), 2);
     }
 }
