@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Str;
 
 class Meal extends Model
 {
+    /** @use HasFactory<MealFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'expenses_claim_id',
         'number_of_meal',

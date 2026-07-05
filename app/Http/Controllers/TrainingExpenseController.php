@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ExpensesClaim;
 use App\Models\TrainingExpense;
+use App\Services\PriceCalculator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -38,7 +39,7 @@ class TrainingExpenseController extends Controller
         $max_reimbursed = 149.10;
 
         // Calcule de reimbursed_price pour s'assurer que la règle de remboursement est respectée
-        $validated['reimbursed_price'] = min($validated['nb_days_of_training'] * $price_per_day, $max_reimbursed);
+        $validated['reimbursed_price'] = PriceCalculator::calculateMaximumPricePerMeal($validated['nb_days_of_training'], $price_per_day, $max_reimbursed);
 
         TrainingExpense::create([
             'expenses_claim_id' => $expensesClaim->id,
