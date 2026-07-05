@@ -64,9 +64,75 @@ Récupération des coups associé à la note de frais et comparaison à la somme
 
 Test écrit :
 
+```php
+it('updates the claim and redirects to done when reimbursed total matches the calculation', function () {
+    $expensesClaim = ExpensesClaim::factory()
+        ->has(OtherTrip::factory()->count(3), 'otherTrips')
+        ->has(Meal::factory(), 'meals')
+        ->create();
+
+    $claim = ExpensesClaim::with([
+        'drivenTrips', 'otherTrips', 'accommodations', 'meals', 'trainingExpenses', 'otherExpenses',
+    ])->findOrFail($expensesClaim->id);
+
+    $totalGiven = 500;
+    $expectedReimbursed = PriceCalculator::calculateTotalPriceAndTotalReimbursed($claim, $totalGiven);
+
+    $response = $this->put(route('expenses-claims.update', $expensesClaim), [
+        'total_given' => $totalGiven,
+        'total_reimbursed' => $expectedReimbursed,
+    ]);
+
+    $response->assertRedirect(route('expenses-claims.flow.done', $expensesClaim));
+
+    $this->assertDatabaseHas('expenses_claims', [
+        'id' => $expensesClaim->id,
+        'total_reimbursed' => $expectedReimbursed,
+    ]);
+});
+```
+
 Résultat initial : échec
 
+```
+FAILED Tests\Integration\ExpensesClaimSummaryTest > `expenses claims` → it updates the claim and redirects to done when reimbursed total matches… TypeError
+ App\Services\PriceCalculator::calculateTotalPriceAndTotalReimbursed(): Argument #1 ($totalFromClaim) must be of type float, App\Models\ExpensesClaim given, called in /Users/sica/Documents/mds/w9-applications/simplyfact/tests/Integration/ExpensesClaimSummaryTest.php on line 42
+
+at app/Services/PriceCalculator.php:59
+55▕
+56▕ return round(min($numberOfTrainingDays * $pricePerDay, $maxReimbursed), 2);
+     57▕     }
+     58▕
+  ➜  59▕     public static function calculateTotalPriceAndTotalReimbursed(float $totalFromClaim, float $totalGiven): float
+     60▕     {
+     61▕         return round(($totalFromClaim - $totalGiven), 2);
+62▕ }
+63▕ }
+
+1 app/Services/PriceCalculator.php:59
+2 tests/Integration/ExpensesClaimSummaryTest.php:42
+
+```
+
 Code ajouté :
+
+```php
+public static function calculateTotalPriceAndTotalReimbursed(ExpensesClaim $claim, float $totalGiven): float
+{
+    $relations = [
+        'drivenTrips', 'otherTrips', 'accommodations',
+        'meals', 'trainingExpenses', 'otherExpenses',
+    ];
+
+    $totalFromClaim = 0;
+
+    foreach ($relations as $relation) {
+        $totalFromClaim += $claim->{$relation}->sum('total_price');
+    }
+
+    return round(($totalFromClaim - $totalGiven), 2);
+}
+```
 
 Résultat final : succès
 
@@ -136,20 +202,31 @@ Résultat final : succès
 
 ## 5. Risques qualité identifiés
 
-Expliquer les principaux risques du projet
-ex : erreur de calcul, mauvais affichage côté utilisateur, route API
+Pour ce projet, le principal risque est que les calculs ne soient pas fait correctement que ce soit du côté front ou du côté back.
+Cela aurait des conséquences pour les remboursements qui devraient ensuite suivre la complétion de la note de frais.
 
 ## 6. Stratégie de tests
 
+J'ai commencé par les tests unitaires pour commencer à prendre en main les tests puis j'ai aggrandi pour les tests d'intégrations.
+
 ## 7. Tests unitaires réalisés
 
-- Pourquoi certains tests sont unitaires
-- Ce qui est couvert
+- Tests sur le calcul des distances données par l'adhérent
+- Tests sur le calcul de la somme remboursé pour les repas (sachant qu'il y a un taux maximum par repas)
+- Tests sur le calcul de la somme remboursé pour les hébergements (sachant qu'il y a un taux par nuit dans un hébergement spécifique)
+- Tests sur le calcul de la somme d'indémnité que va recevoir l'encadrant d'un stage (sachant qu'il y a un taux par jour et un maximum par mois)
+- Tests pour valider le nombre de jour déclaré pour les stages
+
+Cela dans le but de valider tous les calculs porteur de risque pour l'application.
 
 ## 8. Tests d'intégration réalisés
 
-- Pourquoi certains tests sont d'intégration
-- Ce qui est couvert
+- Tests pour valider les choix que l'adhérent à fait
+- Tests pour valider la sauvegarde des choix de l'adhérent
+- Tests pour valider la redirection à la dernière étape de la validation de la note de frais
+- Tests pour valider l'ajout de la somme remboursé dans la dernière étape de la note de frais
+
+Cela dans le but de vérifier plusieurs exemples d'intéraction avec les routes API.
 
 ## 9. Test E2E
 
@@ -232,6 +309,8 @@ La CI consiste à :
 En cas d'échec, la CI et le merge d'une mise à jour du code est stopée et ne peux pas être effectué. Une solution doit être trouvé et push sur le repository/dans le merge afin que les tests puissent recommencé et passé.
 
 ### Limite de la pipeline actuelle
+
+Je ne vérifie pas toutes les routes et n'est donc pas de moyen de vérification totale.
 
 ## 11. Utilisation éventuelle de l'IA générative
 
@@ -344,7 +423,12 @@ it('rejects training days below 1', function () {
 
 ## 12. Limites actuelles
 
+Je n'ai pas pu mettre en place des tests pour le Front bien qu'ayant tenté avec Vitest.
+Travaille à finir sur la branche Feature/more_tests
+
 ## 13. Améliorations possibles
+
+Ajoutés des tests Front avec Vitest qui fonctionnent et valider les mêmes calculs qu'en Back End
 
 ## 14. Preuves d'éxécution attendues
 
@@ -355,3 +439,7 @@ it('rejects training days below 1', function () {
 ![CI succés d'éxecution](simplyfact/public/images/proofOfTests/CI.png)
 
 ![Résultats de Test](simplyfact/public/images/proofOfTests/testsResults.png)
+
+```
+
+```

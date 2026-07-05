@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ExpensesClaim;
 use App\Services\ExpenseClaimPdfService;
 use App\Services\PdfGenerator;
+use App\Services\PriceCalculator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -61,18 +62,32 @@ class ExpensesClaimController extends Controller
         // ajout des valeurs de fin de note de frais
         $validated = $request->validate([
             'total_reimbursed' => 'decimal:0,2',
-            'total_given' => 'nullable|decimal:0,2',
+            'total_given' => 'required|decimal:0,2',
         ]);
+
+        $claim = ExpensesClaim::with([
+            'drivenTrips', 'otherTrips', 'accommodations', 'meals', 'trainingExpenses', 'otherExpenses',
+        ])->findOrFail($expensesClaim->id);
+
+        $calculated = PriceCalculator::calculateTotalPriceAndTotalReimbursed($claim, $validated['total_given']);
+
+        if (abs($calculated - (float) $validated['total_reimbursed']) > 0.01) {
+            return back()->with('error', 'The reimbursed total does not match the calculated total - given total.');
+        }
 
         $expensesClaim->update($validated);
 
-        // Génère PDF et envoie par email
-        // try {
-        $service = new ExpenseClaimPdfService(new PdfGenerator);
-        $service->generateAndSend($expensesClaim->id);
-        // } catch (\Exception $e) {
-        //     return Inertia::flash('error', $e->getMessage())->back();
-        // }
+        if (! app()->environment('testing')) {
+            // Génère PDF et envoie par email
+            try {
+                $service = new ExpenseClaimPdfService(new PdfGenerator);
+                $service->generateAndSend($expensesClaim->id);
+            } catch (\Exception $e) {
+                dump('PDF/Email exception: '.$e->getMessage());
+
+                return back()->with('error', $e->getMessage());
+            }
+        }
 
         return redirect()->route('expenses-claims.flow.done', $expensesClaim);
     }
