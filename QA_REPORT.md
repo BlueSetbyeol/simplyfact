@@ -230,8 +230,7 @@ Cela dans le but de vérifier plusieurs exemples d'intéraction avec les routes 
 
 ## 9. Test E2E
 
-- Pourquoi le parcours E2E choisi est pertinent
-- Ce qui est couvert
+- Le test de la page d'accueil
 
 ## 10. CI/CD
 
@@ -440,6 +439,4 @@ Ajoutés des tests Front avec Vitest qui fonctionnent et valider les mêmes calc
 
 ![Résultats de Test](simplyfact/public/images/proofOfTests/testsResults.png)
 
-```
-
-```
+![Résultats de Test E2E 1ère page](simplyfact/public/images/proofOfTests/proofE2E.png)
