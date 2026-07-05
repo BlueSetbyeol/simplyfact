@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: ['main', 'dev']
+    branches: ['main']
   pull_request:
     branches: ['main', 'dev']
 
@@ -50,3 +50,6 @@ jobs:
 
       - name: TypeScript
         run: npx tsc --noEmit
+
+      - name: Build frontend assets
+        run: npm run build
